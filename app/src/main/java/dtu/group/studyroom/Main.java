@@ -9,6 +9,7 @@ import android.support.annotation.RequiresApi;
 import android.support.design.widget.BottomNavigationView;
 import android.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -16,7 +17,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-public class Main extends AppCompatActivity implements SearchFragment.OnFragmentInteractionListener {
+public class Main extends AppCompatActivity implements MapsFragment.OnFragmentInteractionListener {
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -26,13 +27,13 @@ public class Main extends AppCompatActivity implements SearchFragment.OnFragment
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_home:
+                case R.id.create_review_page:
                     fragmentManager.beginTransaction().replace(R.id.content, SearchFragment.newInstance("Test1","")).commit();
                     return true;
-                case R.id.navigation_dashboard:
+                case R.id.maps_page:
                     fragmentManager.beginTransaction().replace(R.id.content, SearchFragment.newInstance("Test2","")).commit();
                     break;
-                case R.id.navigation_notifications:
+                case R.id.account_page:
                     fragmentManager.beginTransaction().replace(R.id.content, SearchFragment.newInstance("Test3","")).commit();
 
                     return true;
@@ -51,7 +52,6 @@ public class Main extends AppCompatActivity implements SearchFragment.OnFragment
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimaryDark));
-
         }
 
         setContentView(R.layout.activity_main);
@@ -60,7 +60,16 @@ public class Main extends AppCompatActivity implements SearchFragment.OnFragment
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        MapsFragment mf = MapsFragment.newInstance();
+        fragmentTransaction.add(R.id.content, mf);
+
+        fragmentTransaction.commit();
+
     }
+
 
     @Override
     public void onFragmentInteraction(Uri uri) {

@@ -55,6 +55,8 @@ public class SearchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -75,9 +77,7 @@ public class SearchFragment extends Fragment {
         TextView tv = (TextView) view.findViewById(R.id.testText);
         tv.setText(mParam1.toString());
 
-
         return view;
-        
 
     }
 
