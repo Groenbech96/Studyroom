@@ -4,4 +4,5 @@
     <color name="colorPrimaryDark">#440c0f26</color>
     <color name="colorAccent">#14f3f3f3</color>
     <color name="windowBack">#fff3f3f3</color>
+    <color name="cursor">#000000</color>
 </resources>

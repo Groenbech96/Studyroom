@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -12,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v4.app.ActivityCompat;
@@ -19,6 +21,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
+import android.transition.AutoTransition;
 import android.transition.ChangeBounds;
 import android.transition.Scene;
 import android.transition.Transition;
@@ -27,10 +30,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.ScaleAnimation;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.os.*;
 
@@ -43,6 +49,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.firebase.database.Transaction;
 
 import static com.google.android.gms.internal.zzail.runOnUiThread;
@@ -59,6 +66,8 @@ import static com.google.android.gms.internal.zzail.runOnUiThread;
 public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener  {
 
     EditText searchDummy;
+    Drawable searchDummyDraw;
+    RelativeLayout testl;
     ConstraintSet searchDummyConsttraints = new ConstraintSet();
 
     private View fragmentView;
@@ -122,10 +131,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         searchDummy.setOnClickListener(searchDummyListener);
         searchDummy.setSoundEffectsEnabled(false);
 
+
         //TODO: FIX
-        Drawable searchBarImg = getContext().getDrawable(R.drawable.ic_dot);
-        searchBarImg.setBounds( 0, 0, 15, 15 );
-        searchDummy.setCompoundDrawables(searchBarImg, null,null,null);
+        searchDummyDraw = getContext().getDrawable(R.drawable.ic_dot);
+        searchDummyDraw.setBounds( 0, 0, 15, 15 );
+        searchDummy.setCompoundDrawables(searchDummyDraw, null,null,null);
 
 
         return fragmentView;
@@ -134,11 +144,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
+
         map = googleMap;
+
+//        boolean b = map.setMapStyle(
+//                MapStyleOptions.loadRawResourceStyle(
+//                        getActivity().getApplicationContext(), R.raw.google_map_style));
+
 
         updateLocationUI();
 
+
         getDeviceLocation();
+
+
 
     }
 
@@ -240,6 +259,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mapView.onResume();
         // Get the map
         mapView.getMapAsync(this);
+
+
+
+
     }
 
 
@@ -287,65 +310,74 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         }
     };
 
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     private void animateSearchDummy() {
 
-
-
-//        // create set of animations
-//        AnimationSet replaceAnimation = new AnimationSet(false);
-//        // animations should be applied on the finish line
-//        replaceAnimation.setFillAfter(true);
 //
-//        // create scale animation
-//        ScaleAnimation scale = new ScaleAnimation(1.0f, 1, 1.0f, 1);
-//        scale.setDuration(1000);
-//
-//
-//        // create translation animation
-//        TranslateAnimation trans = new TranslateAnimation(0, 0,
-//                TranslateAnimation.ABSOLUTE, 0 - searchDummy.getLeft(), 0, 0,
-//                TranslateAnimation.ABSOLUTE, 0 - searchDummy.getTop());
-//        trans.setDuration(1000);
-//
-//        // add new animations to the set
-//        replaceAnimation.addAnimation(scale);
-//        replaceAnimation.addAnimation(trans);
 
-
-
-        Log.i("MAGNUS", searchDummy.getHeight() + "");
-
-
+        //searchDummy.setText("");
         searchDummyConsttraints.clone((ConstraintLayout) fragmentView.findViewById(R.id.mapsContainer));
-        //TransitionManager.beginDelayedTransition((ConstraintLayout) fragmentView.findViewById(R.id.mapsContainer));
 
+
+      //  AutoTransition t = new AutoTransition();
+       // t.setDuration(200);
+
+        //TransitionManager.beginDelayedTransition((ConstraintLayout) fragmentView.findViewById(R.id.mapsContainer), t);
 
         searchDummyConsttraints.clear(R.id.searchDummy);
-        searchDummyConsttraints.constrainHeight(R.id.searchDummy, ConstraintSet.WRAP_CONTENT);
-        //searchDummyConsttraints.clear(R.id.searchDummy, ConstraintSet.LEFT);
-        //searchDummyConsttraints.clear(R.id.searchDummy, ConstraintSet.RIGHT);
+
+        searchDummyConsttraints.constrainHeight(R.id.searchDummy, searchDummy.getLayoutParams().height);
+        //searchDummyConsttraints.connect(R.id.searchDummy, ConstraintSet.BOTTOM, R.id.guidelineTest, ConstraintSet.TOP, 0);
         searchDummyConsttraints.connect(R.id.searchDummy, ConstraintSet.LEFT, R.id.mapsContainer, ConstraintSet.LEFT,0);
         searchDummyConsttraints.connect(R.id.searchDummy, ConstraintSet.RIGHT, R.id.mapsContainer, ConstraintSet.RIGHT,0);
         searchDummyConsttraints.connect(R.id.searchDummy, ConstraintSet.TOP, R.id.mapsContainer, ConstraintSet.TOP,0);
+
         searchDummyConsttraints.applyTo((ConstraintLayout) fragmentView.findViewById(R.id.mapsContainer));
 
+
         ChangeBounds myTransition = new ChangeBounds();
-        myTransition.setDuration(200L);
-        TransitionManager.go(new Scene((ConstraintLayout) fragmentView.findViewById(R.id.mapsContainer)), myTransition);
+        myTransition.setDuration(300L);
+
+        myTransition.addListener(new Transition.TransitionListener() {
+            @Override
+            public void onTransitionStart(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionEnd(Transition transition) {
+                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                fragmentTransaction.setCustomAnimations(R.anim.fadein, R.anim.fadeout);
+
+                SearchFragment mf = SearchFragment.newInstance();
+                fragmentTransaction.replace(R.id.content, mf);
 
 
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.setCustomAnimations(R.anim.fadein, R.anim.fadeout);
+                fragmentTransaction.commit();
+            }
 
-        SearchFragment mf = SearchFragment.newInstance();
-        fragmentTransaction.replace(R.id.content, mf, "TEST");
+            @Override
+            public void onTransitionCancel(Transition transition) {
 
-        fragmentTransaction.commit();
+            }
+
+            @Override
+            public void onTransitionPause(Transition transition) {
+
+            }
+
+            @Override
+            public void onTransitionResume(Transition transition) {
 
 
-        // start our animation
-        // searchDummy.startAnimation(replaceAnimation);
+            }
+        });
+
+
+        TransitionManager.beginDelayedTransition((ConstraintLayout) fragmentView.findViewById(R.id.mapsContainer), myTransition);
+
+
 
 
     }

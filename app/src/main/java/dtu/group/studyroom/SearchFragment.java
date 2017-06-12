@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 
@@ -84,12 +85,6 @@ public class SearchFragment extends Fragment {
         expandedSet.connect(R.id.facilitiesMenu,ConstraintSet.BOTTOM,R.id.searchContainer, ConstraintSet.BOTTOM,0);
 
 
-
-        //TODO: FIX
-        Drawable searchBarImg = getContext().getDrawable(R.drawable.ic_dot);
-        searchBarImg.setBounds( 0, 0, 15, 15 );
-        searchBar.setCompoundDrawables(searchBarImg, null,null,null);
-
         Drawable imgCity = getContext().getDrawable(R.drawable.ic_location_city_black_24px);
         imgCity.setBounds( 0, 0, 35, 35 );
         citySearch.setCompoundDrawables(imgCity, null,null,null);
@@ -102,6 +97,10 @@ public class SearchFragment extends Fragment {
         defaultSet.clone((ConstraintLayout) fragmentView.findViewById(R.id.facilitiesMenu));
         expandedSet.clone((ConstraintLayout) fragmentView.findViewById(R.id.facilitiesMenu));
 
+        InputMethodManager imgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imgr.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        searchBar.requestFocus();
+        searchBar.setCursorVisible(true);
 
         return fragmentView;
 
@@ -130,6 +129,9 @@ public class SearchFragment extends Fragment {
         super.onDetach();
         mListener = null;
     }
+
+
+
 
     /**
      * This interface must be implemented by activities that contain this
