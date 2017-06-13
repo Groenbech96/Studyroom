@@ -1,15 +1,10 @@
 package dtu.group.studyroom;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
@@ -24,42 +19,29 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.transition.AutoTransition;
 import android.transition.ChangeBounds;
-import android.transition.Scene;
 import android.transition.Transition;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.ScaleAnimation;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.os.*;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MapStyleOptions;
-import com.google.firebase.database.Transaction;
-
-import static com.google.android.gms.internal.zzail.runOnUiThread;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 
 /**
@@ -70,30 +52,54 @@ import static com.google.android.gms.internal.zzail.runOnUiThread;
  * Use the {@link MapsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener  {
+public class MapsFragment extends Fragment implements OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener  {
 
-    EditText searchDummy;
-    Drawable searchDummyDraw;
-    RelativeLayout testl;
-    ConstraintSet searchDummyConsttraints = new ConstraintSet();
-    private  static ValueAnimator am;
 
-    private View fragmentView;
+    /**
+     * Tags for google maps
+     */
+    private static final String GOOGLE_MAPS_TAG = "GOOGLE_MAPS_TAG";
+    private static final String KEY_CAMERA_POSITION = "camera_position";
+    private static final String KEY_LOCATION = "location";
 
-    private MapView mapView;
-    private GoogleMap map;
+    /**
+     * Google maps items
+     */
 
-    private static int heightNav, heightStat;
-
+    private SupportMapFragment mapView;
+    private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
+    private CameraPosition mCameraPosition = null;
+    private LatLng mDefaultLocation = new LatLng(55.785574, 12.521381);
+    private Location mLastKnownLocation;
 
+    /**
+     * Settings for google maps
+     */
     private static final int DEFAULT_ZOOM = 15;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean mLocationPermissionGranted;
 
-    private Location mLastKnownLocation;
+
+    /**
+     * Search dummt
+     */
+    EditText searchDummy;
+    Drawable searchDummyDraw;
+    ConstraintSet searchDummyConsttraints = new ConstraintSet();
+
+
+    private View fragmentView;
+
+
+
+
 
     private OnFragmentInteractionListener mListener;
+
+
 
     public MapsFragment() {
         // Required empty public constructor
@@ -117,8 +123,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
 
 
-
-
     }
 
     @Override
@@ -127,24 +131,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         // Inflate the layout for this fragment
         fragmentView =  inflater.inflate(R.layout.fragment_maps, container, false);
 
-
+        // Search dummy
         searchDummy = (EditText) fragmentView.findViewById(R.id.searchDummy);
         searchDummy.setOnClickListener(searchDummyListener);
         searchDummy.setSoundEffectsEnabled(false);
-
 
         //TODO: FIX
         searchDummyDraw = getContext().getDrawable(R.drawable.ic_dot);
         searchDummyDraw.setBounds( 0, 0, 15, 15 );
         searchDummy.setCompoundDrawables(searchDummyDraw, null,null,null);
 
+        mapView = SupportMapFragment.newInstance();
 
-        mapView = (MapView) fragmentView.findViewById(R.id.mapView);
-        mapView.onCreate(null);
-        // Start the map view (Make it possible to view)
-        mapView.onResume();
-        // Get the map
-        mapView.getMapAsync(this);
+
+        // Get the mMap
 
         // Connect to the API CLIENT for location
 
@@ -159,30 +159,27 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         mGoogleApiClient.connect();
 
 
-
         return fragmentView;
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-
-        map = googleMap;
+        mMap = googleMap;
 
         updateLocationUI();
 
         getDeviceLocation();
 
 
-
     }
 
     /**
-     * Updates the map's UI settings based on whether the user has granted location permission.
+     * Updates the mMap's UI settings based on whether the user has granted location permission.
      */
     private void updateLocationUI() {
 
-        if (map == null) {
+        if (mMap == null) {
             return;
         }
 
@@ -199,18 +196,20 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
 
         if (mLocationPermissionGranted) {
             Log.i("MAP", "LocationGranted");
-            map.setMyLocationEnabled(true);
-            map.getUiSettings().setMyLocationButtonEnabled(false);
+            mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
         } else {
-            map.setMyLocationEnabled(false);
-            map.getUiSettings().setMyLocationButtonEnabled(false);
+            mMap.setMyLocationEnabled(false);
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
             mLastKnownLocation = null;
         }
 
     }
 
+
+
     /**
-     * Gets the current location of the device, and positions the map's camera.
+     * Gets the current location of the device, and positions the mMap's camera.
      */
     private void getDeviceLocation() {
         /*
@@ -231,12 +230,39 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             mLastKnownLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         }
 
-        if (mLastKnownLocation != null) {
-            Log.i("MAPS", "Move camera");
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+        // Set the map's camera position to the current location of the device.
+        if (mCameraPosition != null) {
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(mCameraPosition));
+        } else if (mLastKnownLocation != null) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(mLastKnownLocation.getLatitude(),
+                            mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+        } else {
+            Log.d(GOOGLE_MAPS_TAG, "Current location is null. Using defaults.");
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
 
     }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        mLocationPermissionGranted = false;
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mLocationPermissionGranted = true;
+                }
+            }
+        }
+        updateLocationUI();
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -273,6 +299,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 
+        getChildFragmentManager().beginTransaction().replace(R.id.mapView, mapView).commit();
+        mapView.getMapAsync(this);
+
+        //mapView = (MapView) fragmentView.findViewById(R.id.mapView);
+        //mapView.onCreate(null);
+        // Start the mMap view (Make it possible to view)
+        //mapView.onResume();
+        // Get the mMap
+        //mapView.getMapAsync(this);
 
 
     }
@@ -308,7 +343,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         @Override
         public void onClick(View v) {
 
-            // If map view is already on screen, and the search button is clicked again, do animation to search
+            // If mMap view is already on screen, and the search button is clicked again, do animation to search
 
             //MapsFragment mf = (MapsFragment) getSupportFragmentManager().findFragmentByTag(MAPS_FRAGMENT_TAG);
 //            if(mf != null && mf.isVisible()) {
@@ -357,7 +392,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         searchDummyConsttraints.connect(R.id.searchDummy, ConstraintSet.LEFT, R.id.mapsContainer, ConstraintSet.LEFT,0);
         searchDummyConsttraints.connect(R.id.searchDummy, ConstraintSet.RIGHT, R.id.mapsContainer, ConstraintSet.RIGHT, 0);
         searchDummyConsttraints.connect(R.id.searchDummy, ConstraintSet.TOP, R.id.mapsContainer, ConstraintSet.TOP, param.height);
-
 
         searchDummyConsttraints.applyTo((ConstraintLayout) fragmentView.findViewById(R.id.mapsContainer));
 
@@ -409,6 +443,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         TransitionManager.beginDelayedTransition((ConstraintLayout) fragmentView.findViewById(R.id.mapsContainer), myTransition);
 
 
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (mMap != null) {
+            outState.putParcelable(KEY_CAMERA_POSITION, mMap.getCameraPosition());
+            outState.putParcelable(KEY_LOCATION, mLastKnownLocation);
+            super.onSaveInstanceState(outState);
+        }
     }
 
 
