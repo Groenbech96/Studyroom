@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "764322996708",
+    "firebase_url": "https://studyroom-e6ec5.firebaseio.com",
+    "project_id": "studyroom-e6ec5",
+    "storage_bucket": "studyroom-e6ec5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:764322996708:android:620b8964aaea7ba4",
+        "android_client_info": {
+          "package_name": "com.group.studyroom"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "764322996708-8tt55ebc5k6ouuu7supl93p1q8m8flhc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.group.studyroom",
+            "certificate_hash": "c07469b840f5b8d00b31c2b6f23f57e101edfe5f"
+          }
+        },
+        {
+          "client_id": "764322996708-6ug46ph8gcmj5e494e3ms74p2a4a0d8c.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDgdtnv1GNKIRSs_Mrvx1vfOk-oJCf2xjk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "764322996708-6ug46ph8gcmj5e494e3ms74p2a4a0d8c.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
