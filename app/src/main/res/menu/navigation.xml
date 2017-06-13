@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
+<!-- Depcricated -->
     <item
         android:id="@+id/account_page"
         android:icon="@drawable/ic_account_person_24dp"
-        android:title="@string/bottom_navi_account_person" />
+        android:title="" />
 
     <item
         android:id="@+id/maps_page"
@@ -14,6 +14,6 @@
     <item
         android:id="@+id/create_review_page"
         android:icon="@drawable/ic_add_black_24dp"
-        android:title="@string/bottom_navi_create_review" />
+        android:title="" />
 
 </menu>

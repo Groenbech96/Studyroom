@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#fff3f3f3</color>
-    <color name="colorPrimaryDark">#440c0f26</color>
+    <color name="colorPrimaryDark">#32b9b9b9</color>
     <color name="colorAccent">#14f3f3f3</color>
     <color name="windowBack">#fff3f3f3</color>
     <color name="cursor">#000000</color>
+    <color name="tabcolor">#FFFFFF</color>
 </resources>

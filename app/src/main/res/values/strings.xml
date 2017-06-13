@@ -5,9 +5,11 @@
     <string name="title_notifications">Notifications</string>
 
     <!-- TODO: Remove or change this placeholder text -->
+
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="bottom_navi_create_review">Add study room</string>
-    <string name="bottom_navi_account_person">My account</string>
+    <string name="bottom_navigation_create_review">Add study room</string>
+    <string name="bottom_navigation_account_person">My account</string>
+    <string name="searchbar_title">Find study room</string>
     <string name="title_activity_maps">Map</string>
 
 
