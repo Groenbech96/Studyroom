@@ -6,4 +6,6 @@
     <color name="windowBack">#fff3f3f3</color>
     <color name="cursor">#000000</color>
     <color name="tabcolor">#FFFFFF</color>
+    <color name="addButtonColor">#F4503F</color>
+    <color name="accountButtonColor">#ffffff</color>
 </resources>
