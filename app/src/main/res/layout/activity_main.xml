@@ -36,8 +36,10 @@
         android:id="@+id/content"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginBottom="0dp"
         android:elevation="0dp"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
@@ -45,140 +47,34 @@
         app:layout_constraintVertical_bias="0.0"
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
-        tools:layout_constraintTop_creator="1"
-        android:layout_marginBottom="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/navbar"></LinearLayout>
+        tools:layout_constraintTop_creator="1"></LinearLayout>
 
 
-    <ImageView
-        android:id="@+id/homebtn"
-        android:layout_width="65dp"
-        android:layout_height="65dp"
-        android:layout_marginBottom="12dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginStart="8dp"
-        android:cropToPadding="false"
-        android:elevation="2dp"
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/account_button"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        app:backgroundTint="@color/accountButtonColor"
+        app:elevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:srcCompat="@mipmap/ic_home_black_24dp" />
+        app:layout_constraintRight_toRightOf="@+id/content"
+        app:srcCompat="@drawable/ic_account_person_24dp" />
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/navbar"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:addStatesFromChildren="false"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:elevation="1dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent">
-
-
-        <!-- In order to position the linear layouts in this constraint layout we add a skeleton view that match the homebutton -->
-        <View
-            android:id="@+id/homebtnSkeleton"
-            android:layout_width="65dp"
-            android:layout_height="65dp"
-            android:layout_marginBottom="0dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginStart="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent" />
-
-        <LinearLayout
-            android:id="@+id/navigation_account_page_button"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="0dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="0dp"
-            android:layout_marginTop="0dp"
-            android:elevation="1dp"
-            android:gravity="center_vertical|center"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/homebtnSkeleton"
-            app:layout_constraintTop_toTopOf="@+id/navbar">
-
-            <ImageView
-                android:id="@+id/navigation_acccount_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/ic_account_person_24dp" />
-
-            <TextView
-                android:id="@+id/navigation_account_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="My account"
-                android:textAppearance="@style/TextAppearance.AppCompat"
-                android:textSize="10sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/navigation_add_page_button"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="0dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginRight="0dp"
-            android:elevation="1dp"
-            android:gravity="center_vertical|center"
-            android:orientation="vertical"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toRightOf="@+id/homebtnSkeleton"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/navbar"
-            app:layout_constraintVertical_bias="0.0">
-
-            <ImageView
-                android:id="@+id/navigation_add_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:srcCompat="@drawable/ic_add_black_24dp" />
-
-            <TextView
-                android:id="@+id/navigation_add_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Add study room"
-                android:textAppearance="@style/TextAppearance.AppCompat"
-                android:textSize="10sp" />
-        </LinearLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="56dp"
+        android:id="@+id/add_button"
+        android:layout_height="56dp"
+        android:layout_marginBottom="16dp"
+        android:layout_marginEnd="16dp"
+        app:backgroundTint="@color/addButtonColor"
+        app:elevation="4dp"
+        app:layout_constraintBottom_toTopOf="@+id/account_button"
+        app:layout_constraintRight_toRightOf="@+id/content"
+        app:srcCompat="@drawable/ic_add_white_24px"
+        tools:layout_editor_absoluteX="339dp" />
 
 
-    </android.support.constraint.ConstraintLayout>
-
-
-    <!--<android.support.design.widget.BottomNavigationView
-        android:id="@+id/navigation"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryDark"
-        app:elevation="0dp"
-        app:itemIconTint="@android:color/black"
-        app:itemTextColor="@android:color/black"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/navigation"
-        app:theme="@style/AppTheme.Navigation"
-        tools:layout_constraintBottom_creator="1"
-        tools:layout_constraintLeft_creator="1"
-        tools:layout_constraintRight_creator="1" /> -->
 
 </android.support.constraint.ConstraintLayout>
