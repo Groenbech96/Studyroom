@@ -41,6 +41,9 @@ import android.widget.TextView;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class Main extends AppCompatActivity implements MapsFragment.OnFragmentInteractionListener, SearchFragment.OnFragmentInteractionListener {
 
@@ -69,6 +72,10 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
         addButton.setOnClickListener(addButtonListener);
 
 
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("message");
+
+        myRef.setValue("Hello, World V2");
 
         /**
          * Start the maps fragment
@@ -169,10 +176,6 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
 
 
     }
-
-
-
-
 
 
 
