@@ -38,21 +38,32 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
 import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class Main extends AppCompatActivity implements MapsFragment.OnFragmentInteractionListener, SearchFragment.OnFragmentInteractionListener {
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
+public class Main extends AppCompatActivity implements MapsFragment.OnFragmentInteractionListener, SearchFragment.OnFragmentInteractionListener {
 
     private enum FADE {IN, OUT};
 
     private FloatingActionButton accountButton, addButton;
 
     private static final String MAPS_FRAGMENT_TAG = "MAPS_FRAGMENT_TAG";
+
+    private FirebaseAuth mAuth;
 
 
     @Override
@@ -72,10 +83,33 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
         addButton.setOnClickListener(addButtonListener);
 
 
+        mAuth = FirebaseAuth.getInstance();
+
+        mAuth.signInAnonymously()
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("FIREBASE", "signInAnonymously:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            //updateUI(user);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("FIREBASE", "signInAnonymously:failure", task.getException());
+
+                            //updateUI(null);
+                        }
+
+                        // ...
+                    }
+                });
+
+
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("message");
 
-        myRef.setValue("Hello, World V2");
+        myRef.setValue("Hello, World V3");
 
         /**
          * Start the maps fragment
@@ -127,9 +161,9 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
     public void fadeActionButtonAnimation(final FloatingActionButton button, FADE select) {
         if(select == FADE.IN) {
 
-            AlphaAnimation animation1 = new AlphaAnimation(0, 1);
-            animation1.setDuration(getResources().getInteger(R.integer.DEFAULT_ANIMATION_TIME));
-            animation1.setAnimationListener(new Animation.AnimationListener() {
+
+            Animation anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fadeandscalein);
+            anim.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
                     button.setVisibility(View.VISIBLE);
@@ -146,13 +180,12 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
                 }
             });
 
-            button.startAnimation(animation1);
+            button.startAnimation(anim);
 
         } else {
 
-            AlphaAnimation animation1 = new AlphaAnimation(1, 0);
-            animation1.setDuration(getResources().getInteger(R.integer.DEFAULT_ANIMATION_TIME));
-            animation1.setAnimationListener(new Animation.AnimationListener() {
+            Animation anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fadeandscaleout);
+            anim.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) {
 
@@ -169,7 +202,7 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
                 }
             });
 
-            button.startAnimation(animation1);
+            button.startAnimation(anim);
 
 
         }
