@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import dtu.group.studyroom.R;
 
@@ -21,7 +22,7 @@ import dtu.group.studyroom.R;
  */
 public class AddRoomFacilitiesFragment extends Fragment {
 
-
+    private View fragmentView;
     private OnFragmentInteractionListener mListener;
 
     public AddRoomFacilitiesFragment() {
@@ -45,8 +46,16 @@ public class AddRoomFacilitiesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        fragmentView = inflater.inflate(R.layout.fragment_add_room_facilities, container, false);
+        final Button btNext = (Button) fragmentView.findViewById(R.id.btFacilitiesNext);
+        btNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         Log.i("Facility fragment", getArguments().getString("Name") +"    " + getArguments().getString("Address"));
-        return inflater.inflate(R.layout.fragment_add_room_facilities, container, false);
+        return fragmentView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
