@@ -104,18 +104,7 @@ public class AddRoomNameFragment extends Fragment {
     }
 
     public void goToPage2(){
-        Log.i("Hej", "debug");
-        fragmentView.findViewById(R.id.constraintLayout).setVisibility(View.INVISIBLE);
-        ConstraintSet constraintSet = new ConstraintSet();
-        constraintSet.clone((ConstraintLayout) fragmentView.findViewById(R.id.add_room_wrapper));
-        constraintSet.clear(R.id.add_room_page2, ConstraintSet.LEFT);
-        //constraintSet.connect(R.id.add_room_page2, ConstraintSet.TOP, R.id.add_room_wrapper, ConstraintSet.TOP, 0);
-        constraintSet.connect(R.id.add_room_page2, ConstraintSet.LEFT, R.id.add_room_wrapper, ConstraintSet.LEFT,0);
-        //constraintSet.connect(R.id.add_room_page2, ConstraintSet.RIGHT, R.id.add_room_wrapper, ConstraintSet.RIGHT, 0);
-        //constraintSet.connect(R.id.add_room_page2, ConstraintSet.BOTTOM, R.id.add_room_wrapper, ConstraintSet.BOTTOM, 0);
-        constraintSet.applyTo((ConstraintLayout) fragmentView.findViewById(R.id.add_room_wrapper));
 
-        // start animation
-        TransitionManager.beginDelayedTransition((ConstraintLayout) fragmentView.findViewById(R.id.add_room_wrapper));
+
     }
 }
