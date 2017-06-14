@@ -11,8 +11,8 @@
     <string name="bottom_navigation_account_person">My account</string>
     <string name="searchbar_title">Find study room</string>
     <string name="title_activity_maps">Map</string>
-
-
+    <string name="add_study_room_title">Add study room</string>
+    <string name="add_study_room_buttonNext">Next</string>
     <string name="style_json">
   [
     {
