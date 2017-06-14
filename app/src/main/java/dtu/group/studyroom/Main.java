@@ -22,13 +22,15 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import dtu.group.studyroom.addRoom.AddRoomAddressFragment;
+import dtu.group.studyroom.addRoom.AddRoomFacilitiesFragment;
 import dtu.group.studyroom.addRoom.AddRoomNameFragment;
 import dtu.group.studyroom.utils.Utils;
 
 public class Main extends AppCompatActivity implements MapsFragment.OnFragmentInteractionListener,
         SearchFragment.OnFragmentInteractionListener,
         AddRoomNameFragment.OnFragmentInteractionListener,
-        AddRoomAddressFragment.OnFragmentInteractionListener {
+        AddRoomAddressFragment.OnFragmentInteractionListener,
+        AddRoomFacilitiesFragment.OnFragmentInteractionListener{
 
     private enum FADE {IN, OUT};
 

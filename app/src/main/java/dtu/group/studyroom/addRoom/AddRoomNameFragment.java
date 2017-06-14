@@ -1,5 +1,6 @@
 package dtu.group.studyroom.addRoom;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
@@ -120,7 +121,7 @@ public class AddRoomNameFragment extends Fragment {
         final EditText text = (EditText) fragmentView.findViewById(R.id.name_text);
         bundle.putString("Name",text.getText().toString() );
         page2.setArguments(bundle);
-        transaction.replace(R.id.content,page2).show(page2).commit();
+        transaction.replace(R.id.contentLayer,page2).show(page2).commit();
 
     }
 }
