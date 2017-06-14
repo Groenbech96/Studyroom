@@ -1,25 +1,31 @@
 package dtu.group.studyroom;
 
+import android.animation.ArgbEvaluator;
+import android.animation.ValueAnimator;
+import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.constraint.ConstraintSet;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.transition.AutoTransition;
+import android.transition.ChangeBounds;
+import android.transition.Transition;
+import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import dtu.group.studyroom.addRoom.AddRoomAddressFragment;
 import dtu.group.studyroom.addRoom.AddRoomNameFragment;
@@ -36,6 +42,8 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
     private FirebaseAuth mAuth;
 
 
+    private SearchFragment searchFragment;
+    private MapsFragment mapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +101,7 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
 
         fragmentTransaction.commit();
 
+        drawButtons();
 
     }
 
@@ -116,29 +125,81 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
     };
 
 
+
+
     @Override
     public void onBackPressed() {
 
+        boolean normalBackPress = true;
 
-        AddRoomNameFragment myFragment = (AddRoomNameFragment) getSupportFragmentManager().findFragmentByTag("ADD_ROOM_NAME");
-        if (myFragment != null && myFragment.isVisible()) {
+        /**
+         * Handle Add Room Name fragment on back pressed animation.
+         */
+        AddRoomNameFragment addRoomFragment = (AddRoomNameFragment) getSupportFragmentManager().findFragmentByTag(Utils.ADDROOM_NAME_FRAGMENT_TAG);
+        if (addRoomFragment != null && addRoomFragment.isVisible()) {
+
+            Log.i(Utils.APP_INFO, "AddRoom backpress is handled");
+
+            normalBackPress = false;
+            MapsFragment fragment = (MapsFragment) getSupportFragmentManager().findFragmentByTag(Utils.MAPS_FRAGMENT_TAG);
+            fragment.startMapServices();
+
+            Animation anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slidedown);
+            anim.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {}
+                // Make backpress when animation
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    Main.super.onBackPressed();
+                }
+                @Override
+                public void onAnimationRepeat(Animation animation) {}
+            });
+
+            findViewById(R.id.contentLayer).startAnimation(anim);
+            drawButtons();
+        }
 
 
-            //TODO: ANIMATION
+        searchFragment = (SearchFragment) getSupportFragmentManager().findFragmentByTag(Utils.SEARCH_FRAGMENT_TAG);
+        if(searchFragment != null && searchFragment.isVisible()) {
 
+            Log.i(Utils.APP_INFO, "Search backpress is handled");
+            normalBackPress = false;
 
+            mapFragment = (MapsFragment) getSupportFragmentManager().findFragmentByTag(Utils.MAPS_FRAGMENT_TAG);
+            mapFragment.startMapServices();
+
+            ChangeBounds searchBarTransistion = new ChangeBounds();
+            searchBarTransistion.setDuration(getResources().getInteger(R.integer.DEFAULT_ANIMATION_TIME));
+            searchBarTransistion.addListener(searchDummyTransistionInListener);
+
+            findViewById(R.id.status_bar_below_layer).setBackgroundColor(Color.TRANSPARENT);
+
+            mapFragment.animateSearchDummyToMapView(searchBarTransistion);
+            getSupportFragmentManager().beginTransaction().remove(searchFragment).commitAllowingStateLoss();
 
 
             drawButtons();
+
+
+
+
         }
-        super.onBackPressed();
+
+
+
+        // If no animation is to happend, do a normal backpress
+        if(normalBackPress)
+            super.onBackPressed();
 
 
     }
 
 
     /**
-     *
+     * Handle add button action
      */
     private View.OnClickListener addButtonListener = new View.OnClickListener() {
         @Override
@@ -147,6 +208,7 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
             /**
              * Hide the buttons
              */
+
             findViewById(R.id.add_button).startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.imageonclick));
             //hideButtons();
 
@@ -157,44 +219,41 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
             fragment.pauseMapServices();
 
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.setCustomAnimations(R.anim.slideup, R.anim.slideout);
+            fragmentTransaction.setCustomAnimations(R.anim.slideup, R.anim.stayinplace);
 
-            AddRoomNameFragment af = AddRoomNameFragment.newInstance();
-            fragmentTransaction.replace(R.id.contentLayer, af, "ADD_ROOM_NAME");
+            AddRoomNameFragment frag = AddRoomNameFragment.newInstance();
+            fragmentTransaction.replace(R.id.contentLayer, frag, Utils.ADDROOM_NAME_FRAGMENT_TAG);
             fragmentTransaction.commit();
             fragmentTransaction.addToBackStack(null);
-          //  fragmentTransaction.remove(af);
-
-
-            //AddRoomNameFragment af1 = AddRoomNameFragment.newInstance();
-            //FragmentManager fragmentManager1 = getSupportFragmentManager();
-            //FragmentTransaction fragmentTransaction1 = fragmentManager1.beginTransaction();
-
-
-            //fragmentTransaction1.replace(R.id.contentMapLayer, af1, "").commit();
-
-            //findViewById(R.id.contentLayer).setVisibility(View.INVISIBLE);
-
 
         }
     };
 
 
-
-
+    /**
+     * Draw buttons
+     */
     public void drawButtons() {
         fadeActionButtonAnimation(accountButton, FADE.IN);
         fadeActionButtonAnimation(addButton, FADE.IN);
     }
 
+    /**
+     * Hide butttons
+     */
     public void hideButtons() {
         fadeActionButtonAnimation(accountButton, FADE.OUT);
         fadeActionButtonAnimation(addButton, FADE.OUT);
     }
 
+
+    /**
+     * Animation for action buttons
+     * @param button - The button to animate
+     * @param select - the type
+     */
     public void fadeActionButtonAnimation(final FloatingActionButton button, FADE select) {
         if(select == FADE.IN) {
-
 
             Animation anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fadeandscalein);
             anim.setAnimationListener(new Animation.AnimationListener() {
@@ -202,16 +261,10 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
                 public void onAnimationStart(Animation animation) {
                     button.setVisibility(View.VISIBLE);
                 }
-
                 @Override
-                public void onAnimationEnd(Animation animation) {
-
-                }
-
+                public void onAnimationEnd(Animation animation) {}
                 @Override
-                public void onAnimationRepeat(Animation animation) {
-
-                }
+                public void onAnimationRepeat(Animation animation) {}
             });
 
             button.startAnimation(anim);
@@ -221,9 +274,7 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
             Animation anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fadeandscaleout);
             anim.setAnimationListener(new Animation.AnimationListener() {
                 @Override
-                public void onAnimationStart(Animation animation) {
-
-                }
+                public void onAnimationStart(Animation animation) {}
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
@@ -231,18 +282,37 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
                 }
 
                 @Override
-                public void onAnimationRepeat(Animation animation) {
-
-                }
+                public void onAnimationRepeat(Animation animation) {}
             });
 
             button.startAnimation(anim);
 
-
         }
 
-
     }
+
+
+
+    private Transition.TransitionListener searchDummyTransistionInListener = new Transition.TransitionListener() {
+        @Override
+        public void onTransitionStart(Transition transition) {}
+
+        @Override
+        public void onTransitionEnd(Transition transition) {
+
+
+            Main.super.onBackPressed();
+        }
+
+        @Override
+        public void onTransitionCancel(Transition transition) {}
+
+        @Override
+        public void onTransitionPause(Transition transition) {}
+
+        @Override
+        public void onTransitionResume(Transition transition) {}
+    };
 
 
 

@@ -4,13 +4,9 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.transition.TransitionManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +14,6 @@ import android.widget.Button;
 
 import dtu.group.studyroom.Main;
 import dtu.group.studyroom.R;
-import dtu.group.studyroom.SearchFragment;
 
 
 /**
@@ -126,7 +121,7 @@ public class AddRoomNameFragment extends Fragment {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
-        fragmentTransaction.setCustomAnimations(R.anim.slidein, R.anim.slideout);
+        fragmentTransaction.setCustomAnimations(R.anim.slidein, R.anim.stayinplace);
 
         AddRoomAddressFragment mf = AddRoomAddressFragment.newInstance();
         fragmentTransaction.replace(R.id.contentLayer, mf);
