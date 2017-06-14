@@ -1,11 +1,14 @@
 package dtu.group.studyroom.addRoom;
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,7 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import dtu.group.studyroom.Main;
 import dtu.group.studyroom.R;
+import dtu.group.studyroom.SearchFragment;
 
 
 /**
@@ -32,7 +37,6 @@ public class AddRoomNameFragment extends Fragment {
     public AddRoomNameFragment() {
         // Required empty public constructor
     }
-
 
 
     public static AddRoomNameFragment newInstance() {
@@ -54,6 +58,9 @@ public class AddRoomNameFragment extends Fragment {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_add_room_name, container, false);
 
+
+
+
         final Button btNext = (Button) fragmentView.findViewById(R.id.btNameNext);
         btNext.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
@@ -74,6 +81,10 @@ public class AddRoomNameFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        Activity act = getActivity();
+        if (act instanceof Main)
+            ((Main) act).hideButtons();
+
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
@@ -85,8 +96,12 @@ public class AddRoomNameFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
+
+
         mListener = null;
     }
+
+
 
     /**
      * This interface must be implemented by activities that contain this
@@ -105,6 +120,19 @@ public class AddRoomNameFragment extends Fragment {
 
     public void goToPage2(){
 
+        /**
+         * Change fragment after animation is complete
+         */
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+
+        fragmentTransaction.setCustomAnimations(R.anim.slidein, R.anim.slideout);
+
+        AddRoomAddressFragment mf = AddRoomAddressFragment.newInstance();
+        fragmentTransaction.replace(R.id.contentLayer, mf);
+        fragmentTransaction.addToBackStack(null);
+
+        fragmentTransaction.commit();
 
     }
 }

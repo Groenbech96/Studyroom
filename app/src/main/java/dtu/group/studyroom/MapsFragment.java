@@ -108,6 +108,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         // Required empty public constructor
     }
 
+
+
     /**
      *
      * @return fragment instance
@@ -150,11 +152,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
             ((Main) act).drawButtons();
 
 
-
-
         mapView = SupportMapFragment.newInstance();
-
-
 
 
         // Connect to the API CLIENT for location
@@ -169,7 +167,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
                 .build();
 
         mGoogleApiClient.connect();
-
 
 
         return fragmentView;
@@ -328,6 +325,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
     }
 
+
     @Override
     public void onConnectionSuspended(int i) {
 
@@ -338,7 +336,22 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
     }
 
+    public void pauseMapServices() {
 
+        if (ContextCompat.checkSelfPermission(this.getActivity().getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(this.getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        }
+
+        Log.i("GOOGLEMAPS", "LOCATION TURNED OFF");
+        if (mLocationPermissionGranted) {
+            mMap.setMyLocationEnabled(false);
+        } else {
+            mMap.setMyLocationEnabled(false);
+        }
+
+    }
 
 
     /**
@@ -365,7 +378,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
             Activity act = getActivity();
             if (act instanceof Main)
                 ((Main) act).hideButtons();
-
 
 
         }
@@ -444,7 +456,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
             fragmentTransaction.setCustomAnimations(R.anim.fadein, R.anim.fadeout);
 
             SearchFragment mf = SearchFragment.newInstance();
-            fragmentTransaction.replace(R.id.content, mf);
+            fragmentTransaction.replace(R.id.contentMapLayer, mf);
             fragmentTransaction.addToBackStack(null);
 
             fragmentTransaction.commit();
