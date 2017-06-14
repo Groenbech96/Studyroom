@@ -1,5 +1,6 @@
 package dtu.group.studyroom;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -149,14 +150,17 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
             /**
              * Hide the buttons
              */
-            findViewById(R.id.add_button).startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.imageonclick));
+            Intent intent = new Intent(Main.this, AddRoomActivity.class);
+            startActivity(intent);
+
+            /*findViewById(R.id.add_button).startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.imageonclick));
             //hideButtons();
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             MapsFragment fragment = (MapsFragment) fragmentManager.findFragmentByTag(Utils.MAPS_FRAGMENT_TAG);
 
             // Pause the background location services for the google map
-            fragment.pauseMapServices();
+            //fragment.pauseMapServices();
 
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.setCustomAnimations(R.anim.slideup, R.anim.slideout);
@@ -165,6 +169,7 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
             fragmentTransaction.replace(R.id.contentLayer, af, "ADD_ROOM_NAME");
             fragmentTransaction.commit();
             fragmentTransaction.addToBackStack(null);
+            */
           //  fragmentTransaction.remove(af);
 
 

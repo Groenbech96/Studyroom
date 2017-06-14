@@ -103,7 +103,7 @@ public class AddRoomAddressFragment extends Fragment {
         AddRoomFacilitiesFragment page3 = AddRoomFacilitiesFragment.newInstance();
         page3.setArguments(bundle);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.contentLayer,page3).show(page3).commit();
+        transaction.replace(R.id.add_layout,page3).show(page3).commit();
 
     }
 }

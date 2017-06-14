@@ -4,11 +4,13 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 
 import dtu.group.studyroom.R;
 
@@ -24,7 +26,12 @@ public class AddRoomFacilitiesFragment extends Fragment {
 
     private View fragmentView;
     private OnFragmentInteractionListener mListener;
-
+    private CheckBox cbWifi;
+    private CheckBox cbPower;
+    private CheckBox cbGroupSpaces;
+    private CheckBox cbCoffee;
+    private CheckBox cbFood;
+    private CheckBox cbToilet;
     public AddRoomFacilitiesFragment() {
         // Required empty public constructor
     }
@@ -47,14 +54,22 @@ public class AddRoomFacilitiesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_add_room_facilities, container, false);
+        Log.i("Facility fragment", getArguments().getString("Name") +"    " + getArguments().getString("Address"));
         final Button btNext = (Button) fragmentView.findViewById(R.id.btFacilitiesNext);
         btNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                goToPage4();
             }
         });
-        Log.i("Facility fragment", getArguments().getString("Name") +"    " + getArguments().getString("Address"));
+        // referencing rest of the objects
+        cbCoffee = (CheckBox) fragmentView.findViewById(R.id.cbCoffee);
+        cbFood = (CheckBox) fragmentView.findViewById(R.id.cbFood);
+        cbGroupSpaces = (CheckBox) fragmentView.findViewById(R.id.cbGroups);
+        cbPower = (CheckBox) fragmentView.findViewById(R.id.cbPower);
+        cbToilet = (CheckBox) fragmentView.findViewById(R.id.cbToilet);
+        cbWifi = (CheckBox) fragmentView.findViewById(R.id.cbWifi);
+
         return fragmentView;
     }
 
@@ -95,5 +110,33 @@ public class AddRoomFacilitiesFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+    public void goToPage4(){
+        Bundle bundle = getArguments();
+        boolean wifi = false, coffee = false, power = false, groups = false, food = false, toilet = false;
+        if (cbWifi.isChecked())
+                wifi = true;
+        if (cbToilet.isChecked())
+                toilet = true;
+        if (cbPower.isChecked())
+            power = true;
+        if (cbCoffee.isChecked())
+            coffee = true;
+        if (cbFood.isChecked())
+            food = true;
+        if (cbGroupSpaces.isChecked())
+            groups = true;
+        bundle.putBoolean("wifi",wifi);
+        bundle.putBoolean("toilet",toilet);
+        bundle.putBoolean("power",power);
+        bundle.putBoolean("coffee",coffee);
+        bundle.putBoolean("food",food);
+        bundle.putBoolean("groups",groups);
+        AddRoomRatingFragment page4 = AddRoomRatingFragment.newInstance();
+        page4.setArguments(bundle);
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.add_layout,page4).commit();
+
+
     }
 }

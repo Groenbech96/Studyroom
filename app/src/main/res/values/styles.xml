@@ -7,9 +7,13 @@
 
     </style>
 
-    <style name="AppTheme.Navigation" >
+    <style name="AppTheme.Navigation">
         <item name="android:textSize">20sp</item><!-- text size in menu-->
         <item name="android:listPreferredItemHeightSmall">40dp</item><!-- item size in menu-->
     </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

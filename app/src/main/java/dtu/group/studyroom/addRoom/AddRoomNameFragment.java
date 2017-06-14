@@ -121,7 +121,7 @@ public class AddRoomNameFragment extends Fragment {
         final EditText text = (EditText) fragmentView.findViewById(R.id.name_text);
         bundle.putString("Name",text.getText().toString() );
         page2.setArguments(bundle);
-        transaction.replace(R.id.contentLayer,page2).show(page2).commit();
+        transaction.replace(R.id.add_layout,page2).show(page2).commit();
 
     }
 }
