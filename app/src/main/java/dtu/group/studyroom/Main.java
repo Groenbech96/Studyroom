@@ -110,8 +110,6 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
         @Override
         public void onClick(View v) {
 
-
-
             findViewById(R.id.add_button).startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.imageonclick));
             hideButtons();
             //TODO: Create new fragments
@@ -122,6 +120,7 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
             fragmentTransaction.replace(R.id.content, af, MAPS_FRAGMENT_TAG);
 
             fragmentTransaction.commit();
+
         }
     };
 
