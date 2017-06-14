@@ -271,6 +271,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
 
+        //TODO: THIS Does not work atm
+
         Log.i("Permission", "Permission Accepted");
 
         mLocationPermissionGranted = false;
