@@ -13,6 +13,9 @@
     <string name="title_activity_maps">Map</string>
     <string name="add_study_room_title">Add study room</string>
     <string name="add_study_room_buttonNext">Next</string>
+    <string name="add_study_room_facilitiesText">Which facilities does the study area have?</string>
+    <string name="add_study_room_ratingText">How do you rate this place?</string>
+    <string name="add_study_room_go_to_camera_button">Go to camera</string>
     <string name="style_json">
   [
     {
@@ -206,4 +209,5 @@
     }
   ]
   </string>
+    <string name="title_activity_add_room">AddRoomActivity</string>
 </resources>

@@ -1,5 +1,6 @@
 package dtu.group.studyroom;
 
+
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
@@ -28,13 +29,15 @@ import android.widget.LinearLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
 import dtu.group.studyroom.addRoom.AddRoomAddressFragment;
+import dtu.group.studyroom.addRoom.AddRoomFacilitiesFragment;
 import dtu.group.studyroom.addRoom.AddRoomNameFragment;
 import dtu.group.studyroom.utils.Utils;
 
 public class Main extends AppCompatActivity implements MapsFragment.OnFragmentInteractionListener,
         SearchFragment.OnFragmentInteractionListener,
         AddRoomNameFragment.OnFragmentInteractionListener,
-        AddRoomAddressFragment.OnFragmentInteractionListener {
+        AddRoomAddressFragment.OnFragmentInteractionListener,
+        AddRoomFacilitiesFragment.OnFragmentInteractionListener{
 
     private enum FADE {IN, OUT};
 
@@ -209,14 +212,16 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
              * Hide the buttons
              */
 
+
             findViewById(R.id.add_button).startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.imageonclick));
+
             //hideButtons();
 
             FragmentManager fragmentManager = getSupportFragmentManager();
             MapsFragment fragment = (MapsFragment) fragmentManager.findFragmentByTag(Utils.MAPS_FRAGMENT_TAG);
 
             // Pause the background location services for the google map
-            fragment.pauseMapServices();
+            //fragment.pauseMapServices();
 
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
             fragmentTransaction.setCustomAnimations(R.anim.slideup, R.anim.stayinplace);
@@ -225,6 +230,20 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
             fragmentTransaction.replace(R.id.contentLayer, frag, Utils.ADDROOM_NAME_FRAGMENT_TAG);
             fragmentTransaction.commit();
             fragmentTransaction.addToBackStack(null);
+
+            
+          //  fragmentTransaction.remove(af);
+
+
+            //AddRoomNameFragment af1 = AddRoomNameFragment.newInstance();
+            //FragmentManager fragmentManager1 = getSupportFragmentManager();
+            //FragmentTransaction fragmentTransaction1 = fragmentManager1.beginTransaction();
+
+
+            //fragmentTransaction1.replace(R.id.contentMapLayer, af1, "").commit();
+
+            //findViewById(R.id.contentLayer).setVisibility(View.INVISIBLE);
+
 
         }
     };

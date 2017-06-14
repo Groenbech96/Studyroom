@@ -4,9 +4,13 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
 
 import dtu.group.studyroom.R;
 
@@ -19,53 +23,54 @@ import dtu.group.studyroom.R;
  * create an instance of this fragment.
  */
 public class AddRoomFacilitiesFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+    private View fragmentView;
     private OnFragmentInteractionListener mListener;
-
+    private CheckBox cbWifi;
+    private CheckBox cbPower;
+    private CheckBox cbGroupSpaces;
+    private CheckBox cbCoffee;
+    private CheckBox cbFood;
+    private CheckBox cbToilet;
     public AddRoomFacilitiesFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AddRoomFacilitiesFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AddRoomFacilitiesFragment newInstance(String param1, String param2) {
+
+    public static AddRoomFacilitiesFragment newInstance() {
         AddRoomFacilitiesFragment fragment = new AddRoomFacilitiesFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
+
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_room_facilities, container, false);
+        fragmentView = inflater.inflate(R.layout.fragment_add_room_facilities, container, false);
+        Log.i("Facility fragment", getArguments().getString("Name") +"    " + getArguments().getString("Address"));
+        final Button btNext = (Button) fragmentView.findViewById(R.id.btFacilitiesNext);
+        btNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToPage4();
+            }
+        });
+        // referencing rest of the objects
+        cbCoffee = (CheckBox) fragmentView.findViewById(R.id.cbCoffee);
+        cbFood = (CheckBox) fragmentView.findViewById(R.id.cbFood);
+        cbGroupSpaces = (CheckBox) fragmentView.findViewById(R.id.cbGroups);
+        cbPower = (CheckBox) fragmentView.findViewById(R.id.cbPower);
+        cbToilet = (CheckBox) fragmentView.findViewById(R.id.cbToilet);
+        cbWifi = (CheckBox) fragmentView.findViewById(R.id.cbWifi);
+
+        return fragmentView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -105,5 +110,33 @@ public class AddRoomFacilitiesFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+    public void goToPage4(){
+        Bundle bundle = getArguments();
+        boolean wifi = false, coffee = false, power = false, groups = false, food = false, toilet = false;
+        if (cbWifi.isChecked())
+                wifi = true;
+        if (cbToilet.isChecked())
+                toilet = true;
+        if (cbPower.isChecked())
+            power = true;
+        if (cbCoffee.isChecked())
+            coffee = true;
+        if (cbFood.isChecked())
+            food = true;
+        if (cbGroupSpaces.isChecked())
+            groups = true;
+        bundle.putBoolean("wifi",wifi);
+        bundle.putBoolean("toilet",toilet);
+        bundle.putBoolean("power",power);
+        bundle.putBoolean("coffee",coffee);
+        bundle.putBoolean("food",food);
+        bundle.putBoolean("groups",groups);
+        AddRoomRatingFragment page4 = AddRoomRatingFragment.newInstance();
+        page4.setArguments(bundle);
+        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.add_layout,page4).commit();
+
+
     }
 }

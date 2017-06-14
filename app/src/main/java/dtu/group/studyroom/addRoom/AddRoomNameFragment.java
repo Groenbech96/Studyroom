@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import dtu.group.studyroom.Main;
 import dtu.group.studyroom.R;
@@ -34,6 +35,7 @@ public class AddRoomNameFragment extends Fragment {
     }
 
 
+
     public static AddRoomNameFragment newInstance() {
         AddRoomNameFragment fragment = new AddRoomNameFragment();
 
@@ -52,9 +54,6 @@ public class AddRoomNameFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_add_room_name, container, false);
-
-
-
 
         final Button btNext = (Button) fragmentView.findViewById(R.id.btNameNext);
         btNext.setOnClickListener(new View.OnClickListener(){
@@ -91,12 +90,8 @@ public class AddRoomNameFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-
-
         mListener = null;
     }
-
-
 
     /**
      * This interface must be implemented by activities that contain this
@@ -115,19 +110,16 @@ public class AddRoomNameFragment extends Fragment {
 
     public void goToPage2(){
 
-        /**
-         * Change fragment after animation is complete
-         */
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        final FragmentTransaction transaction = manager.beginTransaction();
+        transaction.setCustomAnimations(R.anim.slidein, R.anim.stayinplace);
+        AddRoomAddressFragment page2 = AddRoomAddressFragment.newInstance();
+        Bundle bundle = new Bundle();
+        final EditText text = (EditText) fragmentView.findViewById(R.id.name_text);
+        bundle.putString("Name",text.getText().toString() );
+        page2.setArguments(bundle);
+        transaction.replace(R.id.add_layout,page2).show(page2).commit();
 
-        fragmentTransaction.setCustomAnimations(R.anim.slidein, R.anim.stayinplace);
-
-        AddRoomAddressFragment mf = AddRoomAddressFragment.newInstance();
-        fragmentTransaction.replace(R.id.contentLayer, mf);
-        fragmentTransaction.addToBackStack(null);
-
-        fragmentTransaction.commit();
 
     }
 }
