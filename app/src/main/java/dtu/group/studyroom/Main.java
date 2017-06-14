@@ -20,9 +20,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import dtu.group.studyroom.addRoom.AddRoomAddressFragment;
+import dtu.group.studyroom.addRoom.AddRoomFacilitiesFragment;
 import dtu.group.studyroom.addRoom.AddRoomNameFragment;
 
-public class Main extends AppCompatActivity implements MapsFragment.OnFragmentInteractionListener, SearchFragment.OnFragmentInteractionListener, AddRoomNameFragment.OnFragmentInteractionListener {
+public class Main extends AppCompatActivity implements MapsFragment.OnFragmentInteractionListener, SearchFragment.OnFragmentInteractionListener, AddRoomNameFragment.OnFragmentInteractionListener, AddRoomAddressFragment.OnFragmentInteractionListener, AddRoomFacilitiesFragment.OnFragmentInteractionListener {
 
     private enum FADE {IN, OUT};
 
@@ -115,7 +117,6 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
             //TODO: Create new fragments
             FragmentManager fragmentManager = getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-
             AddRoomNameFragment af = AddRoomNameFragment.newInstance();
             fragmentTransaction.replace(R.id.content, af, MAPS_FRAGMENT_TAG);
 

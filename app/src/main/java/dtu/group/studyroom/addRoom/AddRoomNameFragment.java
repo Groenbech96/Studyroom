@@ -1,17 +1,20 @@
 package dtu.group.studyroom.addRoom;
 
+import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 
 import dtu.group.studyroom.R;
 
@@ -104,7 +107,14 @@ public class AddRoomNameFragment extends Fragment {
     }
 
     public void goToPage2(){
-
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        final FragmentTransaction transaction = manager.beginTransaction();
+        AddRoomAddressFragment page2 = AddRoomAddressFragment.newInstance();
+        Bundle bundle = new Bundle();
+        final EditText text = (EditText) fragmentView.findViewById(R.id.name_text);
+        bundle.putString("Name",text.getText().toString() );
+        page2.setArguments(bundle);
+        transaction.replace(R.id.content,page2).show(page2).commit();
 
     }
 }
