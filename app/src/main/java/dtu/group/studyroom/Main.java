@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
@@ -21,18 +22,19 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import dtu.group.studyroom.addRoom.AddRoomAddressFragment;
-import dtu.group.studyroom.addRoom.AddRoomFacilitiesFragment;
 import dtu.group.studyroom.addRoom.AddRoomNameFragment;
+import dtu.group.studyroom.utils.Utils;
 
-public class Main extends AppCompatActivity implements MapsFragment.OnFragmentInteractionListener, SearchFragment.OnFragmentInteractionListener, AddRoomNameFragment.OnFragmentInteractionListener, AddRoomAddressFragment.OnFragmentInteractionListener, AddRoomFacilitiesFragment.OnFragmentInteractionListener {
+public class Main extends AppCompatActivity implements MapsFragment.OnFragmentInteractionListener,
+        SearchFragment.OnFragmentInteractionListener,
+        AddRoomNameFragment.OnFragmentInteractionListener,
+        AddRoomAddressFragment.OnFragmentInteractionListener {
 
     private enum FADE {IN, OUT};
 
     private FloatingActionButton accountButton, addButton;
-
-    private static final String MAPS_FRAGMENT_TAG = "MAPS_FRAGMENT_TAG";
-
     private FirebaseAuth mAuth;
+
 
 
     @Override
@@ -51,9 +53,8 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
         addButton = (FloatingActionButton) findViewById(R.id.add_button);
         addButton.setOnClickListener(addButtonListener);
 
-
-        mAuth = FirebaseAuth.getInstance();
-
+        // mAuth = FirebaseAuth.getInstance();
+        /*
         mAuth.signInAnonymously()
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -79,7 +80,7 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
         DatabaseReference myRef = database.getReference("message");
 
         myRef.setValue("Hello, World V3");
-
+            */
         /**
          * Start the maps fragment
          */
@@ -88,15 +89,22 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         MapsFragment mf = MapsFragment.newInstance();
-        fragmentTransaction.add(R.id.content, mf, MAPS_FRAGMENT_TAG);
+        fragmentTransaction.add(R.id.contentMapLayer, mf, Utils.MAPS_FRAGMENT_TAG);
 
         fragmentTransaction.commit();
+
+
     }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
 
     }
+
+
+
+
+
 
     private View.OnClickListener accountButtonListener = new View.OnClickListener() {
         @Override
@@ -108,22 +116,70 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
     };
 
 
+    @Override
+    public void onBackPressed() {
+
+
+        AddRoomNameFragment myFragment = (AddRoomNameFragment) getSupportFragmentManager().findFragmentByTag("ADD_ROOM_NAME");
+        if (myFragment != null && myFragment.isVisible()) {
+
+
+            //TODO: ANIMATION
+
+
+
+
+            drawButtons();
+        }
+        super.onBackPressed();
+
+
+    }
+
+
+    /**
+     *
+     */
     private View.OnClickListener addButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 
+            /**
+             * Hide the buttons
+             */
             findViewById(R.id.add_button).startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.imageonclick));
-            hideButtons();
-            //TODO: Create new fragments
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            AddRoomNameFragment af = AddRoomNameFragment.newInstance();
-            fragmentTransaction.replace(R.id.content, af, MAPS_FRAGMENT_TAG);
+            //hideButtons();
 
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            MapsFragment fragment = (MapsFragment) fragmentManager.findFragmentByTag(Utils.MAPS_FRAGMENT_TAG);
+
+            // Pause the background location services for the google map
+            fragment.pauseMapServices();
+
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.setCustomAnimations(R.anim.slideup, R.anim.slideout);
+
+            AddRoomNameFragment af = AddRoomNameFragment.newInstance();
+            fragmentTransaction.replace(R.id.contentLayer, af, "ADD_ROOM_NAME");
             fragmentTransaction.commit();
+            fragmentTransaction.addToBackStack(null);
+          //  fragmentTransaction.remove(af);
+
+
+            //AddRoomNameFragment af1 = AddRoomNameFragment.newInstance();
+            //FragmentManager fragmentManager1 = getSupportFragmentManager();
+            //FragmentTransaction fragmentTransaction1 = fragmentManager1.beginTransaction();
+
+
+            //fragmentTransaction1.replace(R.id.contentMapLayer, af1, "").commit();
+
+            //findViewById(R.id.contentLayer).setVisibility(View.INVISIBLE);
+
 
         }
     };
+
+
 
 
     public void drawButtons() {

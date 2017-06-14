@@ -1,11 +1,11 @@
 package dtu.group.studyroom.addRoom;
 
-import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.transition.TransitionManager;
@@ -16,7 +16,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import dtu.group.studyroom.Main;
 import dtu.group.studyroom.R;
+import dtu.group.studyroom.SearchFragment;
 
 
 /**
@@ -77,6 +79,10 @@ public class AddRoomNameFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+        Activity act = getActivity();
+        if (act instanceof Main)
+            ((Main) act).hideButtons();
+
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;
         } else {
