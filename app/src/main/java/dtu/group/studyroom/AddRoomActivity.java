@@ -1,5 +1,6 @@
 package dtu.group.studyroom;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -50,6 +51,8 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
     private FirebaseAuth mAuth;
     private Bitmap picture;
 
+    private ProgressDialog mProgress;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +90,8 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
         mStorage = FirebaseStorage.getInstance().getReference();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
+        mProgress = new ProgressDialog(this);
+
     }
     @Override
     public void onFragmentInteraction(Uri uri) {
@@ -94,6 +99,9 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
     }
 
     public void saveStudyRoom(StudyRoom studyRoom) {
+
+        mProgress.setMessage("Uploading studyroom..");
+        mProgress.show();
 
         /**
          * Extract fields from studyroom model
@@ -119,12 +127,15 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
         StorageReference filepath = mStorage.child("studyroomImages").child(uuid);
 
         /**
-         * Upload the file to the the firebase storage
+         * Compress the bitmap into jpeg format
          */
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         picture.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] data = baos.toByteArray();
 
+        /**
+         * Upload the file to the the firebase storage
+         */
         filepath.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -134,14 +145,14 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
                  */
                 Uri downloadUrl = taskSnapshot.getDownloadUrl();
 
-                DatabaseReference usersRef = mDatabase.child("studyrooms");
 
                 /**
                  * Save the study room under a unique ID
                  */
-
+                DatabaseReference usersRef = mDatabase.child("studyrooms");
 
                 String key = usersRef.push().getKey();
+
                 usersRef.child(key).child("name").setValue(name);
                 usersRef.child(key).child("address").setValue(address);
                 usersRef.child(key).child("facilites").child("wifi").setValue(wifi);
@@ -152,6 +163,8 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
                 usersRef.child(key).child("facilites").child("toilet").setValue(toilet);
                 usersRef.child(key).child("rating").setValue(rating);
                 usersRef.child(key).child("image").setValue(downloadUrl.toString());
+
+                mProgress.dismiss();
             }
         });
 
@@ -160,10 +173,10 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == RESULT_OK) {
-            Bundle bundle = data.getExtras();
-            picture= (Bitmap)bundle.get("data");
 
-            Log.i("lol","hej");
+            Bundle bundle = data.getExtras();
+            picture = (Bitmap)bundle.get("data");
+
         }
     }
 
