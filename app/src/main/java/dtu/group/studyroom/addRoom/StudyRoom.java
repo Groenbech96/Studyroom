@@ -26,7 +26,12 @@ public class StudyRoom {
 
     public class StudyRoomFacilites {
 
-        private int wifi, toilet, power, coffee, food, groups;
+        public int wifi,
+                toilet,
+                power,
+                coffee,
+                food,
+                groups;
 
         public StudyRoomFacilites(boolean wifi,
                                   boolean toilet,

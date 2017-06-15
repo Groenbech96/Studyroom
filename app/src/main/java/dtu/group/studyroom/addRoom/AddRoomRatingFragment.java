@@ -119,7 +119,7 @@ public class AddRoomRatingFragment extends Fragment {
 
 
         ((Main)getActivity()).saveStudyRoom(studyRoom);
-        
+
     }
 
 
