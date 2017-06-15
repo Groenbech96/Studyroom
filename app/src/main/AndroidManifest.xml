@@ -46,6 +46,17 @@
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"></activity>
+
+        <activity
+            android:name=".ContentActivity"
+            android:label="ContentPage">
+            <intent-filter>
+                <action android:name="android.intent.action.ContentActivity" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
     </application>
 
 </manifest>
