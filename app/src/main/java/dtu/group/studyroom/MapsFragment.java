@@ -1,15 +1,11 @@
 package dtu.group.studyroom;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
@@ -24,42 +20,30 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.transition.AutoTransition;
 import android.transition.ChangeBounds;
-import android.transition.Scene;
 import android.transition.Transition;
 import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.ScaleAnimation;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.os.*;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
-import com.google.firebase.database.Transaction;
-
-import static com.google.android.gms.internal.zzail.runOnUiThread;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 
 /**
@@ -70,30 +54,55 @@ import static com.google.android.gms.internal.zzail.runOnUiThread;
  * Use the {@link MapsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MapsFragment extends Fragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener  {
+public class MapsFragment extends Fragment implements OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener  {
 
-    EditText searchDummy;
-    Drawable searchDummyDraw;
-    RelativeLayout testl;
-    ConstraintSet searchDummyConsttraints = new ConstraintSet();
-    private  static ValueAnimator am;
 
-    private View fragmentView;
+    /**
+     * Tags for google maps
+     */
+    private static final String GOOGLE_MAPS_TAG = "GOOGLE_MAPS_TAG";
+    private static final String KEY_CAMERA_POSITION = "camera_position";
+    private static final String KEY_LOCATION = "location";
 
-    private MapView mapView;
-    private GoogleMap map;
+    /**
+     * Google maps items
+     */
 
-    private static int heightNav, heightStat;
-
+    private SupportMapFragment mapView;
+    private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
+    private CameraPosition mCameraPosition = null;
+    // DTU LOCATION
+    private LatLng mDefaultLocation = new LatLng(55.785574, 12.521381);
+    private Location mLastKnownLocation;
 
+    /**
+     * Settings for google maps
+     */
     private static final int DEFAULT_ZOOM = 15;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean mLocationPermissionGranted;
 
-    private Location mLastKnownLocation;
+
+    /**
+     * Search dummt
+     */
+    EditText searchDummy;
+    Drawable searchDummyDraw;
+    ConstraintSet searchDummyConsttraints = new ConstraintSet();
+    ChangeBounds searchDummyTransistion;
+
+
+    /**
+     * Fragment view
+     */
+    private View fragmentView;
 
     private OnFragmentInteractionListener mListener;
+
+
 
     public MapsFragment() {
         // Required empty public constructor
@@ -105,7 +114,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
      */
     public static MapsFragment newInstance() {
 
-
         MapsFragment fragment = new MapsFragment();
         return fragment;
     }
@@ -113,11 +121,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
-
-
-
 
     }
 
@@ -127,28 +130,36 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         // Inflate the layout for this fragment
         fragmentView =  inflater.inflate(R.layout.fragment_maps, container, false);
 
-
+        // Search dummy
         searchDummy = (EditText) fragmentView.findViewById(R.id.searchDummy);
         searchDummy.setOnClickListener(searchDummyListener);
         searchDummy.setSoundEffectsEnabled(false);
 
-
-        //TODO: FIX
         searchDummyDraw = getContext().getDrawable(R.drawable.ic_dot);
         searchDummyDraw.setBounds( 0, 0, 15, 15 );
         searchDummy.setCompoundDrawables(searchDummyDraw, null,null,null);
+        searchDummyTransistion = new ChangeBounds();
+        searchDummyTransistion.setDuration(150);
+        searchDummyTransistion.addListener(searchDummyTransistionListener);
+
+        // Make status bar transparent
+        getActivity().findViewById(R.id.status_bar_below_layer).setBackgroundColor(Color.TRANSPARENT);
+
+        Activity act = getActivity();
+        if (act instanceof Main)
+            ((Main) act).drawButtons();
 
 
-        mapView = (MapView) fragmentView.findViewById(R.id.mapView);
-        mapView.onCreate(null);
-        // Start the map view (Make it possible to view)
-        mapView.onResume();
-        // Get the map
-        mapView.getMapAsync(this);
+
+
+        mapView = SupportMapFragment.newInstance();
+
+
+
 
         // Connect to the API CLIENT for location
-
-        mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+        if(mGoogleApiClient == null)
+            mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
                 .enableAutoManage(getActivity() /* FragmentActivity */,
                         this /* OnConnectionFailedListener */)
                 .addConnectionCallbacks(this)
@@ -156,6 +167,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
                 .addApi(Places.GEO_DATA_API)
                 .addApi(Places.PLACE_DETECTION_API)
                 .build();
+
         mGoogleApiClient.connect();
 
 
@@ -163,26 +175,30 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         return fragmentView;
     }
 
+
+    /**
+     * When map is ready to be manipulated
+     * @param googleMap
+     */
     @Override
     public void onMapReady(GoogleMap googleMap) {
 
-
-        map = googleMap;
+        mMap = googleMap;
+        mMap.getUiSettings().setCompassEnabled(false);
+        mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.google_map_style));
 
         updateLocationUI();
 
         getDeviceLocation();
 
-
-
     }
 
     /**
-     * Updates the map's UI settings based on whether the user has granted location permission.
+     * Updates the mMap's UI settings based on whether the user has granted location permission.
      */
     private void updateLocationUI() {
 
-        if (map == null) {
+        if (mMap == null) {
             return;
         }
 
@@ -198,19 +214,22 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         }
 
         if (mLocationPermissionGranted) {
-            Log.i("MAP", "LocationGranted");
-            map.setMyLocationEnabled(true);
-            map.getUiSettings().setMyLocationButtonEnabled(false);
+            Log.i(GOOGLE_MAPS_TAG, "LocationGranted");
+            mMap.setMyLocationEnabled(true);
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
         } else {
-            map.setMyLocationEnabled(false);
-            map.getUiSettings().setMyLocationButtonEnabled(false);
+            Log.e(GOOGLE_MAPS_TAG, "LocationNotGranted");
+            mMap.setMyLocationEnabled(false);
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
             mLastKnownLocation = null;
         }
 
     }
 
+
+
     /**
-     * Gets the current location of the device, and positions the map's camera.
+     * Gets the current location of the device, and positions the mMap's camera.
      */
     private void getDeviceLocation() {
         /*
@@ -231,12 +250,44 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
             mLastKnownLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         }
 
-        if (mLastKnownLocation != null) {
-            Log.i("MAPS", "Move camera");
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+        // Set the map's camera position to the current location of the device.
+        if (mCameraPosition != null) {
+            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(mCameraPosition));
+        } else if (mLastKnownLocation != null) {
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                    new LatLng(mLastKnownLocation.getLatitude(),
+                            mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+        } else {
+            Log.d(GOOGLE_MAPS_TAG, "Current location is null. Using defaults.");
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
+            mMap.getUiSettings().setMyLocationButtonEnabled(false);
         }
 
     }
+
+    /**
+     * Handle permissions request
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+
+        //TODO: THIS Does not work atm
+
+        Log.i("Permission", "Permission Accepted");
+
+        mLocationPermissionGranted = false;
+        switch (requestCode) {
+            case PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    mLocationPermissionGranted = true;
+                }
+            }
+        }
+        updateLocationUI();
+    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -266,6 +317,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mGoogleApiClient.stopAutoManage(getActivity());
         mGoogleApiClient.disconnect();
 
     }
@@ -273,11 +325,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     @Override
     public void onConnected(@Nullable Bundle bundle) {
 
-
+        getChildFragmentManager().beginTransaction().replace(R.id.mapView, mapView).commit();
+        mapView.getMapAsync(this);
 
     }
-
-
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -288,6 +339,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
+
+
+
 
     /**
      * This interface must be implemented by activities that contain this
@@ -308,28 +362,26 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         @Override
         public void onClick(View v) {
 
-            // If map view is already on screen, and the search button is clicked again, do animation to search
-
-            //MapsFragment mf = (MapsFragment) getSupportFragmentManager().findFragmentByTag(MAPS_FRAGMENT_TAG);
-//            if(mf != null && mf.isVisible()) {
-//                // TODO: ANIMATION
-//
-//
-//            }
-
             animateSearchDummy();
+
+            Activity act = getActivity();
+            if (act instanceof Main)
+                ((Main) act).hideButtons();
+
+
 
         }
     };
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    /**
+     * Do a searchdummy animation
+     */
     public void animateSearchDummy() {
 
 
         searchDummyConsttraints.clone((ConstraintLayout) fragmentView.findViewById(R.id.mapsContainer));
 
         //TODO: Rewrite with r.strings
-
         int colorFrom = Color.TRANSPARENT;
         int colorTo = Color.WHITE;
 
@@ -348,68 +400,75 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback, Google
         colorAnimation.start();
 
 
+        /**
+         * Change the layout params for the search bar
+         */
+
         ViewGroup.LayoutParams param = getActivity().findViewById(R.id.status_bar).getLayoutParams();
-
         searchDummyConsttraints.clear(R.id.searchDummy);
-
         searchDummyConsttraints.constrainHeight(R.id.searchDummy, searchDummy.getLayoutParams().height);
         searchDummyConsttraints.connect(R.id.mapsContainer, ConstraintSet.TOP, R.id.status_bar, ConstraintSet.BOTTOM, 0);
         searchDummyConsttraints.connect(R.id.searchDummy, ConstraintSet.LEFT, R.id.mapsContainer, ConstraintSet.LEFT,0);
         searchDummyConsttraints.connect(R.id.searchDummy, ConstraintSet.RIGHT, R.id.mapsContainer, ConstraintSet.RIGHT, 0);
         searchDummyConsttraints.connect(R.id.searchDummy, ConstraintSet.TOP, R.id.mapsContainer, ConstraintSet.TOP, param.height);
-
-
         searchDummyConsttraints.applyTo((ConstraintLayout) fragmentView.findViewById(R.id.mapsContainer));
 
-
-        ChangeBounds myTransition = new ChangeBounds();
-        myTransition.setDuration(300L);
-
-        myTransition.addListener(new Transition.TransitionListener() {
-            @Override
-            public void onTransitionStart(Transition transition) {
-
-            }
-
-            @Override
-            public void onTransitionEnd(Transition transition) {
-
-                /**
-                 * Change fragment after animation is complete
-                 */
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.setCustomAnimations(R.anim.fadein, R.anim.fadeout);
-
-                SearchFragment mf = SearchFragment.newInstance();
-                fragmentTransaction.replace(R.id.content, mf);
-                fragmentTransaction.addToBackStack(null);
-
-                fragmentTransaction.commit();
-            }
-
-            @Override
-            public void onTransitionCancel(Transition transition) {
-
-            }
-
-            @Override
-            public void onTransitionPause(Transition transition) {
-
-            }
-
-            @Override
-            public void onTransitionResume(Transition transition) {
-
-
-            }
-        });
-
         // start animation
-        TransitionManager.beginDelayedTransition((ConstraintLayout) fragmentView.findViewById(R.id.mapsContainer), myTransition);
-
+        TransitionManager.beginDelayedTransition((ConstraintLayout) fragmentView.findViewById(R.id.mapsContainer), searchDummyTransistion);
 
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        if (mMap != null) {
+            outState.putParcelable(KEY_CAMERA_POSITION, mMap.getCameraPosition());
+            outState.putParcelable(KEY_LOCATION, mLastKnownLocation);
+            super.onSaveInstanceState(outState);
+        }
+    }
+
+    /**
+     * When the search dummy is animated, we want to change fragment
+     */
+    Transition.TransitionListener searchDummyTransistionListener = new Transition.TransitionListener() {
+        @Override
+        public void onTransitionStart(Transition transition) {
+
+        }
+
+        @Override
+        public void onTransitionEnd(Transition transition) {
+            /**
+             * Change fragment after animation is complete
+             */
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.setCustomAnimations(R.anim.fadein, R.anim.fadeout);
+
+            SearchFragment mf = SearchFragment.newInstance();
+            fragmentTransaction.replace(R.id.content, mf);
+            fragmentTransaction.addToBackStack(null);
+
+            fragmentTransaction.commit();
+        }
+
+        @Override
+        public void onTransitionCancel(Transition transition) {
+
+        }
+
+        @Override
+        public void onTransitionPause(Transition transition) {
+
+        }
+
+        @Override
+        public void onTransitionResume(Transition transition) {
+
+        }
+    };
+
+
 
 
 }
