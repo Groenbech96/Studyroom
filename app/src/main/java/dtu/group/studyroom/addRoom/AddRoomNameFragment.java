@@ -119,7 +119,7 @@ public class AddRoomNameFragment extends Fragment {
         AddRoomAddressFragment page2 = AddRoomAddressFragment.newInstance();
         Bundle bundle = new Bundle();
         final EditText text = (EditText) fragmentView.findViewById(R.id.name_text);
-        bundle.putString("Name",text.getText().toString() );
+        bundle.putString("name",text.getText().toString() );
         page2.setArguments(bundle);
 
         fragmentView.findViewById(R.id.add_room_name_container).setElevation(3);

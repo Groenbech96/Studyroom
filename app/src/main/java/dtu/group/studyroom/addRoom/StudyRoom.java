@@ -6,9 +6,11 @@ package dtu.group.studyroom.addRoom;
 
 public class StudyRoom {
 
-    private String name, address;
-    private StudyRoomFacilites facilites;
-    private float rating;
+    String name;
+    String address;
+    StudyRoomFacilites facilites;
+    float rating;
+
 
     public StudyRoom() {
 

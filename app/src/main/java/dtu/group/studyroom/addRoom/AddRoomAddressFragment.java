@@ -111,7 +111,7 @@ public class AddRoomAddressFragment extends Fragment {
 
         Bundle bundle = getArguments();
         final EditText text = (EditText) fragmentView.findViewById(R.id.address_text);
-        bundle.putString("Address", text.getText().toString());
+        bundle.putString("address", text.getText().toString());
         AddRoomFacilitiesFragment page3 = AddRoomFacilitiesFragment.newInstance();
         page3.setArguments(bundle);
 
