@@ -55,7 +55,7 @@ public class AddRoomFacilitiesFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_add_room_facilities, container, false);
-        Log.i("Facility fragment", getArguments().getString("Name") +"    " + getArguments().getString("Address"));
+        Log.i("Facility fragment", getArguments().getString("name") +"    " + getArguments().getString("address"));
         final Button btNext = (Button) fragmentView.findViewById(R.id.btFacilitiesNext);
         btNext.setOnClickListener(new View.OnClickListener() {
             @Override
