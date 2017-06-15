@@ -6,10 +6,9 @@ package dtu.group.studyroom.addRoom;
 
 public class StudyRoom {
 
-    String name;
-    String address;
-    StudyRoomFacilites facilites;
-    float rating;
+    public String name, address;
+    public StudyRoomFacilites facilites;
+    public float rating;
 
 
     public StudyRoom() {
@@ -28,7 +27,12 @@ public class StudyRoom {
 
     public class StudyRoomFacilites {
 
-        private int wifi, toilet, power, coffee, food, groups;
+        public int wifi,
+                toilet,
+                power,
+                coffee,
+                food,
+                groups;
 
         public StudyRoomFacilites(boolean wifi,
                                   boolean toilet,

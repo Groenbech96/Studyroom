@@ -124,7 +124,7 @@ public class AddRoomNameFragment extends Fragment {
 
         fragmentView.findViewById(R.id.add_room_name_container).setElevation(3);
 
-        transaction.replace(R.id.contentLayer ,page2);
+        transaction.replace(R.id.add_layout ,page2);
         transaction.addToBackStack(null);
         transaction.commit();
 

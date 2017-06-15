@@ -3,6 +3,8 @@ package dtu.group.studyroom;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.app.ActivityOptions;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
@@ -59,7 +61,7 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
 
     private FloatingActionButton accountButton, addButton;
     private FirebaseAuth mAuth;
-
+    private Context mContext;
 
     private SearchFragment searchFragment;
     private MapsFragment mapFragment;
@@ -70,7 +72,7 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mContext = getApplicationContext();
         setContentView(R.layout.activity_main);
 
         /**
@@ -233,37 +235,9 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
              * Hide the buttons
              */
 
-
-            findViewById(R.id.add_button).startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.imageonclick));
-
-            //hideButtons();
-
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            MapsFragment fragment = (MapsFragment) fragmentManager.findFragmentByTag(Utils.MAPS_FRAGMENT_TAG);
-
-            // Pause the background location services for the google map
-            //fragment.pauseMapServices();
-
-            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.setCustomAnimations(R.anim.slideup, R.anim.stayinplace);
-
-            AddRoomNameFragment frag = AddRoomNameFragment.newInstance();
-            fragmentTransaction.replace(R.id.contentLayer, frag, Utils.ADDROOM_NAME_FRAGMENT_TAG);
-            fragmentTransaction.commit();
-            fragmentTransaction.addToBackStack(null);
-
-
-          //  fragmentTransaction.remove(af);
-
-
-            //AddRoomNameFragment af1 = AddRoomNameFragment.newInstance();
-            //FragmentManager fragmentManager1 = getSupportFragmentManager();
-            //FragmentTransaction fragmentTransaction1 = fragmentManager1.beginTransaction();
-
-
-            //fragmentTransaction1.replace(R.id.contentMapLayer, af1, "").commit();
-
-            //findViewById(R.id.contentLayer).setVisibility(View.INVISIBLE);
+            Intent intent = new Intent(Main.this,AddRoomActivity.class);
+            ActivityOptions options = ActivityOptions.makeCustomAnimation(mContext,R.anim.slideup,R.anim.stayinplace );
+            startActivity(intent, options.toBundle());
 
 
         }
@@ -353,24 +327,5 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
         @Override
         public void onTransitionResume(Transition transition) {}
     };
-
-
-
-    public void saveStudyRoom(StudyRoom studyRoom) {
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
-        Gson gson = new Gson();
-        String studyroomJson = gson.toJson(studyRoom);
-
-        Log.i("lol", studyroomJson);
-
-        String key = mDatabase.child("studyrooms").push().getKey();
-        /*Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/studyrooms/" + key, studyroomJson);
-        mDatabase.updateChildren(childUpdates);*/
-
-
-    }
-
-
+    
 }
