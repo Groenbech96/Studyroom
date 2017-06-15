@@ -135,7 +135,7 @@ public class AddRoomFacilitiesFragment extends Fragment {
         AddRoomRatingFragment page4 = AddRoomRatingFragment.newInstance();
         page4.setArguments(bundle);
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.add_layout,page4).commit();
+        transaction.replace(R.id.contentLayer,page4).commit();
 
 
     }
