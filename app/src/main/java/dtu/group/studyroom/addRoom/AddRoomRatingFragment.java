@@ -9,7 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.RatingBar;
 
+import dtu.group.studyroom.Main;
 import dtu.group.studyroom.R;
 
 /**
@@ -24,6 +26,8 @@ public class AddRoomRatingFragment extends Fragment {
 
 
     private View fragmentView;
+    private RatingBar rateing;
+
     private OnFragmentInteractionListener mListener;
 
     public AddRoomRatingFragment() {
@@ -46,6 +50,7 @@ public class AddRoomRatingFragment extends Fragment {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_add_room_rating, container, false);
         final Button btGoToCamera = (Button) fragmentView.findViewById(R.id.btRatingNext);
+        rateing = (RatingBar) fragmentView.findViewById(R.id.add_room_ratingBar);
         btGoToCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,9 +60,7 @@ public class AddRoomRatingFragment extends Fragment {
         return fragmentView;
     }
 
-    private void goToCamera() {
-        //TODO: complete this method
-    }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -97,4 +100,28 @@ public class AddRoomRatingFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
+    private void goToCamera() {
+
+        Bundle data = getArguments();
+
+        StudyRoom.StudyRoomFacilites facilites = new StudyRoom().new StudyRoomFacilites(
+                data.getBoolean("wifi"),
+                data.getBoolean("toilet"),
+                data.getBoolean("power"),
+                data.getBoolean("coffee"),
+                data.getBoolean("food"),
+                data.getBoolean("groups")
+        );
+
+        StudyRoom studyRoom = new StudyRoom(data.getString("name"), data.getString("address"), facilites, rateing.getRating());
+
+
+        ((Main)getActivity()).saveStudyRoom(studyRoom);
+        
+    }
+
+
+
 }

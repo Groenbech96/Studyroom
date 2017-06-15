@@ -40,13 +40,16 @@ import com.google.firebase.storage.StorageReference;
 import dtu.group.studyroom.addRoom.AddRoomAddressFragment;
 import dtu.group.studyroom.addRoom.AddRoomFacilitiesFragment;
 import dtu.group.studyroom.addRoom.AddRoomNameFragment;
+import dtu.group.studyroom.addRoom.AddRoomRatingFragment;
+import dtu.group.studyroom.addRoom.StudyRoom;
 import dtu.group.studyroom.utils.Utils;
 
 public class Main extends AppCompatActivity implements MapsFragment.OnFragmentInteractionListener,
         SearchFragment.OnFragmentInteractionListener,
         AddRoomNameFragment.OnFragmentInteractionListener,
         AddRoomAddressFragment.OnFragmentInteractionListener,
-        AddRoomFacilitiesFragment.OnFragmentInteractionListener{
+        AddRoomFacilitiesFragment.OnFragmentInteractionListener,
+        AddRoomRatingFragment.OnFragmentInteractionListener {
 
     private enum FADE {IN, OUT};
 
@@ -352,6 +355,14 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
         public void onTransitionResume(Transition transition) {}
     };
 
+
+
+    public void saveStudyRoom(StudyRoom studyRoom) {
+
+
+
+
+    }
 
 
 }
