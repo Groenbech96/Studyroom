@@ -38,6 +38,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.gson.Gson;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import dtu.group.studyroom.addRoom.AddRoomAddressFragment;
 import dtu.group.studyroom.addRoom.AddRoomFacilitiesFragment;
@@ -326,6 +330,18 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
 
 
     public void saveStudyRoom(StudyRoom studyRoom) {
+
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        Gson gson = new Gson();
+        String studyroomJson = gson.toJson(studyRoom);
+
+        Log.i("lol", studyroomJson);
+
+        String key = mDatabase.child("studyrooms").push().getKey();
+        Map<String, Object> childUpdates = new HashMap<>();
+        childUpdates.put("/studyrooms/" + key, studyroomJson);
+        mDatabase.updateChildren(childUpdates);
 
 
 
