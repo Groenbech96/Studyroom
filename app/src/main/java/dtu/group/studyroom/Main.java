@@ -231,7 +231,7 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
             fragmentTransaction.commit();
             fragmentTransaction.addToBackStack(null);
 
-            
+
           //  fragmentTransaction.remove(af);
 
 

@@ -1,5 +1,6 @@
 package dtu.group.studyroom.addRoom;
 
+import android.graphics.Color;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
 import android.net.Uri;
@@ -47,13 +48,17 @@ public class AddRoomAddressFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_add_room_address, container, false);
-        final Button btNext = (Button) fragmentView.findViewById(R.id.btAdressNext);
+        final Button btNext = (Button) fragmentView.findViewById(R.id.btAddressNext);
         btNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goToPage3();
             }
         });
+
+
+        fragmentView.findViewById(R.id.add_room_address_container).setBackgroundColor(Color.WHITE);
+
 
         return fragmentView;
     }
@@ -67,6 +72,8 @@ public class AddRoomAddressFragment extends Fragment {
 
     @Override
     public void onAttach(Context context) {
+
+
         super.onAttach(context);
         if (context instanceof OnFragmentInteractionListener) {
             mListener = (OnFragmentInteractionListener) context;

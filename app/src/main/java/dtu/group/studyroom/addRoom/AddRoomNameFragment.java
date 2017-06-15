@@ -2,6 +2,7 @@ package dtu.group.studyroom.addRoom;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -112,14 +113,20 @@ public class AddRoomNameFragment extends Fragment {
 
         FragmentManager manager = getActivity().getSupportFragmentManager();
         final FragmentTransaction transaction = manager.beginTransaction();
+
         transaction.setCustomAnimations(R.anim.slidein, R.anim.stayinplace);
+
         AddRoomAddressFragment page2 = AddRoomAddressFragment.newInstance();
         Bundle bundle = new Bundle();
         final EditText text = (EditText) fragmentView.findViewById(R.id.name_text);
         bundle.putString("Name",text.getText().toString() );
         page2.setArguments(bundle);
-        transaction.replace(R.id.add_layout,page2).show(page2).commit();
 
+        fragmentView.findViewById(R.id.add_room_name_container).setElevation(3);
+
+        transaction.replace(R.id.contentLayer ,page2);
+        transaction.addToBackStack(null);
+        transaction.commit();
 
     }
 }
