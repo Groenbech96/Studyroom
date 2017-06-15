@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.design.widget.FloatingActionButton;
@@ -28,18 +29,29 @@ import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import dtu.group.studyroom.addRoom.AddRoomAddressFragment;
 import dtu.group.studyroom.addRoom.AddRoomFacilitiesFragment;
 import dtu.group.studyroom.addRoom.AddRoomNameFragment;
+import dtu.group.studyroom.addRoom.AddRoomRatingFragment;
+import dtu.group.studyroom.addRoom.StudyRoom;
 import dtu.group.studyroom.utils.Utils;
 
 public class Main extends AppCompatActivity implements MapsFragment.OnFragmentInteractionListener,
         SearchFragment.OnFragmentInteractionListener,
         AddRoomNameFragment.OnFragmentInteractionListener,
         AddRoomAddressFragment.OnFragmentInteractionListener,
-        AddRoomFacilitiesFragment.OnFragmentInteractionListener{
+        AddRoomFacilitiesFragment.OnFragmentInteractionListener,
+        AddRoomRatingFragment.OnFragmentInteractionListener {
 
     private enum FADE {IN, OUT};
 
@@ -49,6 +61,9 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
 
     private SearchFragment searchFragment;
     private MapsFragment mapFragment;
+
+    private StorageReference mStorage;
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +81,8 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
         addButton = (FloatingActionButton) findViewById(R.id.add_button);
         addButton.setOnClickListener(addButtonListener);
 
-        // mAuth = FirebaseAuth.getInstance();
-        /*
+        mAuth = FirebaseAuth.getInstance();
+
         mAuth.signInAnonymously()
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -88,12 +103,13 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
                     }
                 });
 
+        /**
+         * Set up references to firebase storage and database
+         */
+        mStorage = FirebaseStorage.getInstance().getReference();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference("message");
 
-        myRef.setValue("Hello, World V3");
-            */
         /**
          * Start the maps fragment
          */
@@ -307,6 +323,14 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
         public void onTransitionResume(Transition transition) {}
     };
 
+
+
+    public void saveStudyRoom(StudyRoom studyRoom) {
+
+
+
+
+    }
 
 
 }

@@ -1,6 +1,7 @@
 package dtu.group.studyroom.addRoom;
 
 import android.graphics.Color;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Context;
 import android.net.Uri;
@@ -103,14 +104,28 @@ public class AddRoomAddressFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
+
+
     public void goToPage3(){
+
         Bundle bundle = getArguments();
         final EditText text = (EditText) fragmentView.findViewById(R.id.address_text);
         bundle.putString("Address", text.getText().toString());
         AddRoomFacilitiesFragment page3 = AddRoomFacilitiesFragment.newInstance();
         page3.setArguments(bundle);
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.add_layout,page3).show(page3).commit();
+
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        final FragmentTransaction transaction = manager.beginTransaction();
+
+        fragmentView.findViewById(R.id.add_room_address_container).setElevation(3);
+
+        transaction.setCustomAnimations(R.anim.slidein, R.anim.stayinplace);
+
+        transaction.addToBackStack(null);
+        transaction.replace(R.id.contentLayer,page3).commit();
+
+
 
     }
 }

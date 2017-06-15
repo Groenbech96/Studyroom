@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -134,8 +135,17 @@ public class AddRoomFacilitiesFragment extends Fragment {
         bundle.putBoolean("groups",groups);
         AddRoomRatingFragment page4 = AddRoomRatingFragment.newInstance();
         page4.setArguments(bundle);
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        final FragmentTransaction transaction = manager.beginTransaction();
+
+        fragmentView.findViewById(R.id.add_room_facility_container).setElevation(3);
+
+        transaction.setCustomAnimations(R.anim.slidein, R.anim.stayinplace);
+        transaction.addToBackStack(null);
         transaction.replace(R.id.contentLayer,page4).commit();
+
+
 
 
     }
