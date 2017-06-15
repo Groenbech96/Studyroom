@@ -121,6 +121,12 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
 
     }
 
+    private void postStudyroom () {
+        /**
+         * TODO: Fetch data for the upload
+         */
+    }
+
     @Override
     public void onFragmentInteraction(Uri uri) {
 
