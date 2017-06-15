@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RatingBar;
 
+import dtu.group.studyroom.AddRoomActivity;
 import dtu.group.studyroom.Main;
 import dtu.group.studyroom.R;
 
@@ -118,7 +119,7 @@ public class AddRoomRatingFragment extends Fragment {
         StudyRoom studyRoom = new StudyRoom(data.getString("name"), data.getString("address"), facilites, rateing.getRating());
 
 
-        ((Main)getActivity()).saveStudyRoom(studyRoom);
+        ((AddRoomActivity)getActivity()).saveStudyRoom(studyRoom);
 
     }
 

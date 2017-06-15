@@ -329,24 +329,7 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
 
 
 
-    public void saveStudyRoom(StudyRoom studyRoom) {
 
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
-        Gson gson = new Gson();
-        String studyroomJson = gson.toJson(studyRoom);
-
-        Log.i("lol", studyroomJson);
-
-        String key = mDatabase.child("studyrooms").push().getKey();
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/studyrooms/" + key, studyroomJson);
-        mDatabase.updateChildren(childUpdates);
-
-
-
-
-    }
 
 
 }
