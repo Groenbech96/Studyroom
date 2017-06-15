@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="dtu.group.studyroom.Main">
+    tools:context="dtu.group.studyroom.Main"
+    android:transitionName="test">
 
     <View
         android:id="@+id/status_bar"
