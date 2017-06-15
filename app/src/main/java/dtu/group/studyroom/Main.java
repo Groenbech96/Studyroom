@@ -327,5 +327,5 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
         @Override
         public void onTransitionResume(Transition transition) {}
     };
-    
+
 }
