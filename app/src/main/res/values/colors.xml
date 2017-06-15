@@ -8,4 +8,6 @@
     <color name="tabcolor">#FFFFFF</color>
     <color name="addButtonColor">#F4503F</color>
     <color name="accountButtonColor">#ffffff</color>
+
+    <color name="greyBox">#c1c1c1</color>
 </resources>
