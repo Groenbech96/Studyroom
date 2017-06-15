@@ -36,7 +36,9 @@
         app:layout_constraintTop_toTopOf="parent" />
 
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+    <FrameLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/mapView"
         android:layout_width="0dp"
@@ -56,8 +58,7 @@
         tools:layout_constraintLeft_creator="1"
         tools:layout_constraintRight_creator="1"
         tools:layout_constraintTop_creator="1"
-        tools:context=".MapsActivity"
-        android:name="com.google.android.gms.maps.SupportMapFragment" />
+        tools:context=".MapsFragment" />
 
 
     <!--<com.google.android.gms.maps.MapView

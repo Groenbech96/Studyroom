@@ -51,6 +51,7 @@ captures/
 .externalNativeBuild
 
 # Google Services (e.g. APIs or Firebase)
+# CREATE NEW JSON ON EACH PC
 google-services.json
 
 # Freeline

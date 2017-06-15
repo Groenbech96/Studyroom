@@ -98,8 +98,8 @@ public class SearchFragment extends Fragment {
         defaultSet.clone((ConstraintLayout) fragmentView.findViewById(R.id.facilitiesMenu));
         expandedSet.clone((ConstraintLayout) fragmentView.findViewById(R.id.facilitiesMenu));
 
-        InputMethodManager imgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imgr.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+        //InputMethodManager imgr = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        //imgr.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         searchBar.requestFocus();
         searchBar.setCursorVisible(true);
 

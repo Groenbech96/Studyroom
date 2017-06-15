@@ -15,64 +15,39 @@ import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.design.widget.BottomNavigationView;
 import android.app.Fragment;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
+import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
-import android.view.animation.ScaleAnimation;
-import android.view.animation.TranslateAnimation;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigation;
-import com.aurelhubert.ahbottomnavigation.AHBottomNavigationItem;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class Main extends AppCompatActivity implements MapsFragment.OnFragmentInteractionListener, SearchFragment.OnFragmentInteractionListener {
 
+    private enum FADE {IN, OUT};
 
-    private ImageView homeButton;
-    private LinearLayout accountButton, addButton;
-
+    private FloatingActionButton accountButton, addButton;
 
     private static final String MAPS_FRAGMENT_TAG = "MAPS_FRAGMENT_TAG";
-    private ConstraintLayout container;
-    private ValueAnimator am;
 
+    private FirebaseAuth mAuth;
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-            switch (item.getItemId()) {
-                case R.id.create_review_page:
-                    fragmentManager.beginTransaction().replace(R.id.content, SearchFragment.newInstance()).commit();
-                    return true;
-                case R.id.maps_page:
-                    fragmentManager.beginTransaction().replace(R.id.content, SearchFragment.newInstance()).commit();
-                    break;
-                case R.id.account_page:
-                    fragmentManager.beginTransaction().replace(R.id.content, SearchFragment.newInstance()).commit();
-
-                    return true;
-            }
-            return false;
-        }
-
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,16 +58,39 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
         /**
          * Create button click listener
          */
-        homeButton = (ImageView) findViewById(R.id.homebtn);
-        homeButton.setOnClickListener(homeButtonListener);
 
-        accountButton = (LinearLayout) findViewById(R.id.navigation_account_page_button);
+        accountButton = (FloatingActionButton) findViewById(R.id.account_button);
         accountButton.setOnClickListener(accountButtonListener);
 
-        addButton = (LinearLayout) findViewById(R.id.navigation_add_page_button);
+        addButton = (FloatingActionButton) findViewById(R.id.add_button);
         addButton.setOnClickListener(addButtonListener);
 
 
+        mAuth = FirebaseAuth.getInstance();
+
+        mAuth.signInAnonymously()
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d("FIREBASE", "signInAnonymously:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            //updateUI(user);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w("FIREBASE", "signInAnonymously:failure", task.getException());
+                        }
+
+                        // ...
+                    }
+                });
+
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("message");
+
+        myRef.setValue("Hello, World V3");
 
         /**
          * Start the maps fragment
@@ -107,37 +105,16 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
         fragmentTransaction.commit();
     }
 
-
     @Override
     public void onFragmentInteraction(Uri uri) {
 
     }
 
-    /**
-     * OnClickListener for the home button
-     */
-    private View.OnClickListener homeButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-
-            // Make a little animation of a click
-            v.startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.imageonclick));
-
-            // If the fragment visible is the maps one, do the animation
-            MapsFragment myFragment = (MapsFragment) getSupportFragmentManager().findFragmentByTag(MAPS_FRAGMENT_TAG);
-            if (myFragment != null && myFragment.isVisible()) {
-                myFragment.animateSearchDummy();
-            }
-
-
-        }
-    };
-
     private View.OnClickListener accountButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 
-            findViewById(R.id.navigation_account_page_button).startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.imageonclick));
+            findViewById(R.id.account_button).startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.imageonclick));
             //TODO: Create new fragment
         }
     };
@@ -146,37 +123,73 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
     private View.OnClickListener addButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            findViewById(R.id.navigation_add_page_button).startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.imageonclick));
+            findViewById(R.id.add_button).startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.imageonclick));
             //TODO: Create new fragments
         }
     };
 
 
+    public void drawButtons() {
+        fadeActionButtonAnimation(accountButton, FADE.IN);
+        fadeActionButtonAnimation(addButton, FADE.IN);
+    }
+
+    public void hideButtons() {
+        fadeActionButtonAnimation(accountButton, FADE.OUT);
+        fadeActionButtonAnimation(addButton, FADE.OUT);
+    }
+
+    public void fadeActionButtonAnimation(final FloatingActionButton button, FADE select) {
+        if(select == FADE.IN) {
 
 
+            Animation anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fadeandscalein);
+            anim.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+                    button.setVisibility(View.VISIBLE);
+                }
 
-    public int getNavigationBarHeight() {
-        Resources resources = this.getResources();
-        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            return resources.getDimensionPixelSize(resourceId);
+                @Override
+                public void onAnimationEnd(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+
+            button.startAnimation(anim);
+
+        } else {
+
+            Animation anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fadeandscaleout);
+            anim.setAnimationListener(new Animation.AnimationListener() {
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    button.setVisibility(View.INVISIBLE);
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+            });
+
+            button.startAnimation(anim);
+
+
         }
-        return 0;
-    }
 
-
-    public int getStatusBarHeight() {
-
-            int result = 0;
-            int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-            if (resourceId > 0) {
-                result = getResources().getDimensionPixelSize(resourceId);
-            }
-            return result;
 
     }
-
-
 
 
 
