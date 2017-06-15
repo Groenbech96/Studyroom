@@ -18,8 +18,13 @@ public class ContentActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_content);
         Områdenavn = (TextView) findViewById(R.id.OmrådeNavn);
-        Områdenavn.setText("hurra?");
+        Områdenavn.setText((CharSequence)succes);
+
+
     }
+
+
+
 
 
 
