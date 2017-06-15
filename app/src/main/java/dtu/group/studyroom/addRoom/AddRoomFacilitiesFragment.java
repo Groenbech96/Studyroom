@@ -143,7 +143,7 @@ public class AddRoomFacilitiesFragment extends Fragment {
 
         transaction.setCustomAnimations(R.anim.slidein, R.anim.stayinplace);
         transaction.addToBackStack(null);
-        transaction.replace(R.id.contentLayer,page4).commit();
+        transaction.replace(R.id.add_layout,page4).commit();
 
 
 

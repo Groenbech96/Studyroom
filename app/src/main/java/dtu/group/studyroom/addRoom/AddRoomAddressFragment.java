@@ -123,7 +123,7 @@ public class AddRoomAddressFragment extends Fragment {
         transaction.setCustomAnimations(R.anim.slidein, R.anim.stayinplace);
 
         transaction.addToBackStack(null);
-        transaction.replace(R.id.contentLayer,page3).commit();
+        transaction.replace(R.id.add_layout,page3).commit();
 
 
 
