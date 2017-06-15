@@ -1,33 +1,31 @@
 package dtu.group.studyroom;
 
-
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
-import android.app.ActivityOptions;
-import android.content.Context;
-import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
+import android.support.design.widget.BottomNavigationView;
+import android.app.Fragment;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.transition.AutoTransition;
-import android.transition.ChangeBounds;
-import android.transition.Transition;
-import android.transition.TransitionManager;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
 import android.view.animation.AnimationUtils;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -36,43 +34,25 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.gson.Gson;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
-import dtu.group.studyroom.addRoom.AddRoomAddressFragment;
-import dtu.group.studyroom.addRoom.AddRoomFacilitiesFragment;
-import dtu.group.studyroom.addRoom.AddRoomNameFragment;
-import dtu.group.studyroom.addRoom.AddRoomRatingFragment;
-import dtu.group.studyroom.addRoom.StudyRoom;
-import dtu.group.studyroom.utils.Utils;
-
-public class Main extends AppCompatActivity implements MapsFragment.OnFragmentInteractionListener,
-        SearchFragment.OnFragmentInteractionListener,
-        AddRoomNameFragment.OnFragmentInteractionListener,
-        AddRoomAddressFragment.OnFragmentInteractionListener,
-        AddRoomFacilitiesFragment.OnFragmentInteractionListener,
-        AddRoomRatingFragment.OnFragmentInteractionListener {
+public class Main extends AppCompatActivity implements MapsFragment.OnFragmentInteractionListener, SearchFragment.OnFragmentInteractionListener {
 
     private enum FADE {IN, OUT};
 
     private FloatingActionButton accountButton, addButton;
+
+    private static final String MAPS_FRAGMENT_TAG = "MAPS_FRAGMENT_TAG";
+
     private FirebaseAuth mAuth;
-    private Context mContext;
 
-    private SearchFragment searchFragment;
-    private MapsFragment mapFragment;
-
-    private StorageReference mStorage;
-    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mContext = getApplicationContext();
+
         setContentView(R.layout.activity_main);
 
         /**
@@ -84,6 +64,7 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
 
         addButton = (FloatingActionButton) findViewById(R.id.add_button);
         addButton.setOnClickListener(addButtonListener);
+
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -99,20 +80,17 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w("FIREBASE", "signInAnonymously:failure", task.getException());
-
-                            //updateUI(null);
                         }
 
                         // ...
                     }
                 });
 
-        /**
-         * Set up references to firebase storage and database
-         */
-        mStorage = FirebaseStorage.getInstance().getReference();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
 
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("message");
+
+        myRef.setValue("Hello, World V3");
 
         /**
          * Start the maps fragment
@@ -122,23 +100,15 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
         MapsFragment mf = MapsFragment.newInstance();
-        fragmentTransaction.add(R.id.contentMapLayer, mf, Utils.MAPS_FRAGMENT_TAG);
+        fragmentTransaction.add(R.id.content, mf, MAPS_FRAGMENT_TAG);
 
         fragmentTransaction.commit();
-
-        drawButtons();
-
     }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
 
     }
-
-
-
-
-
 
     private View.OnClickListener accountButtonListener = new View.OnClickListener() {
         @Override
@@ -150,123 +120,28 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
     };
 
 
-
-
-    @Override
-    public void onBackPressed() {
-
-        boolean normalBackPress = true;
-
-        /**
-         * Handle Add Room Name fragment on back pressed animation.
-         */
-        AddRoomNameFragment addRoomFragment = (AddRoomNameFragment) getSupportFragmentManager().findFragmentByTag(Utils.ADDROOM_NAME_FRAGMENT_TAG);
-        if (addRoomFragment != null && addRoomFragment.isVisible()) {
-
-            Log.i(Utils.APP_INFO, "AddRoom backpress is handled");
-
-            normalBackPress = false;
-            MapsFragment fragment = (MapsFragment) getSupportFragmentManager().findFragmentByTag(Utils.MAPS_FRAGMENT_TAG);
-            fragment.startMapServices();
-
-            Animation anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.slidedown);
-            anim.setAnimationListener(new Animation.AnimationListener() {
-                @Override
-                public void onAnimationStart(Animation animation) {}
-                // Make backpress when animation
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    Main.super.onBackPressed();
-                }
-                @Override
-                public void onAnimationRepeat(Animation animation) {}
-            });
-
-            findViewById(R.id.contentLayer).startAnimation(anim);
-            drawButtons();
-        }
-
-
-        searchFragment = (SearchFragment) getSupportFragmentManager().findFragmentByTag(Utils.SEARCH_FRAGMENT_TAG);
-        if(searchFragment != null && searchFragment.isVisible()) {
-
-            Log.i(Utils.APP_INFO, "Search backpress is handled");
-            normalBackPress = false;
-
-            mapFragment = (MapsFragment) getSupportFragmentManager().findFragmentByTag(Utils.MAPS_FRAGMENT_TAG);
-            mapFragment.startMapServices();
-
-            ChangeBounds searchBarTransistion = new ChangeBounds();
-            searchBarTransistion.setDuration(getResources().getInteger(R.integer.DEFAULT_ANIMATION_TIME));
-            searchBarTransistion.addListener(searchDummyTransistionInListener);
-
-            findViewById(R.id.status_bar_below_layer).setBackgroundColor(Color.TRANSPARENT);
-
-            mapFragment.animateSearchDummyToMapView(searchBarTransistion);
-            getSupportFragmentManager().beginTransaction().remove(searchFragment).commitAllowingStateLoss();
-
-
-            drawButtons();
-
-
-
-
-        }
-
-
-
-        // If no animation is to happend, do a normal backpress
-        if(normalBackPress)
-            super.onBackPressed();
-
-
-    }
-
-
-    /**
-     * Handle add button action
-     */
     private View.OnClickListener addButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
-            /**
-             * Hide the buttons
-             */
-
-            Intent intent = new Intent(Main.this,AddRoomActivity.class);
-            ActivityOptions options = ActivityOptions.makeCustomAnimation(mContext,R.anim.slideup,R.anim.stayinplace );
-            startActivity(intent, options.toBundle());
-
-
+            findViewById(R.id.add_button).startAnimation(AnimationUtils.loadAnimation(getApplicationContext(), R.anim.imageonclick));
+            //TODO: Create new fragments
         }
     };
 
 
-    /**
-     * Draw buttons
-     */
     public void drawButtons() {
         fadeActionButtonAnimation(accountButton, FADE.IN);
         fadeActionButtonAnimation(addButton, FADE.IN);
     }
 
-    /**
-     * Hide butttons
-     */
     public void hideButtons() {
         fadeActionButtonAnimation(accountButton, FADE.OUT);
         fadeActionButtonAnimation(addButton, FADE.OUT);
     }
 
-
-    /**
-     * Animation for action buttons
-     * @param button - The button to animate
-     * @param select - the type
-     */
     public void fadeActionButtonAnimation(final FloatingActionButton button, FADE select) {
         if(select == FADE.IN) {
+
 
             Animation anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fadeandscalein);
             anim.setAnimationListener(new Animation.AnimationListener() {
@@ -274,10 +149,16 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
                 public void onAnimationStart(Animation animation) {
                     button.setVisibility(View.VISIBLE);
                 }
+
                 @Override
-                public void onAnimationEnd(Animation animation) {}
+                public void onAnimationEnd(Animation animation) {
+
+                }
+
                 @Override
-                public void onAnimationRepeat(Animation animation) {}
+                public void onAnimationRepeat(Animation animation) {
+
+                }
             });
 
             button.startAnimation(anim);
@@ -287,7 +168,9 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
             Animation anim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fadeandscaleout);
             anim.setAnimationListener(new Animation.AnimationListener() {
                 @Override
-                public void onAnimationStart(Animation animation) {}
+                public void onAnimationStart(Animation animation) {
+
+                }
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
@@ -295,40 +178,18 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
                 }
 
                 @Override
-                public void onAnimationRepeat(Animation animation) {}
+                public void onAnimationRepeat(Animation animation) {
+
+                }
             });
 
             button.startAnimation(anim);
 
+
         }
+
 
     }
-
-
-
-    private Transition.TransitionListener searchDummyTransistionInListener = new Transition.TransitionListener() {
-        @Override
-        public void onTransitionStart(Transition transition) {}
-
-        @Override
-        public void onTransitionEnd(Transition transition) {
-
-
-            Main.super.onBackPressed();
-        }
-
-        @Override
-        public void onTransitionCancel(Transition transition) {}
-
-        @Override
-        public void onTransitionPause(Transition transition) {}
-
-        @Override
-        public void onTransitionResume(Transition transition) {}
-    };
-
-
-
 
 
 
