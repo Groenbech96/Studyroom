@@ -206,4 +206,6 @@
     }
   ]
   </string>
+    <item name="Test2" type="dimen">60%</item>
+  <dimen name="Test1">100sp</dimen>
 </resources>
