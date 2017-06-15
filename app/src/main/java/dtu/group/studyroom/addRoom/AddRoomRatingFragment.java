@@ -37,7 +37,7 @@ public class AddRoomRatingFragment extends Fragment {
 
     private View fragmentView;
     private RatingBar rateing;
-
+    private Bundle allData;
     String mCurrentPhotoPath;
 
     private OnFragmentInteractionListener mListener;
@@ -62,11 +62,18 @@ public class AddRoomRatingFragment extends Fragment {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_add_room_rating, container, false);
         final Button btGoToCamera = (Button) fragmentView.findViewById(R.id.btRatingNext);
+        final Button btUpload = (Button) fragmentView.findViewById(R.id.btUpload);
         rateing = (RatingBar) fragmentView.findViewById(R.id.add_room_ratingBar);
         btGoToCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goToCamera();
+            }
+        });
+        btUpload.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                upload();
             }
         });
         return fragmentView;
@@ -119,58 +126,31 @@ public class AddRoomRatingFragment extends Fragment {
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-          /*  // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(getActivity().getApplicationContext(),
-                        "dtu.group.studyroom.fileprovider",
-                        photoFile);
-                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                getActivity().startActivityForResult(cameraIntent, 1);
-            }*/
 
           getActivity().startActivityForResult(cameraIntent,1);
         }
 
         Bundle data = getArguments();
+        data.putDouble("rating",rateing.getRating());
+        allData = data;
 
-        StudyRoom.StudyRoomFacilites facilites = new StudyRoom().new StudyRoomFacilites(
-                data.getBoolean("wifi"),
-                data.getBoolean("toilet"),
-                data.getBoolean("power"),
-                data.getBoolean("coffee"),
-                data.getBoolean("food"),
-                data.getBoolean("groups")
-        );
-
-        StudyRoom studyRoom = new StudyRoom(data.getString("name"), data.getString("address"), facilites, rateing.getRating());
-
-
-        ((AddRoomActivity)getActivity()).saveStudyRoom(studyRoom);
 
     }
 
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
+    private void upload() {
+        StudyRoom.StudyRoomFacilites facilites = new StudyRoom().new StudyRoomFacilites(
+                allData.getBoolean("wifi"),
+                allData.getBoolean("toilet"),
+                allData.getBoolean("power"),
+                allData.getBoolean("coffee"),
+                allData.getBoolean("food"),
+                allData.getBoolean("groups")
         );
 
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
-        return image;
+        StudyRoom studyRoom = new StudyRoom(allData.getString("name"), allData.getString("address"), facilites, rateing.getRating());
+
+
+        ((AddRoomActivity)getActivity()).saveStudyRoom(studyRoom);
     }
 
 

@@ -29,6 +29,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -120,22 +121,26 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
         /**
          * Upload the file to the the firebase storage
          */
-       /* filepath.putFile(pictureUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        picture.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        filepath.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-*/
+
                 /**
                  * Get the reference to the image
                  */
-                /* Uri downloadUrl = taskSnapshot.getDownloadUrl();
+                Uri downloadUrl = taskSnapshot.getDownloadUrl();
 
                 DatabaseReference usersRef = mDatabase.child("studyrooms");
-                  */
+
                 /**
                  * Save the study room under a unique ID
                  */
 
-                /*
+
                 String key = usersRef.push().getKey();
                 usersRef.child(key).child("name").setValue(name);
                 usersRef.child(key).child("address").setValue(address);
@@ -148,7 +153,7 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
                 usersRef.child(key).child("rating").setValue(rating);
                 usersRef.child(key).child("image").setValue(downloadUrl.toString());
             }
-        });*/
+        });
 
     }
 
@@ -157,9 +162,6 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
         if (requestCode == 1 && resultCode == RESULT_OK) {
             Bundle bundle = data.getExtras();
             picture= (Bitmap)bundle.get("data");
-
-
-
 
             Log.i("lol","hej");
         }
