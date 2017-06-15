@@ -85,21 +85,24 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
 
     public void saveStudyRoom(StudyRoom studyRoom) {
 
+
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        Gson gson = new Gson();
-        String studyroomJson = gson.toJson(studyRoom);
+        DatabaseReference usersRef = mDatabase.child("studyrooms");
 
-        Log.i("lol", studyroomJson);
+        String key = usersRef.push().getKey();
+        usersRef.child(key).child("name").setValue(studyRoom.name);
+        usersRef.child(key).child("address").setValue(studyRoom.address);
+        usersRef.child(key).child("facilites").child("wifi").setValue(studyRoom.facilites.wifi);
+        usersRef.child(key).child("facilites").child("coffee").setValue(studyRoom.facilites.coffee);
+        usersRef.child(key).child("facilites").child("food").setValue(studyRoom.facilites.food);
+        usersRef.child(key).child("facilites").child("groups").setValue(studyRoom.facilites.groups);
+        usersRef.child(key).child("facilites").child("power").setValue(studyRoom.facilites.power);
+        usersRef.child(key).child("facilites").child("toilet").setValue(studyRoom.facilites.toilet);
+        usersRef.child(key).child("rating").setValue(studyRoom.rating);
 
-        DatabaseReference post = mDatabase.push();
 
-        post.child("name").setValue("hej");
-    /*
-        String key = mDatabase.child("studyrooms").push().getKey();
-        Map<String, Object> childUpdates = new HashMap<>();
-        childUpdates.put("/studyrooms/" + key, studyroomJson);
-        mDatabase.updateChildren(childUpdates);*/
+       /* */
 
 
 
