@@ -40,6 +40,7 @@ import dtu.group.studyroom.addRoom.AddRoomFacilitiesFragment;
 import dtu.group.studyroom.addRoom.AddRoomNameFragment;
 import dtu.group.studyroom.addRoom.AddRoomRatingFragment;
 import dtu.group.studyroom.addRoom.StudyRoom;
+import dtu.group.studyroom.utils.Utils;
 
 public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFragment.OnFragmentInteractionListener,
         AddRoomAddressFragment.OnFragmentInteractionListener,
@@ -60,7 +61,7 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
         setContentView(R.layout.activity_add_room);
         AddRoomNameFragment page1 = AddRoomNameFragment.newInstance();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.add(R.id.add_layout,page1).commit();
+        transaction.add(R.id.add_layout,page1, Utils.ADDROOM_NAME_FRAGMENT_TAG).commit();
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -172,15 +173,33 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        /**
+         * If request and resultcode are okay, we save the picture just taken.
+         */
         if (requestCode == 1 && resultCode == RESULT_OK) {
 
             Bundle bundle = data.getExtras();
+
             picture = (Bitmap)bundle.get("data");
 
         }
+
     }
 
+    @Override
+    public void onBackPressed() {
 
+        AddRoomNameFragment addRoomNameFragment = (AddRoomNameFragment) getSupportFragmentManager().findFragmentByTag(Utils.ADDROOM_NAME_FRAGMENT_TAG);
+        if(addRoomNameFragment != null && addRoomNameFragment.isVisible()) {
+
+            finish();
+            overridePendingTransition(R.anim.stayinplace, R.anim.slidedown);
+
+
+        }
+
+
+        }
 
 
 }

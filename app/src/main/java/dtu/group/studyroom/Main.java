@@ -50,6 +50,8 @@ import dtu.group.studyroom.addRoom.AddRoomRatingFragment;
 import dtu.group.studyroom.addRoom.StudyRoom;
 import dtu.group.studyroom.utils.Utils;
 
+import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+
 public class Main extends AppCompatActivity implements MapsFragment.OnFragmentInteractionListener,
         SearchFragment.OnFragmentInteractionListener,
         AddRoomNameFragment.OnFragmentInteractionListener,
@@ -78,6 +80,7 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
         /**
          * Create button click listener
          */
+
 
         accountButton = (FloatingActionButton) findViewById(R.id.account_button);
         accountButton.setOnClickListener(accountButtonListener);
@@ -137,10 +140,20 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
     }
 
 
+    /**
+     * When main is restarted, draw the buttons
+     * This happens when AddRoomActivity is ended.
+     */
+    @Override
+    public void onRestart() {
+        super.onRestart();
+        drawButtons();
 
+    }
 
-
-
+    /**
+     * Account button click
+     */
     private View.OnClickListener accountButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -151,8 +164,9 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
     };
 
 
-
-
+    /**
+     * Handle backpresses for fragments and so on.
+     */
     @Override
     public void onBackPressed() {
 
@@ -214,8 +228,6 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
 
         }
 
-
-
         // If no animation is to happend, do a normal backpress
         if(normalBackPress)
             super.onBackPressed();
@@ -225,7 +237,7 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
 
 
     /**
-     * Handle add button action
+     * Add button click
      */
     private View.OnClickListener addButtonListener = new View.OnClickListener() {
         @Override
@@ -234,10 +246,12 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
             /**
              * Hide the buttons
              */
+            hideButtons();
 
             Intent intent = new Intent(Main.this,AddRoomActivity.class);
-            ActivityOptions options = ActivityOptions.makeCustomAnimation(mContext,R.anim.slideup,R.anim.stayinplace );
+            ActivityOptions options = ActivityOptions.makeCustomAnimation(mContext,R.anim.slideup,R.anim.stayinplace);
             startActivity(intent, options.toBundle());
+
 
 
         }

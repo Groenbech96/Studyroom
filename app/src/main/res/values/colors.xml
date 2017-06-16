@@ -11,4 +11,5 @@
     <color name="colorBackground">#ffffff</color>
     <color name="colorStatusBarPrimary">@android:color/white</color>
     <color name="colorStatusBarSecondary">@android:color/transparent</color>
+    <color name="colorBackgroundSecondary">#fff3f3f3</color>
 </resources>

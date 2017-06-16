@@ -1,7 +1,9 @@
 package dtu.group.studyroom.addRoom;
 
 import android.app.Activity;
+import android.app.ActivityOptions;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,9 +15,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
+import dtu.group.studyroom.AddRoomActivity;
 import dtu.group.studyroom.Main;
 import dtu.group.studyroom.R;
+import dtu.group.studyroom.utils.OnSwipeTouchListener;
 
 
 /**
@@ -31,10 +36,11 @@ public class AddRoomNameFragment extends Fragment {
     private View fragmentView;
     private OnFragmentInteractionListener mListener;
 
+    private Button btnNext, btnBack;
+
     public AddRoomNameFragment() {
         // Required empty public constructor
     }
-
 
 
     public static AddRoomNameFragment newInstance() {
@@ -56,15 +62,39 @@ public class AddRoomNameFragment extends Fragment {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_add_room_name, container, false);
 
-        final Button btNext = (Button) fragmentView.findViewById(R.id.btNameNext);
-        btNext.setOnClickListener(new View.OnClickListener(){
+
+
+        btnNext = (Button) fragmentView.findViewById(R.id.add_room_btNameNext);
+        btnNext.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 goToPage2();
             }
         });
 
+        btnBack  = (Button) fragmentView.findViewById(R.id.add_room_btNameBack);
+        btnBack.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View view){
+                goToPage0();
+            }
+        });
+
+        fragmentView.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
+
+            public void onSwipeRight() {
+                goToPage0();
+            }
+            public void onSwipeLeft() {
+                goToPage2();
+            }
+
+
+        });
+
+
+
         return fragmentView;
     }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -118,15 +148,29 @@ public class AddRoomNameFragment extends Fragment {
 
         AddRoomAddressFragment page2 = AddRoomAddressFragment.newInstance();
         Bundle bundle = new Bundle();
-        final EditText text = (EditText) fragmentView.findViewById(R.id.name_text);
+        final EditText text = (EditText) fragmentView.findViewById(R.id.add_room_name_text);
         bundle.putString("name",text.getText().toString() );
         page2.setArguments(bundle);
-
-        fragmentView.findViewById(R.id.add_room_name_container).setElevation(3);
 
         transaction.replace(R.id.add_layout ,page2);
         transaction.addToBackStack(null);
         transaction.commit();
 
     }
+
+
+    private void goToPage0() {
+
+        /**
+         * Add back animation
+         */
+
+        getActivity().finish();
+        getActivity().overridePendingTransition(R.anim.stayinplace, R.anim.slidedown);
+
+
+
+    }
+
+
 }

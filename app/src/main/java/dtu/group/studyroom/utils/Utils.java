@@ -18,6 +18,12 @@ public class Utils {
     public static final String ADDROOM_ADDRESS_FRAGMENT_TAG = "ADDROOM_ADDRESS_FRAGMENT_TAG";
     public static final String APP_INFO = "APPLICATION DEBUG INFO";
 
+    /**
+     * LOGS
+     */
+
+    public static final String LOG_GOOGLE_MAP_API = "GOOGLE_MAPS_API";
+
 
     /**
      * Pixel Dp conversion
