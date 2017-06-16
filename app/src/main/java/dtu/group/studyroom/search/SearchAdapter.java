@@ -1,13 +1,15 @@
 package dtu.group.studyroom.search;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import dtu.group.studyroom.R;
 import dtu.group.studyroom.addRoom.StudyRoom;
 
 /**
@@ -38,14 +40,45 @@ public class SearchAdapter extends BaseAdapter{
         notifyDataSetChanged();
     }
 
-    public View getView(int i, View view, ViewGroup viewGroup) {
+    @Override
+    public View getView(int i, View convertView, ViewGroup parent) {
         final StudyRoom studyRoom = studyRooms.get(i);
 
+        ViewHolder viewHolder;
 
+        if (convertView == null) {
+            convertView = LayoutInflater.from(context).inflate(R.layout.study_room_list_item, parent, false);
+            viewHolder = new ViewHolder();
+            viewHolder.name = (TextView) convertView.findViewById(R.id.searchItemName);
+            viewHolder.address = (TextView) convertView.findViewById(R.id.searchItemAddress);
+            convertView.setTag(viewHolder);
+        } else {
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
+
+        final TextView name = viewHolder.name;
+        name.setText(studyRoom.getName());
+
+        final TextView address = viewHolder.address;
+        address.setText(studyRoom.getAddress());
+
+        return convertView;
     }
 
+    @Override
+    public long getItemId(int pos) {
+        return pos;
+    }
+
+    public void clear() {
+        studyRooms.clear();
+        notifyDataSetChanged();
+    }
+
+
     private static class ViewHolder {
-        Text
+        TextView name;
+        TextView address;
     }
 
 }

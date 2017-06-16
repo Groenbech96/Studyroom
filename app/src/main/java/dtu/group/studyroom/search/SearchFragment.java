@@ -14,8 +14,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.EditText;
+import android.widget.ListView;
 
+import java.util.HashMap;
+
+import dtu.group.studyroom.Main;
 import dtu.group.studyroom.R;
+import dtu.group.studyroom.addRoom.StudyRoom;
 
 
 /**
@@ -34,6 +39,8 @@ public class SearchFragment extends Fragment {
     private ConstraintSet defaultSet, expandedSet;
     private ConstraintLayout constraintLayout;
     private boolean facilityMenuVisible = true;
+    private ListView listView;
+    private SearchAdapter searchAdapter;
 
     private OnFragmentInteractionListener mListener;
 
@@ -53,7 +60,7 @@ public class SearchFragment extends Fragment {
         super.onCreate(savedInstanceState);
         facilityMenuVisible = false;
 
-
+        searchAdapter = new SearchAdapter(getActivity().getApplicationContext());
     }
 
     @Override
@@ -94,6 +101,12 @@ public class SearchFragment extends Fragment {
         //imgr.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         searchBar.requestFocus();
         searchBar.setCursorVisible(true);
+
+        listView = (ListView) fragmentView.findViewById(R.id.searchResultListView);
+
+        listView.setAdapter(searchAdapter);
+
+        insertStudyRoomsToListView();
 
         return fragmentView;
 
@@ -229,6 +242,15 @@ public class SearchFragment extends Fragment {
         };
 
     };
+
+    public void insertStudyRoomsToListView() {
+        HashMap<String, StudyRoom> studyrooms = Main.getStudyrooms();
+        searchAdapter.clear();
+
+        for (StudyRoom studyRoom : studyrooms.values()) {
+            searchAdapter.add(studyRoom);
+        }
+    }
 
 
 }
