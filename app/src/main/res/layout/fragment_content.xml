@@ -1,215 +1,285 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
-    <ImageView
-        android:id="@+id/imageView2"
+    <ScrollView
+        android:id="@+id/scrollView2"
         android:layout_width="0dp"
-        android:layout_height="310dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginRight="0dp"
-        android:layout_marginTop="-64dp"
+        android:layout_height="600dp"
+        android:clipToPadding="false"
+        android:fillViewport="false"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/cast_mini_controller_progress_drawable" />
+        app:layout_constraintVertical_bias="0.0">
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="18dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="20dp"
-        android:background="@color/colorBottomNavigationNotification"
-        android:padding="10dp"
-        android:text="Gruppeområderum"
-        android:textAlignment="center"
-        android:textColor="@color/cast_expanded_controller_progress_text_color"
-        android:textSize="20sp"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView2">
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-    </TextView>
+            <!-- Image of Study room -->
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="383dp"
+                android:layout_height="263dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@mipmap/ic_launcher" />
 
-    <RatingBar
-        android:id="@+id/ratingBar"
-        style="@android:style/Widget.DeviceDefault.Light.RatingBar.Small"
-        android:layout_width="82dp"
-        android:layout_height="20dp"
-        android:layout_marginLeft="0dp"
-        android:layout_marginTop="8dp"
-        android:numStars="5"
-        android:rating="3.5"
-        android:textAlignment="textStart"
-        app:layout_constraintLeft_toLeftOf="@+id/textView5"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+            <!-- Name of Study room -->
+            <TextView
+                android:id="@+id/OmrådeNavn"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/addButtonColor"
+                android:fontFamily="sans-serif-smallcaps"
+                android:padding="10dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:text="Gruppeområde"
+                android:textAlignment="center"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="@+id/WIFI"
+                app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="176dp"
-        android:layout_height="53dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="0dp"
-        android:background="@color/cast_expanded_controller_ad_label_background_color"
-        android:paddingLeft="50dp"
-        android:paddingTop="15dp"
-        android:text="Power"
-        android:textAlignment="textStart"
-        android:textColor="@color/cast_expanded_controller_background_color"
-        android:textSize="16sp"
-        app:layout_constraintLeft_toRightOf="@+id/textView9"
-        app:layout_constraintTop_toTopOf="@+id/textView9" />
+            <RatingBar
+                android:id="@+id/ratingBar"
+                android:layout_width="124dp"
+                android:layout_height="57dp"
+                android:layout_marginTop="10dp"
+                android:numStars="5"
+                android:rating="3.5"
+                app:layout_constraintLeft_toLeftOf="@+id/OmrådeNavn"
+                app:layout_constraintTop_toBottomOf="@+id/OmrådeNavn" />
 
-    <TextView
-        android:id="@+id/textView10"
-        android:layout_width="176dp"
-        android:layout_height="53dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:background="@color/cast_expanded_controller_ad_label_background_color"
-        android:paddingLeft="50dp"
-        android:paddingTop="15dp"
-        android:text="Group"
-        android:textAlignment="textStart"
-        android:textColor="@color/cast_expanded_controller_background_color"
-        android:textSize="16sp"
-        app:layout_constraintLeft_toRightOf="@+id/textView8"
-        app:layout_constraintTop_toBottomOf="@+id/textView6" />
+            <!-- Wifi -->
+            <TextView
+                android:id="@+id/WIFI"
+                android:layout_width="155dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="72dp"
+                android:background="@color/greyBox"
+                android:fontFamily="sans-serif-condensed"
+                android:inputType="textPersonName"
+                android:paddingLeft="45dp"
+                android:paddingTop="25dp"
+                android:text="WIFI"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/Power"
+                app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
 
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="166dp"
-        android:layout_height="53dp"
-        android:layout_marginLeft="-45dp"
-        android:layout_marginTop="10dp"
-        android:background="@color/cast_expanded_controller_ad_label_background_color"
-        android:paddingLeft="50dp"
-        android:paddingTop="15dp"
-        android:text="Coffée"
-        android:textAlignment="textStart"
-        android:textColor="@color/cast_expanded_controller_background_color"
-        android:textSize="16sp"
-        app:layout_constraintLeft_toLeftOf="@+id/ratingBar"
-        app:layout_constraintTop_toBottomOf="@+id/textView9" />
+            <!-- Power -->
+            <TextView
+                android:id="@+id/Power"
+                android:layout_width="155dp"
+                android:layout_height="60dp"
+                android:background="@color/greyBox"
+                android:fontFamily="sans-serif-condensed"
+                android:inputType="textPersonName"
+                android:paddingLeft="45dp"
+                android:paddingTop="25dp"
+                android:text="Power"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toRightOf="@+id/WIFI"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/WIFI" />
 
-    <TextView
-        android:id="@+id/textView9"
-        android:layout_width="166dp"
-        android:layout_height="53dp"
-        android:layout_marginLeft="0dp"
-        android:background="@color/cast_expanded_controller_ad_label_background_color"
-        android:paddingLeft="50dp"
-        android:paddingTop="15dp"
-        android:text="Wifi"
-        android:textAlignment="textStart"
-        android:textColor="@color/cast_expanded_controller_background_color"
-        android:textSize="16sp"
-        app:layout_constraintLeft_toLeftOf="@+id/ratingBar"
-        android:layout_marginTop="5dp"
-        app:layout_constraintTop_toBottomOf="@+id/imageView8" />
+            <!-- Group -->
+            <TextView
+                android:id="@+id/Group"
+                android:layout_width="155dp"
+                android:layout_height="60dp"
+                android:background="@color/greyBox"
+                android:fontFamily="sans-serif-condensed"
+                android:inputType="textPersonName"
+                android:paddingLeft="45dp"
+                android:paddingTop="25dp"
+                android:text="Group spaces"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="@+id/Coffee"
+                app:layout_constraintLeft_toLeftOf="@+id/Power" />
 
-    <ImageView
-        android:id="@+id/imageView3"
-        android:layout_width="38dp"
-        android:layout_height="32dp"
-        app:srcCompat="@drawable/ic_power_black_24px"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="@+id/textView6"
-        app:layout_constraintTop_toTopOf="@+id/textView6"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView6"
-        android:layout_marginBottom="8dp" />
+            <!-- Coffée -->
+            <TextView
+                android:id="@+id/Coffee"
+                android:layout_width="155dp"
+                android:layout_height="60dp"
+                android:layout_marginTop="20dp"
+                android:background="@color/greyBox"
+                android:fontFamily="sans-serif-condensed"
+                android:inputType="textPersonName"
+                android:paddingLeft="45dp"
+                android:paddingTop="25dp"
+                android:text="Coffee"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="@+id/WIFI"
+                app:layout_constraintTop_toBottomOf="@+id/WIFI" />
 
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="38dp"
-        android:layout_height="32dp"
-        app:srcCompat="@drawable/ic_wifi_black_24px"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="@+id/textView9"
-        app:layout_constraintTop_toTopOf="@+id/textView9"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView9"
-        android:layout_marginBottom="8dp" />
+            <!-- Wifi Icon -->
+            <ImageView
+                android:id="@+id/WIFI_icon"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/ic_wifi_black_24px"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="@+id/WIFI"
+                app:layout_constraintLeft_toLeftOf="@+id/WIFI"
+                app:layout_constraintTop_toTopOf="@+id/WIFI"
+                app:srcCompat="@drawable/ic_wifi_black_24px" />
 
-    <ImageView
-        android:id="@+id/imageView6"
-        android:layout_width="38dp"
-        android:layout_height="32dp"
-        app:srcCompat="@drawable/ic_local_cafe_black_24px"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="@+id/textView8"
-        app:layout_constraintTop_toTopOf="@+id/textView8"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView8"
-        android:layout_marginBottom="8dp" />
+            <!-- Coffée Icon-->
+            <ImageView
+                android:id="@+id/coffee_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/ic_local_cafe_black_24px"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="@+id/Coffee"
+                app:layout_constraintLeft_toLeftOf="@+id/Coffee"
+                app:layout_constraintTop_toTopOf="@+id/Coffee"
+                app:srcCompat="@drawable/ic_local_cafe_black_24px" />
 
-    <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="38dp"
-        android:layout_height="32dp"
-        app:srcCompat="@drawable/ic_group_black_24px"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="@+id/textView10"
-        app:layout_constraintTop_toTopOf="@+id/textView10"
-        android:layout_marginTop="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/textView10"
-        android:layout_marginBottom="8dp" />
+            <!-- Power Icon -->
+            <ImageView
+                android:id="@+id/power_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/ic_power_black_24px"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="@+id/Power"
+                app:layout_constraintLeft_toLeftOf="@+id/Power"
+                app:layout_constraintTop_toTopOf="@+id/Power"
+                app:srcCompat="@drawable/ic_power_black_24px" />
 
-    <ImageView
-        android:id="@+id/imageView8"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        app:srcCompat="@drawable/ic_navigation_black_24px"
-        android:layout_marginTop="5dp"
-        app:layout_constraintTop_toBottomOf="@+id/imageView9"
-        android:layout_marginLeft="0dp"
-        app:layout_constraintLeft_toLeftOf="@+id/imageView9" />
+            <!-- Group icon -->
+            <ImageView
+                android:id="@+id/group_icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/ic_group_black_24px"
+                android:visibility="visible"
+                app:layout_constraintBottom_toBottomOf="@+id/Group"
+                app:layout_constraintLeft_toLeftOf="@+id/Group"
+                app:layout_constraintTop_toTopOf="@+id/Group"
+                app:srcCompat="@drawable/ic_group_black_24px" />
 
-    <ImageView
-        android:id="@+id/imageView9"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        app:srcCompat="@drawable/ic_place_black_24px"
-        android:layout_marginTop="5dp"
-        app:layout_constraintTop_toBottomOf="@+id/ratingBar"
-        android:layout_marginLeft="0dp"
-        app:layout_constraintLeft_toLeftOf="@+id/ratingBar" />
+            <!-- Test -->
+            <TextView
+                android:id="@+id/test"
+                android:layout_width="357dp"
+                android:layout_height="94dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="11dp"
+                android:inputType="textPersonName"
+                android:text="Test "
+                android:textSize="100sp"
+                app:layout_constraintHorizontal_bias="0.545"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
-    <TextView
-        android:id="@+id/textView11"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Adresse"
-        android:textColor="@color/cast_expanded_controller_background_color"
-        app:layout_constraintLeft_toRightOf="@+id/imageView9"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintTop_toTopOf="@+id/imageView9"
-        android:layout_marginTop="0dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView9"
-        android:layout_marginBottom="0dp"
-        app:layout_constraintVertical_bias="0.4" />
+            <!-- Adress of Study room -->
+            <TextView
+                android:id="@+id/adresse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:paddingLeft="18dp"
+                android:text="AdresseStreng"
+                app:layout_constraintLeft_toLeftOf="@+id/OmrådeNavn"
+                app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
 
-    <TextView
-        android:id="@+id/textView13"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text='"x"km væk'
-        android:textColor="@color/cast_expanded_controller_background_color"
-        app:layout_constraintLeft_toRightOf="@+id/imageView8"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="7dp"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView8"
-        android:layout_marginBottom="0dp"
-        app:layout_constraintTop_toBottomOf="@+id/textView11"
-        app:layout_constraintVertical_bias="0.0" />
+            <!-- Distance to Study room -->
+            <TextView
+                android:id="@+id/afstand"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:paddingLeft="18dp"
+                android:text="afstand fra dig"
+                app:layout_constraintLeft_toLeftOf="@+id/OmrådeNavn"
+                app:layout_constraintTop_toBottomOf="@+id/adresse" />
+
+            <!-- Adress icon -->
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="15dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="3dp"
+                app:layout_constraintBottom_toTopOf="@+id/afstand"
+                app:layout_constraintLeft_toLeftOf="@+id/adresse"
+                app:srcCompat="@drawable/ic_location_on_black_24px" />
+
+            <!-- Distance icon -->
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="15dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="@+id/afstand"
+                app:layout_constraintLeft_toLeftOf="@+id/afstand"
+                app:layout_constraintTop_toTopOf="@+id/afstand"
+                app:srcCompat="@drawable/ic_navigation_black_24px" />
+
+            <!-- Map View -->
+            <com.google.android.gms.maps.MapView
+                android:id="@+id/mapView2"
+                android:layout_width="353dp"
+                android:layout_height="200dp"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:paddingTop="8dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/test"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <!-- Test -->
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="358dp"
+                android:layout_height="150dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:text="Test2"
+                android:textSize="100sp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/Group" />
+
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>
