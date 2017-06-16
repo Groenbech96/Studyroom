@@ -333,7 +333,7 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
 
         if(getArguments() != null) {
             if (getArguments().containsKey("address") && getArguments().containsKey("latlng")) {
-                foundLatLng = getArguments().getParcelable("latlng");
+              /*  foundLatLng = getArguments().getParcelable("latlng");
 
                 MarkerOptions markerOptions = new MarkerOptions();
 
@@ -365,8 +365,9 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
                 mMap.addMarker(markerOptions);
 
                 mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(foundLatLng, DEFAULT_ZOOM));
-
-
+           */
+                String address = getArguments().getString("address");
+                new GeocoderTask().execute(address);
 
             } else {
                 getDeviceLocation();
@@ -581,7 +582,7 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
             //mMap.clear();
             mMap.clear();
 
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(foundLatLng, DEFAULT_ZOOM));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(foundLatLng, DEFAULT_ZOOM));
 
             // Creating a marker
             MarkerOptions markerOptions = new MarkerOptions();
@@ -598,6 +599,7 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
 
         }
     }
+
 
 }
 
