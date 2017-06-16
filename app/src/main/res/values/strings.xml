@@ -210,8 +210,8 @@
     <string name="add_room_address_first_run">add_room_address_first_run</string>
 
     <!-- Add room strings  -->
-    <string name="add_room_name_hint">Give area a name</string>
-    <string name="add_room_address_hint">What is your address?</string>
+    <string name="add_room_name_hint">What is the name of the area?</string>
+    <string name="add_room_address_hint">What is the address?</string>
     <string name="add_study_room_title">Add study room</string>
     <string name="add_study_room_buttonNext">Next</string>
     <string name="add_study_room_facilitiesText">Which facilities does the study area have?</string>
