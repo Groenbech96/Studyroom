@@ -293,7 +293,7 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
 
                 // Setting the position for the marker
                 markerOptions.position(latLng);
-
+                foundLatLng = latLng;
                 // Setting the title for the marker.
                 // This will be displayed on taping the marker
 

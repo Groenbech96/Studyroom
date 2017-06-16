@@ -2,6 +2,7 @@ package dtu.group.studyroom.addRoom;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -14,11 +15,16 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.FileProvider;
 
 import android.util.Log;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.SeekBar;
+import android.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,9 +47,13 @@ public class AddRoomRatingFragment extends Fragment {
 
 
     private View fragmentView;
-    private RatingBar rateing;
+    private SeekBar rating;
+    private ImageView view;
     private Bundle allData;
     String mCurrentPhotoPath;
+    private float lastIndex = 0;
+
+    AnimationDrawable anim;
 
     private OnFragmentInteractionListener mListener;
 
@@ -78,8 +88,24 @@ public class AddRoomRatingFragment extends Fragment {
             }
         });
 
+        view = (ImageView) fragmentView.findViewById(R.id.imageView);
+        view.setBackgroundResource(R.drawable.rating);
+        anim = (AnimationDrawable) view.getBackground();
 
-        rateing = (RatingBar) fragmentView.findViewById(R.id.add_room_ratingBar);
+        rating = (SeekBar) fragmentView.findViewById(R.id.add_room_seekBar);
+
+
+        rating.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+
+            public boolean onTouch(View v, MotionEvent event) {
+
+                setSmileymage(rating.getProgress());
+                Log.i("RATE", rating.getProgress()+"");
+
+                return false;
+            }});
+
 
         btGoToCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,14 +114,44 @@ public class AddRoomRatingFragment extends Fragment {
             }
         });
 
-        //referencing the ratingbar for later use
-        rateing = (RatingBar) fragmentView.findViewById(R.id.add_room_ratingBar);
-
         return fragmentView;
 
 
     }
 
+    private void setSmileymage(int index) {
+
+        if(index != lastIndex) {
+
+
+            if(index < 10) {
+                view.setImageResource(R.drawable.ic_s1);
+            } else if (index >= 10 && index < 20) {
+                view.setImageResource(R.drawable.ic_s2);
+            } else if (index >= 20 && index < 30) {
+                view.setImageResource(R.drawable.ic_s3);
+            }else if (index >= 30 && index < 40) {
+                view.setImageResource(R.drawable.ic_s4);
+            }else if (index >= 40 && index < 50) {
+                view.setImageResource(R.drawable.ic_s5);
+            }else if (index >= 50 && index < 60) {
+                view.setImageResource(R.drawable.ic_s6);
+            }else if (index >= 60 && index < 70) {
+                view.setImageResource(R.drawable.ic_s7);
+            }else if (index >= 70 && index < 101) {
+                view.setImageResource(R.drawable.ic_s8);
+            }
+            
+
+            lastIndex = index;
+
+        }
+
+
+
+
+
+    }
 
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -143,6 +199,8 @@ public class AddRoomRatingFragment extends Fragment {
          * Starts the camera if there is one,
          * and stores the rating in a bundle
          */
+
+
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
@@ -151,7 +209,7 @@ public class AddRoomRatingFragment extends Fragment {
         }
 
         Bundle data = getArguments();
-        data.putDouble("rating",rateing.getRating());
+        data.putDouble("rating",rating.getProgress());
         allData = data;
 
 
@@ -171,8 +229,7 @@ public class AddRoomRatingFragment extends Fragment {
                 allData.getBoolean("groups")
         );
 
-        StudyRoom studyRoom = new StudyRoom(allData.getString("name"), allData.getString("address"), facilites, rateing.getRating());
-
+        StudyRoom studyRoom = new StudyRoom(allData.getString("name"), allData.getString("address"), facilites, rating.getProgress());
 
         ((AddRoomActivity)getActivity()).saveStudyRoom(studyRoom);
     }

@@ -173,6 +173,26 @@ public class AddRoomFacilitiesFragment extends Fragment {
     public void goToPage2() {
 
         Bundle bundle = getArguments();
+        boolean wifi = false, coffee = false, power = false, groups = false, food = false, toilet = false;
+        if (cbWifi.isChecked())
+            wifi = true;
+        if (cbToilet.isChecked())
+            toilet = true;
+        if (cbPower.isChecked())
+            power = true;
+        if (cbCoffee.isChecked())
+            coffee = true;
+        if (cbFood.isChecked())
+            food = true;
+        if (cbGroupSpaces.isChecked())
+            groups = true;
+        bundle.putBoolean("wifi",wifi);
+        bundle.putBoolean("toilet",toilet);
+        bundle.putBoolean("power",power);
+        bundle.putBoolean("coffee",coffee);
+        bundle.putBoolean("food",food);
+        bundle.putBoolean("groups",groups);
+
         AddRoomAddressFragment page2 = AddRoomAddressFragment.newInstance();
         page2.setArguments(bundle);
         FragmentManager manager = getActivity().getSupportFragmentManager();
