@@ -41,6 +41,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 
+import dtu.group.studyroom.addRoom.AddRoomAddressFragment;
 import dtu.group.studyroom.utils.Utils;
 
 import static dtu.group.studyroom.utils.Utils.LOG_GOOGLE_MAP_API;
@@ -66,6 +67,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
 
+    public static boolean debug = false;
     /**
      * Google maps items
      */
@@ -158,25 +160,27 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
         mapView = SupportMapFragment.newInstance();
 
+        if(!debug) {
 
-        // Connect to the API CLIENT for location
-        if(mGoogleApiClient == null) {
-            Log.i(LOG_GOOGLE_MAP_API, "API BUILD");
-            mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                    .enableAutoManage(getActivity() /* FragmentActivity */,
-                            this /* OnConnectionFailedListener */)
-                    .addConnectionCallbacks(this)
-                    .addApi(LocationServices.API)
-                    .addApi(Places.GEO_DATA_API)
-                    .addApi(Places.PLACE_DETECTION_API)
-                    .build();
+            // Connect to the API CLIENT for location
+            if (mGoogleApiClient == null) {
+                Log.i(LOG_GOOGLE_MAP_API, "API BUILD");
+                mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                        .enableAutoManage(getActivity() /* FragmentActivity */,
+                                this /* OnConnectionFailedListener */)
+                        .addConnectionCallbacks(this)
+                        .addApi(LocationServices.API)
+                        .addApi(Places.GEO_DATA_API)
+                        .addApi(Places.PLACE_DETECTION_API)
+                        .build();
+            }
+
+            if (!mGoogleApiClient.isConnected()) {
+                mGoogleApiClient.connect();
+                Log.i(LOG_GOOGLE_MAP_API, "API CONNECTED");
+            }
+
         }
-
-        if(!mGoogleApiClient.isConnected()) {
-            mGoogleApiClient.connect();
-            Log.i(LOG_GOOGLE_MAP_API, "API CONNECTED");
-        }
-
 
 
         setUpConstraintSets();
@@ -346,9 +350,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mGoogleApiClient.stopAutoManage(getActivity());
-        mGoogleApiClient.disconnect();
-        Log.i(LOG_GOOGLE_MAP_API, "API DISCONNECTED");
+        if(!debug) {
+            mGoogleApiClient.stopAutoManage(getActivity());
+            mGoogleApiClient.disconnect();
+            Log.i(LOG_GOOGLE_MAP_API, "API DISCONNECTED");
+        }
     }
 
 
@@ -361,9 +367,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
          * Already managing a GoogleApiClient with id
          * APIClient must be disconnected on fragment pause
          */
-        mGoogleApiClient.stopAutoManage(getActivity());
-        mGoogleApiClient.disconnect();
-        Log.i(LOG_GOOGLE_MAP_API, "API DISCONNECTED");
+        if(!debug) {
+            mGoogleApiClient.stopAutoManage(getActivity());
+            mGoogleApiClient.disconnect();
+            Log.i(LOG_GOOGLE_MAP_API, "API DISCONNECTED");
+        }
     }
 
 

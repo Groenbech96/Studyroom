@@ -79,7 +79,7 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
     private LatLng foundLatLng;
     private Location mLastKnownLocation;
 
-    private static boolean debug = true;
+    public static boolean debug = false;
 
     /**
      * Settings for google maps
@@ -124,7 +124,6 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_add_room_address, container, false);
 
-
         btnNext = (Button) fragmentView.findViewById(R.id.add_room_btAddressNext);
         btnNext.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
@@ -145,9 +144,8 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
                 goToPage1();
             }
             public void onSwipeLeft() {
-                goToPage3();
-            }
 
+            }
 
         });
 
