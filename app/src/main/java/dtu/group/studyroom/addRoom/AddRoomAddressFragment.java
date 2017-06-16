@@ -170,6 +170,13 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
 
         });
 
+        if(getArguments() != null)
+            if(getArguments().containsKey("address")) {
+                searchBar.setText(getArguments().getString("address"));
+            }
+
+
+
 
         try {
             fragmentView.findViewById(R.id.add_room_address_container).setElevation(5f);
@@ -322,10 +329,55 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
             }
         });
 
-
         updateLocationUI();
 
-        getDeviceLocation();
+        if(getArguments() != null) {
+            if (getArguments().containsKey("address") && getArguments().containsKey("latlng")) {
+                foundLatLng = getArguments().getParcelable("latlng");
+
+                MarkerOptions markerOptions = new MarkerOptions();
+
+                // Setting the position for the marker
+                markerOptions.position(foundLatLng);
+
+                List<Address> addresses = null;
+                String addressText = "";
+                Geocoder geocoder = new Geocoder(getActivity().getApplicationContext(), Locale.getDefault());
+                try {
+                    // Getting a maximum of 3 Address that matches the input text
+                    addresses = geocoder.getFromLocation(foundLatLng.latitude, foundLatLng.longitude, 1);
+                    if (addresses != null) {
+                        addressText = addresses.get(0).getAddressLine(0).toString();
+                        searchBar.setText(addressText);
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+                BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher);
+
+                markerOptions.icon(icon);
+
+                // Clears the previously touched position
+                //mMap.clear();
+
+                // Placing a marker on the touched position
+                mMap.addMarker(markerOptions);
+
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(foundLatLng, DEFAULT_ZOOM));
+
+
+
+            } else {
+                getDeviceLocation();
+            }
+        } else {
+            getDeviceLocation();
+        }
+
+
+
+
     }
 
 
@@ -422,28 +474,42 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
 
     public void goToPage3(){
 
-        Bundle bundle = getArguments();
-        bundle.putString("address", searchBar.getText().toString());
-        AddRoomFacilitiesFragment page3 = AddRoomFacilitiesFragment.newInstance();
-        page3.setArguments(bundle);
+        if(!searchBar.getText().toString().trim().equals("") && foundLatLng != null) {
 
-        FragmentManager manager = getActivity().getSupportFragmentManager();
-        final FragmentTransaction transaction = manager.beginTransaction();
+            Bundle bundle = getArguments();
+            bundle.putString("address", searchBar.getText().toString());
+            bundle.putParcelable("latlng", foundLatLng);
 
-        fragmentView.findViewById(R.id.add_room_address_container).setElevation(3);
+            AddRoomFacilitiesFragment page3 = AddRoomFacilitiesFragment.newInstance();
+            page3.setArguments(bundle);
 
-        transaction.setCustomAnimations(R.anim.slidein, R.anim.stayinplace);
+            FragmentManager manager = getActivity().getSupportFragmentManager();
+            final FragmentTransaction transaction = manager.beginTransaction();
 
-        transaction.addToBackStack(null);
-        transaction.replace(R.id.add_layout,page3).commit();
+            fragmentView.findViewById(R.id.add_room_address_container).setElevation(3);
+
+            transaction.setCustomAnimations(R.anim.slidein, R.anim.stayinplace);
+
+            transaction.addToBackStack(null);
+            transaction.replace(R.id.add_layout, page3).commit();
+
+        }
 
     }
 
     private void goToPage1() {
 
 
+        Bundle bundle = getArguments();
+
+        if(!searchBar.getText().toString().trim().equals("") && foundLatLng != null) {
+            bundle.putString("address", searchBar.getText().toString());
+            bundle.putParcelable("latlng", foundLatLng);
+
+        }
 
         AddRoomNameFragment page1 = AddRoomNameFragment.newInstance();
+        page1.setArguments(bundle);
 
         FragmentManager manager = getActivity().getSupportFragmentManager();
         final FragmentTransaction transaction = manager.beginTransaction();
@@ -454,7 +520,6 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
 
         transaction.replace(R.id.add_layout ,page1);
         transaction.commit();
-
 
 
 

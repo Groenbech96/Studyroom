@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -37,6 +38,7 @@ public class AddRoomNameFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
 
     private Button btnNext, btnBack;
+    private EditText text;
 
     public AddRoomNameFragment() {
         // Required empty public constructor
@@ -63,7 +65,6 @@ public class AddRoomNameFragment extends Fragment {
         fragmentView = inflater.inflate(R.layout.fragment_add_room_name, container, false);
 
 
-
         btnNext = (Button) fragmentView.findViewById(R.id.add_room_btNameNext);
         btnNext.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
@@ -87,9 +88,14 @@ public class AddRoomNameFragment extends Fragment {
                 goToPage2();
             }
 
-
         });
 
+        text = (EditText) fragmentView.findViewById(R.id.add_room_name_text);
+
+        if(getArguments() != null)
+            if(getArguments().containsKey("name")) {
+                text.setText(getArguments().getString("name"));
+            }
 
 
         return fragmentView;
@@ -147,14 +153,37 @@ public class AddRoomNameFragment extends Fragment {
         transaction.setCustomAnimations(R.anim.slidein, R.anim.stayinplace);
 
         AddRoomAddressFragment page2 = AddRoomAddressFragment.newInstance();
-        Bundle bundle = new Bundle();
-        final EditText text = (EditText) fragmentView.findViewById(R.id.add_room_name_text);
-        bundle.putString("name",text.getText().toString() );
-        page2.setArguments(bundle);
+        Bundle bundle;
 
-        transaction.replace(R.id.add_layout ,page2);
-        transaction.addToBackStack(null);
-        transaction.commit();
+        if(getArguments() == null)
+            bundle = new Bundle();
+        else
+            bundle = getArguments();
+
+
+        if(!text.getText().toString().trim().equals("")) {
+            if(text.getText().toString().trim().length() > 4) {
+
+                bundle.putString("name", text.getText().toString() );
+                page2.setArguments(bundle);
+
+                transaction.replace(R.id.add_layout ,page2);
+                transaction.addToBackStack(null);
+                transaction.commit();
+
+            } else {
+
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.showSoftInput(text, InputMethodManager.SHOW_IMPLICIT);
+
+            }
+        } else {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.showSoftInput(text, InputMethodManager.SHOW_IMPLICIT);
+        }
+
+
+
 
     }
 

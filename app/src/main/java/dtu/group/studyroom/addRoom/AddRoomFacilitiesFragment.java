@@ -172,9 +172,9 @@ public class AddRoomFacilitiesFragment extends Fragment {
 
     public void goToPage2() {
 
-
+        Bundle bundle = getArguments();
         AddRoomAddressFragment page2 = AddRoomAddressFragment.newInstance();
-
+        page2.setArguments(bundle);
         FragmentManager manager = getActivity().getSupportFragmentManager();
         final FragmentTransaction transaction = manager.beginTransaction();
 
