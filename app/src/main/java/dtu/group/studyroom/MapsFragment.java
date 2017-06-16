@@ -43,6 +43,8 @@ import com.google.android.gms.maps.model.MapStyleOptions;
 
 import dtu.group.studyroom.utils.Utils;
 
+import static dtu.group.studyroom.utils.Utils.LOG_GOOGLE_MAP_API;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -82,7 +84,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     private static final int DEFAULT_ZOOM = 15;
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean mLocationPermissionGranted;
-
 
     /**
      * Search dummt
@@ -159,17 +160,23 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
 
         // Connect to the API CLIENT for location
-        if(mGoogleApiClient == null)
+        if(mGoogleApiClient == null) {
+            Log.i(LOG_GOOGLE_MAP_API, "API BUILD");
             mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .enableAutoManage(getActivity() /* FragmentActivity */,
-                        this /* OnConnectionFailedListener */)
-                .addConnectionCallbacks(this)
-                .addApi(LocationServices.API)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .build();
+                    .enableAutoManage(getActivity() /* FragmentActivity */,
+                            this /* OnConnectionFailedListener */)
+                    .addConnectionCallbacks(this)
+                    .addApi(LocationServices.API)
+                    .addApi(Places.GEO_DATA_API)
+                    .addApi(Places.PLACE_DETECTION_API)
+                    .build();
+        }
 
-        mGoogleApiClient.connect();
+        if(!mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.connect();
+            Log.i(LOG_GOOGLE_MAP_API, "API CONNECTED");
+        }
+
 
 
         setUpConstraintSets();
@@ -250,8 +257,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
     }
 
-
-
     /**
      * Gets the current location of the device, and positions the mMap's camera.
      */
@@ -276,9 +281,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
         // Set the map's camera position to the current location of the device.
         if (mCameraPosition != null) {
-            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(mCameraPosition));
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(mCameraPosition));
         } else if (mLastKnownLocation != null) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                     new LatLng(mLastKnownLocation.getLatitude(),
                             mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
         } else {
@@ -332,17 +337,36 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onDetach() {
         super.onDetach();
-
         mListener = null;
     }
 
+    /**
+     * When fragment is destroyed, disconnect app
+     */
     @Override
     public void onDestroy() {
         super.onDestroy();
         mGoogleApiClient.stopAutoManage(getActivity());
         mGoogleApiClient.disconnect();
-
+        Log.i(LOG_GOOGLE_MAP_API, "API DISCONNECTED");
     }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        /**
+         * In order not to have a error:
+         * Already managing a GoogleApiClient with id
+         * APIClient must be disconnected on fragment pause
+         */
+        mGoogleApiClient.stopAutoManage(getActivity());
+        mGoogleApiClient.disconnect();
+        Log.i(LOG_GOOGLE_MAP_API, "API DISCONNECTED");
+    }
+
+
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -371,7 +395,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
             ActivityCompat.requestPermissions(this.getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
 
-        Log.i("GOOGLEMAPS", "LOCATION TURNED OFF");
+        Log.i(LOG_GOOGLE_MAP_API, "LOCATION TURNED OFF");
         if (mLocationPermissionGranted) {
             mMap.setMyLocationEnabled(false);
         } else {
@@ -388,7 +412,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
             ActivityCompat.requestPermissions(this.getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
         }
 
-        Log.i("GOOGLEMAPS", "LOCATION TURNED ON");
+        Log.i(LOG_GOOGLE_MAP_API, "LOCATION TURNED ON");
         if (mLocationPermissionGranted) {
             mMap.setMyLocationEnabled(true);
         } else {
@@ -438,7 +462,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
      * Do a searchdummy animation
      */
     public void animateSearchDummyToSearch(Transition transition) {
-        
+
 
         // Animate status bar color
         animateViewColor(getActivity().findViewById(R.id.status_bar_below_layer),
@@ -535,9 +559,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
             fragmentTransaction.replace(R.id.contentLayer, searchFragment, Utils.SEARCH_FRAGMENT_TAG);
             fragmentTransaction.addToBackStack(null);
 
-            MapsFragment.this.pauseMapServices();
-
-            fragmentTransaction.commit();
+             MapsFragment.this.pauseMapServices();
+             fragmentTransaction.commit();
         }
 
         @Override

@@ -11,11 +11,7 @@
     <string name="bottom_navigation_account_person">My account</string>
     <string name="searchbar_title">Find study room</string>
     <string name="title_activity_maps">Map</string>
-    <string name="add_study_room_title">Add study room</string>
-    <string name="add_study_room_buttonNext">Next</string>
-    <string name="add_study_room_facilitiesText">Which facilities does the study area have?</string>
-    <string name="add_study_room_ratingText">How do you rate this place?</string>
-    <string name="add_study_room_go_to_camera_button">Go to camera</string>
+
     <string name="style_json">
   [
     {
@@ -210,4 +206,15 @@
   ]
   </string>
     <string name="title_activity_add_room">AddRoomActivity</string>
+    <string name="sharedprefs">sharedPrefs</string>
+    <string name="add_room_address_first_run">add_room_address_first_run</string>
+
+    <!-- Add room strings  -->
+    <string name="add_room_name_hint">Give area a name</string>
+    <string name="add_room_address_hint">What is your address?</string>
+    <string name="add_study_room_title">Add study room</string>
+    <string name="add_study_room_buttonNext">Next</string>
+    <string name="add_study_room_facilitiesText">Which facilities does the study area have?</string>
+    <string name="add_study_room_ratingText">How do you rate this place?</string>
+    <string name="add_study_room_go_to_camera_button">Go to camera</string>
 </resources>

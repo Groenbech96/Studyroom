@@ -4,6 +4,8 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -50,15 +52,30 @@ public class AddRoomRatingFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_add_room_rating, container, false);
-        final Button btGoToCamera = (Button) fragmentView.findViewById(R.id.btRatingNext);
-        rateing = (RatingBar) fragmentView.findViewById(R.id.add_room_ratingBar);
+        final Button btGoToCamera = (Button) fragmentView.findViewById(R.id.add_room_btRatingNext);
         btGoToCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goToCamera();
             }
         });
+
+        final Button btBack = (Button) fragmentView.findViewById(R.id.add_room_btRatingBack);
+        btBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToPage3();
+            }
+        });
+
+
+
+
+        rateing = (RatingBar) fragmentView.findViewById(R.id.add_room_ratingBar);
+
         return fragmentView;
+
+
     }
 
 
@@ -123,6 +140,21 @@ public class AddRoomRatingFragment extends Fragment {
 
     }
 
+
+    public void goToPage3() {
+
+        AddRoomFacilitiesFragment page3 = AddRoomFacilitiesFragment.newInstance();
+
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        final FragmentTransaction transaction = manager.beginTransaction();
+
+        transaction.setCustomAnimations(R.anim.stayinplace, R.anim.slideout);
+
+        transaction.replace(R.id.add_layout ,page3);
+        transaction.commit();
+
+
+    }
 
 
 }

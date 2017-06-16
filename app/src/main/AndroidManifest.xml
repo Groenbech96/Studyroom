@@ -45,6 +45,7 @@
         <activity
             android:name=".AddRoomActivity"
             android:label="@string/title_activity_add_room"
+            android:screenOrientation="portrait"
             android:theme="@style/AppTheme"></activity>
     </application>
 
