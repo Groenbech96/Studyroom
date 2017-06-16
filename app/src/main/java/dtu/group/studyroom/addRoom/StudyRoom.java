@@ -10,6 +10,7 @@ public class StudyRoom {
     public StudyRoomFacilites facilites;
     public float rating;
 
+
     public StudyRoom() {
 
     }

@@ -13,4 +13,5 @@
     <color name="colorStatusBarSecondary">@android:color/transparent</color>
 
     <color name="greyBox">#c1c1c1</color>
+    <color name="colorBackgroundSecondary">#fff3f3f3</color>
 </resources>

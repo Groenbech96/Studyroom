@@ -54,15 +54,26 @@ public class AddRoomFacilitiesFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         fragmentView = inflater.inflate(R.layout.fragment_add_room_facilities, container, false);
-        Log.i("Facility fragment", getArguments().getString("name") +"    " + getArguments().getString("address"));
-        final Button btNext = (Button) fragmentView.findViewById(R.id.btFacilitiesNext);
+        // Log.i("Facility fragment", getArguments().getString("name") +"    " + getArguments().getString("address"));
+
+        final Button btNext = (Button) fragmentView.findViewById(R.id.add_room_btFacilitiesNext);
         btNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goToPage4();
             }
         });
+
+        final Button btBack = (Button) fragmentView.findViewById(R.id.add_room_btFacilitiesBack);
+        btBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToPage2();
+            }
+        });
+
         // referencing rest of the objects
         cbCoffee = (CheckBox) fragmentView.findViewById(R.id.cbCoffee);
         cbFood = (CheckBox) fragmentView.findViewById(R.id.cbFood);
@@ -70,6 +81,13 @@ public class AddRoomFacilitiesFragment extends Fragment {
         cbPower = (CheckBox) fragmentView.findViewById(R.id.cbPower);
         cbToilet = (CheckBox) fragmentView.findViewById(R.id.cbToilet);
         cbWifi = (CheckBox) fragmentView.findViewById(R.id.cbWifi);
+
+
+        try {
+            fragmentView.findViewById(R.id.add_room_facility_container).setElevation(5f);
+        } catch (Exception e) {
+            Log.e("ELEVATION ERROR", "ELEVATION FAILED in OCW Fac");
+        }
 
         return fragmentView;
     }
@@ -96,6 +114,12 @@ public class AddRoomFacilitiesFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+
+        try {
+            fragmentView.findViewById(R.id.add_room_facility_container).setElevation(0f);
+        } catch (Exception e) {
+            Log.e("ELEVATION ERROR", "ELEVATION FAILED in OD fac");
+        }
     }
 
     /**
@@ -139,11 +163,29 @@ public class AddRoomFacilitiesFragment extends Fragment {
         FragmentManager manager = getActivity().getSupportFragmentManager();
         final FragmentTransaction transaction = manager.beginTransaction();
 
-        fragmentView.findViewById(R.id.add_room_facility_container).setElevation(3);
-
         transaction.setCustomAnimations(R.anim.slidein, R.anim.stayinplace);
         transaction.addToBackStack(null);
         transaction.replace(R.id.add_layout,page4).commit();
+
+    }
+
+
+    public void goToPage2() {
+
+        Bundle bundle = getArguments();
+        AddRoomAddressFragment page2 = AddRoomAddressFragment.newInstance();
+        page2.setArguments(bundle);
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        final FragmentTransaction transaction = manager.beginTransaction();
+
+        transaction.setCustomAnimations(R.anim.stayinplace, R.anim.slideout);
+
+
+
+        transaction.replace(R.id.add_layout ,page2);
+        transaction.commit();
+
+
 
 
 

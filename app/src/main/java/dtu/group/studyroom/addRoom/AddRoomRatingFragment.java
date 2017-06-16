@@ -1,15 +1,29 @@
 package dtu.group.studyroom.addRoom;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+
+import android.support.v4.content.FileProvider;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.RatingBar;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import dtu.group.studyroom.AddRoomActivity;
 import dtu.group.studyroom.Main;
@@ -28,6 +42,8 @@ public class AddRoomRatingFragment extends Fragment {
 
     private View fragmentView;
     private RatingBar rateing;
+    private Bundle allData;
+    String mCurrentPhotoPath;
 
     private OnFragmentInteractionListener mListener;
 
@@ -50,15 +66,34 @@ public class AddRoomRatingFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_add_room_rating, container, false);
-        final Button btGoToCamera = (Button) fragmentView.findViewById(R.id.btRatingNext);
+
+        final Button btGoToCamera = (Button) fragmentView.findViewById(R.id.add_room_btRatingNext);
+
+
+        final Button btBack = (Button) fragmentView.findViewById(R.id.add_room_btRatingBack);
+        btBack.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToPage3();
+            }
+        });
+
+
         rateing = (RatingBar) fragmentView.findViewById(R.id.add_room_ratingBar);
+
         btGoToCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goToCamera();
             }
         });
+
+        //referencing the ratingbar for later use
+        rateing = (RatingBar) fragmentView.findViewById(R.id.add_room_ratingBar);
+
         return fragmentView;
+
+
     }
 
 
@@ -104,25 +139,59 @@ public class AddRoomRatingFragment extends Fragment {
 
 
     private void goToCamera() {
+        /**
+         * Starts the camera if there is one,
+         * and stores the rating in a bundle
+         */
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+
+          getActivity().startActivityForResult(cameraIntent,1);
+        }
 
         Bundle data = getArguments();
+        data.putDouble("rating",rateing.getRating());
+        allData = data;
 
-        StudyRoom.StudyRoomFacilites facilites = new StudyRoom().new StudyRoomFacilites(
-                data.getBoolean("wifi"),
-                data.getBoolean("toilet"),
-                data.getBoolean("power"),
-                data.getBoolean("coffee"),
-                data.getBoolean("food"),
-                data.getBoolean("groups")
-        );
-
-        StudyRoom studyRoom = new StudyRoom(data.getString("name"), data.getString("address"), facilites, rateing.getRating());
-
-
-        ((AddRoomActivity)getActivity()).saveStudyRoom(studyRoom);
 
     }
 
+    private void upload() {
+        /**
+         * Grabs information given from earlier fragments to create the study room
+         * After this is done, it is uploaded to the server.
+         */
+        StudyRoom.StudyRoomFacilites facilites = new StudyRoom().new StudyRoomFacilites(
+                allData.getBoolean("wifi"),
+                allData.getBoolean("toilet"),
+                allData.getBoolean("power"),
+                allData.getBoolean("coffee"),
+                allData.getBoolean("food"),
+                allData.getBoolean("groups")
+        );
+
+        StudyRoom studyRoom = new StudyRoom(allData.getString("name"), allData.getString("address"), facilites, rateing.getRating());
+
+
+        ((AddRoomActivity)getActivity()).saveStudyRoom(studyRoom);
+    }
+
+
+    public void goToPage3() {
+
+        AddRoomFacilitiesFragment page3 = AddRoomFacilitiesFragment.newInstance();
+
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        final FragmentTransaction transaction = manager.beginTransaction();
+
+        transaction.setCustomAnimations(R.anim.stayinplace, R.anim.slideout);
+
+        transaction.replace(R.id.add_layout ,page3);
+        transaction.commit();
+
+
+    }
 
 
 }
