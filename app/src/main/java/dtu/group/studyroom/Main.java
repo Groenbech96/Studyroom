@@ -40,6 +40,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -58,6 +59,8 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
         AddRoomAddressFragment.OnFragmentInteractionListener,
         AddRoomFacilitiesFragment.OnFragmentInteractionListener,
         AddRoomRatingFragment.OnFragmentInteractionListener {
+
+    private ArrayList<StudyRoom> studyRooms = new ArrayList<>();
 
     private enum FADE {IN, OUT};
 

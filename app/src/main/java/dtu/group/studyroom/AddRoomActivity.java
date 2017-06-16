@@ -40,6 +40,7 @@ import dtu.group.studyroom.addRoom.AddRoomFacilitiesFragment;
 import dtu.group.studyroom.addRoom.AddRoomNameFragment;
 import dtu.group.studyroom.addRoom.AddRoomRatingFragment;
 import dtu.group.studyroom.addRoom.StudyRoom;
+import dtu.group.studyroom.firebase.Firebase;
 import dtu.group.studyroom.utils.Utils;
 
 public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFragment.OnFragmentInteractionListener,
@@ -49,10 +50,9 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
 
     private StorageReference mStorage;
     private DatabaseReference mDatabase;
-    private FirebaseAuth mAuth;
     private Bitmap picture;
 
-    private ProgressDialog mProgress;
+
 
 
     @Override
@@ -63,35 +63,7 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.add(R.id.add_layout,page1, Utils.ADDROOM_NAME_FRAGMENT_TAG).commit();
 
-        mAuth = FirebaseAuth.getInstance();
-
-        mAuth.signInAnonymously()
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("FIREBASE", "signInAnonymously:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            //updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("FIREBASE", "signInAnonymously:failure", task.getException());
-
-                            //updateUI(null);
-                        }
-
-                        // ...
-                    }
-                });
-
-        /**
-         * Set up references to firebase storage and database
-         */
-        mStorage = FirebaseStorage.getInstance().getReference();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
-        mProgress = new ProgressDialog(this);
+        Firebase.getInstance().logInAnonymously(this);
 
     }
     @Override
@@ -99,77 +71,7 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
 
     }
 
-    public void saveStudyRoom(StudyRoom studyRoom) {
 
-        mProgress.setMessage("Uploading studyroom..");
-        mProgress.show();
-
-        /**
-         * Extract fields from studyroom model
-         */
-        final String name = studyRoom.name;
-        final String address = studyRoom.address;
-        final int wifi = studyRoom.facilites.wifi;
-        final int coffee = studyRoom.facilites.coffee;
-        final int food = studyRoom.facilites.food;
-        final int groups = studyRoom.facilites.groups;
-        final int power = studyRoom.facilites.power;
-        final int toilet = studyRoom.facilites.toilet;
-        final float rating = studyRoom.rating;
-
-        /**
-         * Generate unique id for the image
-         */
-        String uuid = UUID.randomUUID().toString();
-
-        /**
-         * Set file path with the unique ID
-         */
-        StorageReference filepath = mStorage.child("studyroomImages").child(uuid);
-
-        /**
-         * Compress the bitmap into jpeg format
-         */
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        picture.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
-
-        /**
-         * Upload the file to the the firebase storage
-         */
-        filepath.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                /**
-                 * Get the reference to the image
-                 */
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
-
-
-                /**
-                 * Save the study room under a unique ID
-                 */
-                DatabaseReference usersRef = mDatabase.child("studyrooms");
-
-                String key = usersRef.push().getKey();
-
-                usersRef.child(key).child("name").setValue(name);
-                usersRef.child(key).child("address").setValue(address);
-                usersRef.child(key).child("facilites").child("wifi").setValue(wifi);
-                usersRef.child(key).child("facilites").child("coffee").setValue(coffee);
-                usersRef.child(key).child("facilites").child("food").setValue(food);
-                usersRef.child(key).child("facilites").child("groups").setValue(groups);
-                usersRef.child(key).child("facilites").child("power").setValue(power);
-                usersRef.child(key).child("facilites").child("toilet").setValue(toilet);
-                usersRef.child(key).child("rating").setValue(rating);
-                usersRef.child(key).child("image").setValue(downloadUrl.toString());
-
-                mProgress.dismiss();
-            }
-        });
-
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
