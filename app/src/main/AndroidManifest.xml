@@ -42,11 +42,19 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
+
+        <activity
+            android:name=".ContentActivity"
+            android:label="ContentPage"
+            android:screenOrientation="portrait"></activity>
+
         <activity
             android:name=".AddRoomActivity"
             android:label="@string/title_activity_add_room"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme"></activity>
+
+
 
     </application>
 
