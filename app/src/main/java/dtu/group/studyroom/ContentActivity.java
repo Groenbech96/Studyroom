@@ -28,7 +28,7 @@ public class ContentActivity extends Activity {
 
     }
 
-
+/*
     public void setPage(StudyRoom studyroom){
         Områdenavn = (TextView)findViewById(R.id.OmrådeNavn);
         Områdenavn.setText(studyroom.name);
@@ -74,7 +74,7 @@ public class ContentActivity extends Activity {
 
     }
 
-
+*/
 
 
 

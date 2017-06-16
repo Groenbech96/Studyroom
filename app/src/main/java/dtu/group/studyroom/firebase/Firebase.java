@@ -12,15 +12,20 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.util.HashMap;
 import java.util.UUID;
 
+import dtu.group.studyroom.Main;
 import dtu.group.studyroom.addRoom.StudyRoom;
 
 /**
@@ -32,14 +37,29 @@ public class Firebase {
     private static Firebase firebase;
 
     private StorageReference mStorage = FirebaseStorage.getInstance().getReference();
-    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("studyrooms");
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
     private Firebase () {
+        Log.i("lol1", "hejhej");
+        /**
+         * Set up listener
+         */
+        mDatabase.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                downloadStudyRoom(dataSnapshot);
+            }
 
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     public static Firebase getInstance() {
+
         return firebase == null ? firebase = new Firebase() : firebase;
     }
 
@@ -66,71 +86,128 @@ public class Firebase {
 
     }
 
-    public void saveStudyRoom(StudyRoom studyRoom, Bitmap picture) {
+    private void downloadStudyRoom(DataSnapshot dataSnapshot) {
+
+        HashMap<String, StudyRoom> localStudyRooms = Main.getStudyrooms();
+
+        for (DataSnapshot studyRoomSnapshot : dataSnapshot.getChildren()) {
+
+            StudyRoom studyRoom = createStudyRoomFromSnapshot(studyRoomSnapshot);
+            localStudyRooms.put(studyRoomSnapshot.getKey(),studyRoom);
+
+        }
+        Main.setStudyrooms(localStudyRooms);
+    }
+
+    private StudyRoom createStudyRoomFromSnapshot(DataSnapshot studyRoomSnapshot) {
+
+        StudyRoom studyRoom = new StudyRoom();
+
+        for (DataSnapshot attributeSnapshot : studyRoomSnapshot.getChildren()) {
+            switch (attributeSnapshot.getKey()) {
+                case "name" :
+                    studyRoom.setName(attributeSnapshot.getValue().toString());
+                    break;
+                case "address" :
+                    studyRoom.setAddress(attributeSnapshot.getValue().toString());
+                    break;
+                case "rating" :
+                    try{
+                        studyRoom.setRating((double)attributeSnapshot.getValue());
+                    } catch(ClassCastException e){
+                        Long l = (long) attributeSnapshot.getValue();
+                        double d = l.doubleValue();
+                        studyRoom.setRating(d);
+                    }
+                    break;
+                case "facilities" :
+                    StudyRoom.StudyRoomFacilites facilites = createFacilitiesFromSnapshot(attributeSnapshot);
+                    studyRoom.setFacilites(facilites);
+                    break;
+            }
+        }
+
+        return studyRoom;
+    }
+
+    private StudyRoom.StudyRoomFacilites createFacilitiesFromSnapshot(DataSnapshot attributeSnapshot) {
+        StudyRoom.StudyRoomFacilites facilites = new StudyRoom().new StudyRoomFacilites();
+
+        for (DataSnapshot facilitySnapshot : attributeSnapshot.getChildren()) {
+
+            Long l;
+            int i;
+
+            switch (facilitySnapshot.getKey()) {
+                case "wifi" :
+                    l = (long) facilitySnapshot.getValue();
+                    i = l.intValue();
+                    facilites.setWifi(i);
+                    break;
+                case "toilet" :
+                    l = (long) facilitySnapshot.getValue();
+                    i = l.intValue();
+                    facilites.setToilet(i);
+                    break;
+                case "power" :
+                    l = (long) facilitySnapshot.getValue();
+                    i = l.intValue();
+                    facilites.setPower(i);
+                    break;
+                case "coffee" :
+                    l = (long) facilitySnapshot.getValue();
+                    i = l.intValue();
+                    facilites.setCoffee(i);
+                    break;
+                case "food" :
+                    l = (long) facilitySnapshot.getValue();
+                    i = l.intValue();
+                    facilites.setFood(i);
+                    break;
+                case "groups" :
+                    l = (long) facilitySnapshot.getValue();
+                    i = l.intValue();
+                    facilites.setGroups(i);
+                    break;
+            }
+        }
+
+        return facilites;
+    }
+
+    public void uploadStudyRoom(StudyRoom studyRoom) {
 
         /**
          * Extract fields from studyroom model
          */
-        final String name = studyRoom.name;
-        final String address = studyRoom.address;
-        final int wifi = studyRoom.facilites.wifi;
-        final int coffee = studyRoom.facilites.coffee;
-        final int food = studyRoom.facilites.food;
-        final int groups = studyRoom.facilites.groups;
-        final int power = studyRoom.facilites.power;
-        final int toilet = studyRoom.facilites.toilet;
-        final float rating = studyRoom.rating;
+
+        final String name = studyRoom.getName();
+        final String address = studyRoom.getAddress();
+        final int wifi = studyRoom.getFacilites().getWifi();
+        final int coffee = studyRoom.getFacilites().getCoffee();
+        final int food = studyRoom.getFacilites().getFood();
+        final int groups = studyRoom.getFacilites().getGroups();
+        final int power = studyRoom.getFacilites().getPower();
+        final int toilet = studyRoom.getFacilites().getToilet();
+        final double rating = studyRoom.getRating();
+
 
         /**
-         * Generate unique id for the image
+         * Save the study room under a unique ID
          */
-        String uuid = UUID.randomUUID().toString();
+        DatabaseReference usersRef = mDatabase;
 
-        /**
-         * Set file path with the unique ID
-         */
-        StorageReference filepath = mStorage.child("studyroomImages").child(uuid);
+        String key = usersRef.push().getKey();
 
-        /**
-         * Compress the bitmap into jpeg format
-         */
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        picture.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
-
-        /**
-         * Upload the file to the the firebase storage
-         */
-        filepath.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-
-                /**
-                 * Get the reference to the image
-                 */
-                Uri downloadUrl = taskSnapshot.getDownloadUrl();
-
-
-                /**
-                 * Save the study room under a unique ID
-                 */
-                DatabaseReference usersRef = mDatabase.child("studyrooms");
-
-                String key = usersRef.push().getKey();
-
-                usersRef.child(key).child("name").setValue(name);
-                usersRef.child(key).child("address").setValue(address);
-                usersRef.child(key).child("facilites").child("wifi").setValue(wifi);
-                usersRef.child(key).child("facilites").child("coffee").setValue(coffee);
-                usersRef.child(key).child("facilites").child("food").setValue(food);
-                usersRef.child(key).child("facilites").child("groups").setValue(groups);
-                usersRef.child(key).child("facilites").child("power").setValue(power);
-                usersRef.child(key).child("facilites").child("toilet").setValue(toilet);
-                usersRef.child(key).child("rating").setValue(rating);
-                usersRef.child(key).child("image").setValue(downloadUrl.toString());
-
-            }
-        });
+        usersRef.child(key).child("name").setValue(name);
+        usersRef.child(key).child("address").setValue(address);
+        usersRef.child(key).child("facilities").child("wifi").setValue(wifi);
+        usersRef.child(key).child("facilities").child("coffee").setValue(coffee);
+        usersRef.child(key).child("facilities").child("food").setValue(food);
+        usersRef.child(key).child("facilities").child("groups").setValue(groups);
+        usersRef.child(key).child("facilities").child("power").setValue(power);
+        usersRef.child(key).child("facilities").child("toilet").setValue(toilet);
+        usersRef.child(key).child("rating").setValue(rating);
 
     }
 

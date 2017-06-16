@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "764322996708-7h6hg0deo24i4l2eg1ss4phti15o83ai.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dtu.group.studyroom",
+            "certificate_hash": "fc71f87b91035f82dc3a7862de16fe3da692d0a4"
+          }
+        },
+        {
           "client_id": "764322996708-vbslstjrv7dujunltc71mce2kb0ftpib.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

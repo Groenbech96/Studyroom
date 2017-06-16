@@ -6,20 +6,51 @@ package dtu.group.studyroom.addRoom;
 
 public class StudyRoom {
 
-    public String name, address;
-    public StudyRoomFacilites facilites;
-    public float rating;
-
+    private String name, address;
+    private StudyRoomFacilites facilites;
+    private double rating;
 
     public StudyRoom() {
 
     }
 
-    public StudyRoom(String name, String address, StudyRoomFacilites facilites, float rating) {
+    public StudyRoom(String name, String address, StudyRoomFacilites facilites, double rating) {
         this.rating = rating;
         this.name = name;
         this.address = address;
         this.facilites = facilites;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setFacilites(StudyRoomFacilites facilites) {
+        this.facilites = facilites;
+    }
+
+    public void setRating(double rating) {
+        this.rating = rating;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public StudyRoomFacilites getFacilites() {
+        return facilites;
+    }
+
+    public double getRating() {
+        return rating;
     }
 
 
@@ -27,12 +58,16 @@ public class StudyRoom {
 
     public class StudyRoomFacilites {
 
-        public int wifi,
-                toilet,
-                power,
-                coffee,
-                food,
-                groups;
+        private int wifi;
+        private int toilet;
+        private int power;
+        private int coffee;
+        private int food;
+        private int groups;
+
+        public StudyRoomFacilites() {
+
+        }
 
         public StudyRoomFacilites(boolean wifi,
                                   boolean toilet,
@@ -49,7 +84,53 @@ public class StudyRoom {
             this.toilet = toilet ? 1 :  0;
         }
 
+        public void setWifi(int wifi) {
+            this.wifi = wifi;
+        }
 
+        public void setToilet(int toilet) {
+            this.toilet = toilet;
+        }
+
+        public void setPower(int power) {
+            this.power = power;
+        }
+
+        public void setCoffee(int coffee) {
+            this.coffee = coffee;
+        }
+
+        public void setFood(int food) {
+            this.food = food;
+        }
+
+        public void setGroups(int groups) {
+            this.groups = groups;
+        }
+
+        public int getWifi() {
+            return wifi;
+        }
+
+        public int getToilet() {
+            return toilet;
+        }
+
+        public int getPower() {
+            return power;
+        }
+
+        public int getCoffee() {
+            return coffee;
+        }
+
+        public int getFood() {
+            return food;
+        }
+
+        public int getGroups() {
+            return groups;
+        }
     }
 
 

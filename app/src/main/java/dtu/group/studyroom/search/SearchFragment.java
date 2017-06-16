@@ -1,4 +1,4 @@
-package dtu.group.studyroom;
+package dtu.group.studyroom.search;
 
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
@@ -9,21 +9,13 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v4.app.Fragment;
-import android.transition.AutoTransition;
-import android.transition.ChangeBounds;
-import android.transition.Scene;
-import android.transition.Slide;
-import android.transition.TransitionManager;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+
+import dtu.group.studyroom.R;
 
 
 /**

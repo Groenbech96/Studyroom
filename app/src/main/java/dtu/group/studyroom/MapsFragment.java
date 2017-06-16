@@ -41,7 +41,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 
-import dtu.group.studyroom.addRoom.AddRoomAddressFragment;
+import dtu.group.studyroom.search.SearchFragment;
 import dtu.group.studyroom.utils.Utils;
 
 import static dtu.group.studyroom.utils.Utils.LOG_GOOGLE_MAP_API;
