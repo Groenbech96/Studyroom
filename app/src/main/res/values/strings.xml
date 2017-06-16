@@ -217,4 +217,24 @@
     <string name="add_study_room_facilitiesText">Which facilities does the study area have?</string>
     <string name="add_study_room_ratingText">How do you rate this place?</string>
     <string name="add_study_room_go_to_camera_button">Go to camera</string>
+
+
+    <!--contentPage Strings -->
+    <string name="wifi_string">WIFI</string>
+    <string name="power_string">Power</string>
+    <string name="coffee_string">Coffee</string>
+    <string name="group_string">Group spaces</string>
+    <string name="bathroom_string">Bathroom</string>
+    <string name="food_string">Food</string>
+    <string name="studyroom_string">Studyroom name</string>
+    <string name="address_string">AdresseStreng</string>
+    <string name="distance_string">afstand fra dig</string>
+    <string name="studyroom_image_string">Studyroom image</string>
+
+
+
+
+
+
+
 </resources>
