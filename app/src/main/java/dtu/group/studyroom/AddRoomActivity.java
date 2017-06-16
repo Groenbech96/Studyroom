@@ -159,11 +159,13 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        /**
+         * If request and resultcode are okay, we save the picture just taken.
+         */
         if (requestCode == 1 && resultCode == RESULT_OK) {
             Bundle bundle = data.getExtras();
             picture= (Bitmap)bundle.get("data");
 
-            Log.i("lol","hej");
         }
     }
 

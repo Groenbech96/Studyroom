@@ -49,6 +49,8 @@ public class AddRoomAddressFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_add_room_address, container, false);
+
+        // Setting buttonlistener
         final Button btNext = (Button) fragmentView.findViewById(R.id.btAddressNext);
         btNext.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -61,9 +61,10 @@ public class AddRoomRatingFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_add_room_rating, container, false);
+
+        //set buttonlisterners for the buttons
         final Button btGoToCamera = (Button) fragmentView.findViewById(R.id.btRatingNext);
         final Button btUpload = (Button) fragmentView.findViewById(R.id.btUpload);
-        rateing = (RatingBar) fragmentView.findViewById(R.id.add_room_ratingBar);
         btGoToCamera.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,6 +77,9 @@ public class AddRoomRatingFragment extends Fragment {
                 upload();
             }
         });
+
+        //referencing the ratingbar for later use
+        rateing = (RatingBar) fragmentView.findViewById(R.id.add_room_ratingBar);
         return fragmentView;
     }
 
@@ -122,7 +126,10 @@ public class AddRoomRatingFragment extends Fragment {
 
 
     private void goToCamera() {
-
+        /**
+         * Starts the camera if there is one,
+         * and stores the rating in a bundle
+         */
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
@@ -138,6 +145,10 @@ public class AddRoomRatingFragment extends Fragment {
     }
 
     private void upload() {
+        /**
+         * Grabs information given from earlier fragments to create the study room
+         * After this is done, it is uploaded to the server.
+         */
         StudyRoom.StudyRoomFacilites facilites = new StudyRoom().new StudyRoomFacilites(
                 allData.getBoolean("wifi"),
                 allData.getBoolean("toilet"),
