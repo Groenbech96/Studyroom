@@ -22,12 +22,14 @@ public class SearchAdapter extends BaseAdapter{
     ArrayList<StudyRoom> studyRooms = new ArrayList<>();
 
     public SearchAdapter(Context context) {
+
+        super();
         this.context = context;
     }
 
     @Override
     public int getCount() {
-        return 0;
+        return studyRooms.size();
     }
 
     @Override
@@ -57,7 +59,8 @@ public class SearchAdapter extends BaseAdapter{
         }
 
         final TextView name = viewHolder.name;
-        name.setText(studyRoom.getName());
+        String name1 = studyRoom.getName();
+        name.setText(name1);
 
         final TextView address = viewHolder.address;
         address.setText(studyRoom.getAddress());
