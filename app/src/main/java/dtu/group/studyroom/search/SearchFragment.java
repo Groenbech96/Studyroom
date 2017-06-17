@@ -18,6 +18,8 @@ import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.HashMap;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import dtu.group.studyroom.Main;
 import dtu.group.studyroom.R;
@@ -115,11 +117,14 @@ public class SearchFragment extends Fragment {
             public void onClick(View v) {
                 HashMap<String, StudyRoom> localStudyRooms = Main.getStudyrooms();
 
-                StudyRoom studyRoom3 = new StudyRoom("Navn3", "adresse3", new StudyRoom().new StudyRoomFacilites(true,true,true,true,true,true), 3);
+                StudyRoom studyRoom3 = new StudyRoom("Cafe Laksen", "København Ø", new StudyRoom().new StudyRoomFacilites(true,true,true,true,true,true), 3);
 
-                localStudyRooms.put("eldeefoefk", studyRoom3);
+                String uuid = UUID.randomUUID().toString();
+
+                localStudyRooms.put(uuid, studyRoom3);
                 Main.setStudyrooms(localStudyRooms);
                 insertStudyRoomsToListView();
+
             }
         });
 

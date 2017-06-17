@@ -1,5 +1,6 @@
 package dtu.group.studyroom.search;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
@@ -13,6 +14,8 @@ public class searchListView extends ListView {
 
     private android.view.ViewGroup.LayoutParams parameters;
     private int previousCount = 0;
+    private int previousHeight = 0;
+    private int newHeight = 0;
 
     public searchListView(Context context, AttributeSet attributes) {
         super(context, attributes);
@@ -23,13 +26,32 @@ public class searchListView extends ListView {
     {
         if (getCount() != previousCount)
         {
-            int height = getChildAt(0).getHeight() + 1 ;
+            int childHeight = getChildAt(0).getHeight() + 1 ;
+
+            previousHeight = childHeight * previousCount;
             previousCount = getCount();
-            parameters = getLayoutParams();
-            parameters.height = getCount() * height;
-            setLayoutParams(parameters);
+
+            newHeight = getCount() * childHeight;
+
+            animateHeightChange();
         }
 
         super.onDraw(canvas);
+    }
+
+    public void animateHeightChange(){
+        ValueAnimator va = ValueAnimator.ofInt(previousHeight, newHeight);
+        int mDuration = 200;
+        va.setDuration(mDuration);
+
+        va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            public void onAnimationUpdate(ValueAnimator animation) {
+                Integer value = (Integer) animation.getAnimatedValue();
+                parameters = getLayoutParams();
+                parameters.height = value.intValue();
+                setLayoutParams(parameters);
+            }
+        });
+        va.start();
     }
 }

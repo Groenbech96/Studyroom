@@ -63,10 +63,7 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
 
         Firebase.getInstance().logInAnonymously(this);
 
-        StudyRoom studyRoom1 = new StudyRoom("Navn1", "adresse1", new StudyRoom().new StudyRoomFacilites(true,true,true,true,true,true), 3);
-        StudyRoom studyRoom2 = new StudyRoom("Navn2", "adresse2", new StudyRoom().new StudyRoomFacilites(true,true,true,true,true,true), 3);
-        studyrooms.put("tqwysgfdikwjdeej", studyRoom1);
-        studyrooms.put("tqwysgfdikwjdeeh", studyRoom2);
+
         /**
          * Start the maps fragment
          */
