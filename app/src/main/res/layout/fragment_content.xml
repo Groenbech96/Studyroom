@@ -1,15 +1,24 @@
+
+<!-- VERSION IS IN ADD_ROOM_REVIEW  -->
+
+<!--
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.constraint.ConstraintLayout
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+<<<<<<< HEAD
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="0dp"
         android:layout_height="match_parent"
+=======
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+>>>>>>> 3b55ef6217af9d3e8aab672c5195a2e489cd37fb
         android:fillViewport="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -17,6 +26,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <android.support.constraint.ConstraintLayout
+<<<<<<< HEAD
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -28,6 +38,21 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@mipmap/ic_launcher" />
+=======
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/StudyroomImage"
+                android:layout_width="0dp"
+                android:layout_height="250dp"
+                android:background="@mipmap/ic_test_image"
+                android:visibility="visible"
+                android:contentDescription="@string/studyroom_image_string"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/edittext_bottom_line" />
 
             <TextView
                 android:id="@+id/OmrådeNavn"
@@ -36,17 +61,10 @@
                 android:layout_marginTop="20dp"
                 android:background="@color/addButtonColor"
                 android:contentDescription="OmrådeNavn"
-                android:fontFamily="sans-serif-smallcaps"
-                android:padding="10dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
                 android:text="Gruppeområde"
-                android:textAlignment="center"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintLeft_toLeftOf="@+id/WIFI"
+
                 app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+
 
             <RatingBar
                 android:id="@+id/ratingBar"
@@ -69,6 +87,7 @@
                 android:paddingStart="45dp"
                 android:paddingTop="25dp"
                 android:text="WIFI"
+
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -144,6 +163,7 @@
                 android:paddingLeft="45dp"
                 android:paddingTop="25dp"
                 android:text="Bathroom"
+
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="@+id/WIFI"
@@ -155,9 +175,11 @@
                 android:layout_height="60dp"
                 android:background="@color/greyBox"
                 android:fontFamily="sans-serif-condensed"
+
                 android:paddingLeft="45dp"
                 android:paddingTop="25dp"
                 android:text="Food"
+
                 android:textSize="12sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="@+id/bathroom"
@@ -207,6 +229,7 @@
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_black_24px"
                 android:visibility="visible"
+
                 app:layout_constraintBottom_toBottomOf="@+id/Power"
                 app:layout_constraintRight_toRightOf="@+id/Power"
                 app:layout_constraintTop_toTopOf="@+id/Power"
@@ -244,6 +267,7 @@
                 android:layout_marginStart="10dp"
                 android:background="@drawable/ic_group_black_24px"
                 android:visibility="visible"
+
                 app:layout_constraintBottom_toBottomOf="@+id/Group"
                 app:layout_constraintLeft_toLeftOf="@+id/Group"
                 app:layout_constraintTop_toTopOf="@+id/Group"
@@ -256,6 +280,7 @@
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/ic_cancel_black_24px"
                 android:visibility="visible"
+
                 app:layout_constraintBottom_toBottomOf="@+id/Group"
                 app:layout_constraintRight_toRightOf="@+id/Group"
                 app:layout_constraintTop_toTopOf="@+id/Group"
@@ -268,6 +293,8 @@
                 android:layout_marginStart="10dp"
                 android:background="@drawable/ic_wc_black_24px"
                 android:visibility="visible"
+
+                android:contentDescription="@string/bathroom_string"
                 app:layout_constraintBottom_toBottomOf="@+id/bathroom"
                 app:layout_constraintLeft_toLeftOf="@+id/bathroom"
                 app:layout_constraintTop_toTopOf="@+id/bathroom"
@@ -318,8 +345,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                tools:ignore="MissingConstraints"
-                tools:layout_editor_absoluteY="789dp" />
+                />
 
             <TextView
                 android:id="@+id/test"
@@ -334,13 +360,15 @@
                 app:layout_constraintTop_toBottomOf="@+id/Group"
                 app:layout_constraintVertical_bias="0.508" />
 
+
             <TextView
                 android:id="@+id/adresse"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:paddingStart="18dp"
-                android:text="AdresseStreng"
+                android:paddingEnd="0dp"
+                android:text="@string/address_string"
                 app:layout_constraintLeft_toLeftOf="@+id/OmrådeNavn"
                 app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
 
@@ -350,7 +378,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:paddingStart="18dp"
-                android:text="afstand fra dig"
+                android:paddingEnd="0dp"
+                android:text="@string/distance_string"
                 app:layout_constraintLeft_toLeftOf="@+id/OmrådeNavn"
                 app:layout_constraintTop_toBottomOf="@+id/adresse" />
 
@@ -360,6 +389,7 @@
                 android:layout_height="15dp"
                 android:layout_marginBottom="8dp"
                 android:background="@drawable/ic_location_on_black_24px"
+                android:contentDescription="@string/address_string"
                 app:layout_constraintBottom_toTopOf="@+id/afstand"
                 app:layout_constraintLeft_toLeftOf="@+id/adresse"
                 app:srcCompat="@drawable/ic_location_on_black_24px" />
@@ -369,12 +399,16 @@
                 android:layout_width="15dp"
                 android:layout_height="15dp"
                 android:background="@drawable/ic_navigation_black_24px"
+
+                android:contentDescription="@string/distance_string"
                 app:layout_constraintBottom_toBottomOf="@+id/afstand"
                 app:layout_constraintLeft_toLeftOf="@+id/afstand"
                 app:layout_constraintTop_toTopOf="@+id/afstand"
                 app:srcCompat="@drawable/ic_navigation_black_24px" />
 
+
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
 
-</android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout> -->
+
