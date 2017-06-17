@@ -2,6 +2,6 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <!-- checked -->
     <!-- unchecked-->
-    <item android:state_checked="true" android:drawable="@drawable/ic_check_circle_green_24dp" />
-    <item android:state_checked="false" android:drawable="@drawable/ic_check_circle_grey_24dp" />
+    <item android:state_checked="true" android:drawable="@drawable/ic_green_accept" />
+    <item android:state_checked="false" android:drawable="@drawable/ic_grey_accept" />
 </selector>

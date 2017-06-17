@@ -3,8 +3,12 @@ package dtu.group.studyroom;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -16,6 +20,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,6 +36,11 @@ import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -39,18 +49,29 @@ import dtu.group.studyroom.addRoom.AddRoomAddressFragment;
 import dtu.group.studyroom.addRoom.AddRoomFacilitiesFragment;
 import dtu.group.studyroom.addRoom.AddRoomNameFragment;
 import dtu.group.studyroom.addRoom.AddRoomRatingFragment;
+import dtu.group.studyroom.addRoom.AddRoomReviewFragment;
 import dtu.group.studyroom.addRoom.StudyRoom;
 import dtu.group.studyroom.utils.Utils;
 
 public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFragment.OnFragmentInteractionListener,
         AddRoomAddressFragment.OnFragmentInteractionListener,
         AddRoomFacilitiesFragment.OnFragmentInteractionListener,
-        AddRoomRatingFragment.OnFragmentInteractionListener{
+        AddRoomRatingFragment.OnFragmentInteractionListener,
+        AddRoomReviewFragment.OnFragmentInteractionListener {
 
     private StorageReference mStorage;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
     private Bitmap picture;
+
+
+    public String mPhotoPath;
+    public Uri mPhotoUri;
+    public String mPhotoName;
+
+
+    private Bundle bundleData;
+
 
     private ProgressDialog mProgress;
 
@@ -99,6 +120,25 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
 
     }
 
+
+    public File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mPhotoName = imageFileName;
+        mPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+
     public void saveStudyRoom(StudyRoom studyRoom) {
 
         mProgress.setMessage("Uploading studyroom..");
@@ -130,14 +170,13 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
         /**
          * Compress the bitmap into jpeg format
          */
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        picture.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-        byte[] data = baos.toByteArray();
+
+        Uri file = Uri.fromFile(new File(mPhotoPath));
 
         /**
          * Upload the file to the the firebase storage
          */
-        filepath.putBytes(data).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+        filepath.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
@@ -170,21 +209,36 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
         });
 
     }
-
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        /**
-         * If request and resultcode are okay, we save the picture just taken.
-         */
-        if (requestCode == 1 && resultCode == RESULT_OK) {
-
-            Bundle bundle = data.getExtras();
-
-            picture = (Bitmap)bundle.get("data");
-
-        }
-
+    public void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode,resultCode,data);
     }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        /**
+//         * If request and resultcode are okay, we save the picture just taken.
+//         */
+//        if (requestCode == 1 && resultCode == RESULT_OK) {
+//
+//            Log.i("Test", "Jubii Ac");
+//            //AddRoomReviewFragment fragment = (AddRoomReviewFragment) getSupportFragmentManager().findFragmentByTag("FRAG_REVIEW");
+//            //fragment.setImage();
+//
+//
+//        } else if (resultCode == RESULT_CANCELED) {
+//
+//            Toast.makeText(this, "You must take a picture!", Toast.LENGTH_SHORT).show();;
+//
+//        }
+//
+//    }
+
+    public Bundle getBundleData() {
+        return this.bundleData;
+    }
+
+
 
     @Override
     public void onBackPressed() {
@@ -199,7 +253,11 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
         }
 
 
-        }
+    }
+
+    public void setBundleData(Bundle data) {
+        bundleData = data;
+    }
 
 
 }

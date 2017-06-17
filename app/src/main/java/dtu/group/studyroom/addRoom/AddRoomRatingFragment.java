@@ -35,6 +35,9 @@ import dtu.group.studyroom.AddRoomActivity;
 import dtu.group.studyroom.Main;
 import dtu.group.studyroom.R;
 
+import static android.app.Activity.RESULT_CANCELED;
+import static android.app.Activity.RESULT_OK;
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -94,7 +97,6 @@ public class AddRoomRatingFragment extends Fragment {
 
         rating = (SeekBar) fragmentView.findViewById(R.id.add_room_seekBar);
 
-
         rating.setOnTouchListener(new View.OnTouchListener() {
             @Override
 
@@ -113,6 +115,15 @@ public class AddRoomRatingFragment extends Fragment {
                 goToCamera();
             }
         });
+
+        if(getArguments() != null)
+            if(getArguments().containsKey("rating")) {
+                rating.setProgress(getArguments().getInt("rating"));
+                setSmileymage(rating.getProgress());
+            }
+
+
+
 
         return fragmentView;
 
@@ -141,7 +152,7 @@ public class AddRoomRatingFragment extends Fragment {
             }else if (index >= 70 && index < 101) {
                 view.setImageResource(R.drawable.ic_s8);
             }
-            
+
 
             lastIndex = index;
 
@@ -149,10 +160,7 @@ public class AddRoomRatingFragment extends Fragment {
 
 
 
-
-
     }
-
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -200,20 +208,88 @@ public class AddRoomRatingFragment extends Fragment {
          * and stores the rating in a bundle
          */
 
+        Bundle data = getArguments();
+        data.putInt("rating",rating.getProgress());
+
+       //  ((AddRoomActivity)getActivity()).setBundleData(data);
 
         Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
         if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
 
-          getActivity().startActivityForResult(cameraIntent,1);
+            File photoFile = null;
+            try {
+                photoFile = ((AddRoomActivity)getActivity()).createImageFile();
+            } catch (IOException ex) {
+                // Error occurred while creating the File
+
+            }
+
+            Log.i("IMAGE", photoFile.getAbsolutePath());
+            if (photoFile != null) {
+
+                Uri photoURI = Uri.fromFile(photoFile);
+                ((AddRoomActivity)getActivity()).mPhotoUri = photoURI;
+
+                cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(cameraIntent, 1);
+            }
+
+
         }
 
-        Bundle data = getArguments();
-        data.putDouble("rating",rating.getProgress());
-        allData = data;
+        /*
+        FragmentManager manager = getActivity().getSupportFragmentManager();
+        final FragmentTransaction transaction = manager.beginTransaction();
+
+        transaction.setCustomAnimations(R.anim.slidein, R.anim.stayinplace);
+
+        AddRoomReviewFragment page = AddRoomReviewFragment.newInstance();
+        page.setArguments(data);
+        transaction.replace(R.id.add_layout, page, "FRAG_REVIEW").commit();
+          */
+        // allData = data;
+
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        /**
+         //         * If request and resultcode are okay, we save the picture just taken.
+         //         */
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+
+            FragmentManager manager = getActivity().getSupportFragmentManager();
+            final FragmentTransaction transaction = manager.beginTransaction();
+
+            transaction.setCustomAnimations(R.anim.slidein, R.anim.stayinplace);
+
+            AddRoomReviewFragment page = AddRoomReviewFragment.newInstance();
+            page.setArguments(getArguments());
+            transaction.replace(R.id.add_layout, page, "FRAG_REVIEW").commit();
+
+
+
+
+            //AddRoomReviewFragment fragment = (AddRoomReviewFragment) getSupportFragmentManager().findFragmentByTag("FRAG_REVIEW");
+            //fragment.setImage();
+
+
+        } else if (resultCode == RESULT_CANCELED) {
+
+            Toast.makeText(getActivity(), "You must take a picture!", Toast.LENGTH_SHORT).show();;
+
+        }
+
+
+
 
 
     }
+
+
+
 
     private void upload() {
         /**
@@ -237,7 +313,13 @@ public class AddRoomRatingFragment extends Fragment {
 
     public void goToPage3() {
 
-        AddRoomFacilitiesFragment page3 = AddRoomFacilitiesFragment.newInstance();
+        Bundle bundle = getArguments();
+
+        if(rating != null && rating.getProgress() >= 0)
+            bundle.putInt("rating", rating.getProgress());
+
+        AddRoomReviewFragment page3 = AddRoomReviewFragment.newInstance();
+        page3.setArguments(bundle);
 
         FragmentManager manager = getActivity().getSupportFragmentManager();
         final FragmentTransaction transaction = manager.beginTransaction();

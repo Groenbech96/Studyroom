@@ -69,7 +69,7 @@
                     app:layout_constraintLeft_toLeftOf="parent"/>
 
                 <android.support.constraint.ConstraintLayout
-                    android:id="@+id/constraintLayoutCheck1"
+                    android:id="@+id/constraintLayoutWifi"
                     android:layout_width="0dp"
                     android:layout_height="60dp"
                     app:layout_constraintHorizontal_bias="0.0"
@@ -109,7 +109,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <CheckBox
-                            android:id="@+id/checkBox1"
+                            android:id="@+id/add_room_wifi_checkBox"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
@@ -135,13 +135,13 @@
                 </android.support.constraint.ConstraintLayout>
 
                 <android.support.constraint.ConstraintLayout
-                    android:id="@+id/constraintLayoutCheck2"
+                    android:id="@+id/constraintLayoutPower"
                     android:layout_width="0dp"
                     android:layout_height="60dp"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/constraintLayoutCheck1">
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayoutWifi">
 
                         <ImageView
                             android:id="@+id/icon_power"
@@ -174,7 +174,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <CheckBox
-                            android:id="@+id/checkBox2"
+                            android:id="@+id/add_room_power_checkBox"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
@@ -200,13 +200,13 @@
                 </android.support.constraint.ConstraintLayout>
 
                 <android.support.constraint.ConstraintLayout
-                    android:id="@+id/constraintLayoutCheck3"
+                    android:id="@+id/constraintLayoutCoffee"
                     android:layout_width="0dp"
                     android:layout_height="60dp"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/constraintLayoutCheck2">
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayoutPower">
 
                         <ImageView
                             android:id="@+id/icon_coffee"
@@ -239,7 +239,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <CheckBox
-                            android:id="@+id/checkBox3"
+                            android:id="@+id/add_room_coffee_checkBox"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
@@ -265,13 +265,13 @@
                 </android.support.constraint.ConstraintLayout>
 
                 <android.support.constraint.ConstraintLayout
-                    android:id="@+id/constraintLayoutCheck4"
+                    android:id="@+id/constraintLayoutGroup"
                     android:layout_width="0dp"
                     android:layout_height="60dp"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/constraintLayoutCheck3">
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayoutCoffee">
 
                         <ImageView
                             android:id="@+id/icon_group"
@@ -304,7 +304,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <CheckBox
-                            android:id="@+id/checkBox4"
+                            android:id="@+id/add_room_group_checkBox"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
@@ -330,13 +330,13 @@
                 </android.support.constraint.ConstraintLayout>
 
                 <android.support.constraint.ConstraintLayout
-                    android:id="@+id/constraintLayoutCheck5"
+                    android:id="@+id/constraintLayoutToilet"
                     android:layout_width="0dp"
                     android:layout_height="60dp"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/constraintLayoutCheck4">
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayoutGroup">
 
                         <ImageView
                             android:id="@+id/icon_toilet"
@@ -369,7 +369,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <CheckBox
-                            android:id="@+id/checkBox5"
+                            android:id="@+id/add_room_toilet_checkBox"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
@@ -395,13 +395,13 @@
                 </android.support.constraint.ConstraintLayout>
 
                 <android.support.constraint.ConstraintLayout
-                    android:id="@+id/constraintLayoutCheck6"
+                    android:id="@+id/constraintLayoutQuiet"
                     android:layout_width="0dp"
                     android:layout_height="60dp"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/constraintLayoutCheck5">
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayoutToilet">
 
                         <ImageView
                             android:id="@+id/icon_quiet"
@@ -434,7 +434,7 @@
                             app:layout_constraintTop_toTopOf="parent" />
 
                         <CheckBox
-                            android:id="@+id/checkBox6"
+                            android:id="@+id/add_room_quiet_checkBox"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
@@ -461,27 +461,27 @@
 
                 <Button
                     android:id="@+id/add_room_btNameBack"
-                    android:layout_width="88dp"
-                    android:layout_height="48dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_marginBottom="12dp"
                     android:layout_marginLeft="12dp"
+                    android:layout_marginStart="12dp"
                     android:background="@drawable/ic_keyboard_arrow_left_white_24px"
                     android:elevation="1dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    android:layout_marginStart="12dp" />
+                    app:layout_constraintLeft_toLeftOf="parent" />
 
                 <Button
                     android:id="@+id/add_room_btNameNext"
-                    android:layout_width="88dp"
-                    android:layout_height="48dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_marginBottom="12dp"
+                    android:layout_marginEnd="12dp"
                     android:layout_marginRight="12dp"
                     android:background="@drawable/ic_keyboard_arrow_right_white_24px"
                     android:elevation="1dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    android:layout_marginEnd="12dp" />
+                    app:layout_constraintRight_toRightOf="parent" />
 
         </android.support.constraint.ConstraintLayout>
 

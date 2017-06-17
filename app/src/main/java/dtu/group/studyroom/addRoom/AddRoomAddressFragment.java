@@ -176,8 +176,6 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
             }
 
 
-
-
         try {
             fragmentView.findViewById(R.id.add_room_address_container).setElevation(5f);
         } catch (Exception e) {
@@ -316,7 +314,6 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
                 BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher);
 
                 markerOptions.icon(icon);
-
 
                 // Clears the previously touched position
                 mMap.clear();
@@ -481,7 +478,7 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
             bundle.putString("address", searchBar.getText().toString());
             bundle.putParcelable("latlng", foundLatLng);
 
-            AddRoomFacilitiesFragment page3 = AddRoomFacilitiesFragment.newInstance();
+            AddRoomRatingFragment page3 = AddRoomRatingFragment.newInstance();
             page3.setArguments(bundle);
 
             FragmentManager manager = getActivity().getSupportFragmentManager();
@@ -506,7 +503,6 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
         if(!searchBar.getText().toString().trim().equals("") && foundLatLng != null) {
             bundle.putString("address", searchBar.getText().toString());
             bundle.putParcelable("latlng", foundLatLng);
-
         }
 
         AddRoomNameFragment page1 = AddRoomNameFragment.newInstance();
@@ -517,12 +513,8 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
 
         transaction.setCustomAnimations(R.anim.stayinplace, R.anim.slideout);
 
-
-
         transaction.replace(R.id.add_layout ,page1);
         transaction.commit();
-
-
 
 
     }
@@ -573,6 +565,7 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
 
             if(addresses==null || addresses.size()==0){
                 Toast.makeText(getActivity().getBaseContext(), "No Location found", Toast.LENGTH_SHORT).show();
+                return;
             }
 
             Address address = (Address) addresses.get(0);
