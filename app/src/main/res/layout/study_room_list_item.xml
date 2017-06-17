@@ -8,7 +8,7 @@
 
     <TextView
         android:id="@+id/searchItemName"
-        android:textSize="16sp"
+        android:textSize="15sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="0dp"
@@ -19,11 +19,12 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.512"
+        android:textColor="#4D4D4D"
         />
 
     <TextView
         android:id="@+id/searchItemAddress"
-        android:textSize="25sp"
+        android:textSize="26sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="0dp"
@@ -33,8 +34,9 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:drawableLeft="@drawable/ic_location_on_black_24px"
-        android:scaleX="0.55"
-        android:scaleY="0.55"
+        android:drawableLeft="@drawable/ic_location_on_grey_24dp"
+        android:drawablePadding="5dp"
+        android:scaleX="0.52"
+        android:scaleY="0.52"
         app:layout_constraintVertical_bias="0.516" />
 </android.support.constraint.ConstraintLayout>
