@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -107,6 +108,20 @@ public class SearchFragment extends Fragment {
         listView.setAdapter(searchAdapter);
 
         insertStudyRoomsToListView();
+
+        Button testtn = (Button) fragmentView.findViewById(R.id.testBtn);
+        testtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                HashMap<String, StudyRoom> localStudyRooms = Main.getStudyrooms();
+
+                StudyRoom studyRoom3 = new StudyRoom("Navn3", "adresse3", new StudyRoom().new StudyRoomFacilites(true,true,true,true,true,true), 3);
+
+                localStudyRooms.put("eldeefoefk", studyRoom3);
+                Main.setStudyrooms(localStudyRooms);
+                insertStudyRoomsToListView();
+            }
+        });
 
         return fragmentView;
 
