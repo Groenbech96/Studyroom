@@ -30,7 +30,7 @@ public class ContentActivity extends Activity {
             allData.getBoolean("groups")
     );
 
-    StudyRoom studyRoom = new StudyRoom("navnet her", "adressen på stedet", facilites, rateing.getRating());
+    // StudyRoom studyRoom = new StudyRoom("navnet her", "adressen på stedet", facilites, rateing.getRating());
 
 
     @Override

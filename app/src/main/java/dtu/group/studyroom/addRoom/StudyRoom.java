@@ -1,27 +1,33 @@
 package dtu.group.studyroom.addRoom;
 
+import com.google.android.gms.maps.model.LatLng;
+
 /**
  * Created by groenbech on 15/06/2017.
  */
 
 public class StudyRoom {
 
-    public String name, address, city, postal;
-    public StudyRoomFacilites facilites;
-    public double rating;
+    private String name, address, city, postal;
+    private StudyRoomFacilites facilites;
+    private double rating;
+
+
+    public LatLng coordinates;
 
 
     public StudyRoom() {
 
     }
 
-    public StudyRoom(String name, String address, String postal, String city, StudyRoomFacilites facilites, float rating) {
+    public StudyRoom(String name, String address, String postal, String city, LatLng coordinates, StudyRoomFacilites facilites, float rating) {
         this.rating = rating;
         this.name = name;
         this.address = address;
         this.facilites = facilites;
         this.city = city;
         this.postal = postal;
+        this.coordinates = coordinates;
     }
 
     public void setName(String name) {
@@ -72,6 +78,13 @@ public class StudyRoom {
         return postal;
     }
 
+    public LatLng getCoordinates() {
+        return coordinates;
+    }
+
+    public void setCoordinates(LatLng coordinates) {
+        this.coordinates = coordinates;
+    }
 
     public class StudyRoomFacilites {
 

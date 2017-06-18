@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -205,6 +206,7 @@ public class Firebase {
         final int power = studyRoom.getFacilites().getPower();
         final int toilet = studyRoom.getFacilites().getToilet();
         final double rating = studyRoom.getRating();
+        final LatLng coordinates = studyRoom.getCoordinates();
 
 
         /**
@@ -254,6 +256,7 @@ public class Firebase {
                 mDatabase.child(key).child("facilites").child("toilet").setValue(toilet);
                 mDatabase.child(key).child("rating").setValue(rating);
                 mDatabase.child(key).child("image").setValue(downloadUrl.toString());
+                mDatabase.child(key).child("coordinates").setValue(coordinates);
             }
         });
 
