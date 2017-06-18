@@ -266,4 +266,5 @@ public class Firebase {
         mActivityReference = new WeakReference<Activity>(a);
     }
 
+
 }
