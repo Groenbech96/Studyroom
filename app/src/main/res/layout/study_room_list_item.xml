@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/searchItemWrapper"
     android:layout_width="match_parent"
-    android:layout_height="60dp">
+    android:layout_height="60dp"
+    android:focusable="false">
 
     <TextView
         android:id="@+id/searchItemName"

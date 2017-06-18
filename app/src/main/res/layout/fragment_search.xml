@@ -52,7 +52,8 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/searchBar"
             android:animateLayoutChanges="true"
-            android:scrollbars="none"/>
+            android:scrollbars="none"
+            android:focusable="false"/>
 
         <LinearLayout
             android:id="@+id/linearLayout"

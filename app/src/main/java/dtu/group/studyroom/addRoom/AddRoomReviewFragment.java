@@ -260,7 +260,7 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
 
     private void saveReview() {
 
-        StudyRoom.StudyRoomFacilites facilites = new StudyRoom().new StudyRoomFacilites(
+        StudyRoomFacilities facilites = new StudyRoomFacilities(
                 data.getBoolean("wifi"),
                 data.getBoolean("toilet"),
                 data.getBoolean("power"),

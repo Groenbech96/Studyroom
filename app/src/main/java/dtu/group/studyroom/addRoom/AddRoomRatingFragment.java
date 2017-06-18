@@ -326,7 +326,7 @@ public class AddRoomRatingFragment extends Fragment {
          * Grabs information given from earlier fragments to create the study room
          * After this is done, it is uploaded to the server.
          */
-        StudyRoom.StudyRoomFacilites facilites = new StudyRoom().new StudyRoomFacilites(
+        StudyRoomFacilities facilites = new StudyRoomFacilities(
                 allData.getBoolean("wifi"),
                 allData.getBoolean("toilet"),
                 allData.getBoolean("power"),

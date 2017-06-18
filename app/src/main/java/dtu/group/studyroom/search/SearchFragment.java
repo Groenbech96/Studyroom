@@ -3,6 +3,7 @@ package dtu.group.studyroom.search;
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,10 +12,12 @@ import android.support.constraint.ConstraintSet;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -23,6 +26,7 @@ import java.util.HashMap;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import dtu.group.studyroom.ContentActivity;
 import dtu.group.studyroom.Main;
 import dtu.group.studyroom.R;
 import dtu.group.studyroom.addRoom.StudyRoom;
@@ -127,6 +131,26 @@ public class SearchFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {
 
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                //View selectedView = ((View) listView.getSelectedItem());
+
+                SearchAdapter.ViewHolder viewHolder = (SearchAdapter.ViewHolder) view.getTag();
+
+                String studyRoomId = viewHolder.id;
+                StudyRoom studyRoom = ((Main) SearchFragment.this.getActivity()).getStudyrooms().get(studyRoomId);
+
+                Intent intent = new Intent(SearchFragment.this.getActivity(), ContentActivity.class);
+
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("studyroom", studyRoom);
+                intent.putExtras(bundle);
+                startActivity(intent);
             }
         });
 

@@ -28,7 +28,8 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import dtu.group.studyroom.Main;
-import dtu.group.studyroom.addRoom.StudyRoom;
+import dtu.group.studyroom.addRoom.*;
+
 
 /**
  * Created by christianschmidt on 16/06/2017.
@@ -100,6 +101,8 @@ public class Firebase {
         for (DataSnapshot studyRoomSnapshot : dataSnapshot.getChildren()) {
 
             StudyRoom studyRoom = createStudyRoomFromSnapshot(studyRoomSnapshot);
+            studyRoom.setId(studyRoomSnapshot.getKey());
+
             localStudyRooms.put(studyRoomSnapshot.getKey(),studyRoom);
 
         }
@@ -128,7 +131,7 @@ public class Firebase {
                     }
                     break;
                 case "facilities" :
-                    StudyRoom.StudyRoomFacilites facilites = createFacilitiesFromSnapshot(attributeSnapshot);
+                    StudyRoomFacilities facilites = createFacilitiesFromSnapshot(attributeSnapshot);
                     studyRoom.setFacilites(facilites);
                     break;
             }
@@ -137,8 +140,8 @@ public class Firebase {
         return studyRoom;
     }
 
-    private StudyRoom.StudyRoomFacilites createFacilitiesFromSnapshot(DataSnapshot attributeSnapshot) {
-        StudyRoom.StudyRoomFacilites facilites = new StudyRoom().new StudyRoomFacilites();
+    private StudyRoomFacilities createFacilitiesFromSnapshot(DataSnapshot attributeSnapshot) {
+        StudyRoomFacilities facilites = new StudyRoomFacilities();
 
         for (DataSnapshot facilitySnapshot : attributeSnapshot.getChildren()) {
 

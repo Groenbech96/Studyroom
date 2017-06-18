@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import dtu.group.studyroom.Main;
 import dtu.group.studyroom.R;
@@ -63,6 +65,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable{
             viewHolder = new ViewHolder();
             viewHolder.name = (TextView) convertView.findViewById(R.id.searchItemName);
             viewHolder.address = (TextView) convertView.findViewById(R.id.searchItemAddress);
+            viewHolder.id = studyRoom.getId();
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
@@ -89,9 +92,10 @@ public class SearchAdapter extends BaseAdapter implements Filterable{
     }
 
 
-    private static class ViewHolder {
+    static class ViewHolder {
         TextView name;
         TextView address;
+        String id;
     }
 
     public Filter getFilter() {
@@ -111,9 +115,10 @@ public class SearchAdapter extends BaseAdapter implements Filterable{
                 results.count = studyRooms.size();
                 results.values = studyRooms;
 
-                for (StudyRoom studyRoom : studyRooms.values()) {
+                for(StudyRoom studyRoom: studyRooms.values()){
                     tempStudyRooms.add(studyRoom);
                 }
+
             } else {
                 constraint = constraint.toString().toLowerCase();
 
