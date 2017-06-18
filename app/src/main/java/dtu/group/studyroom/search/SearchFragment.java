@@ -61,6 +61,7 @@ public class SearchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         facilityMenuVisible = false;
 
         searchAdapter = new SearchAdapter(getActivity().getApplicationContext());
@@ -115,14 +116,14 @@ public class SearchFragment extends Fragment {
         testtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HashMap<String, StudyRoom> localStudyRooms = Main.getStudyrooms();
+                HashMap<String, StudyRoom> localStudyRooms = ((Main) getActivity()).getStudyrooms();
 
                 StudyRoom studyRoom3 = new StudyRoom("Cafe Laksen", "København Ø", new StudyRoom().new StudyRoomFacilites(true,true,true,true,true,true), 3);
 
                 String uuid = UUID.randomUUID().toString();
 
                 localStudyRooms.put(uuid, studyRoom3);
-                Main.setStudyrooms(localStudyRooms);
+                ((Main) getActivity()).setStudyrooms(localStudyRooms);
                 insertStudyRoomsToListView();
 
             }
@@ -264,7 +265,7 @@ public class SearchFragment extends Fragment {
     };
 
     public void insertStudyRoomsToListView() {
-        HashMap<String, StudyRoom> studyrooms = Main.getStudyrooms();
+        HashMap<String, StudyRoom> studyrooms = ((Main) getActivity()).getStudyrooms();
         searchAdapter.clear();
 
         for (StudyRoom studyRoom : studyrooms.values()) {

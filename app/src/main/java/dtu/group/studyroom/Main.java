@@ -38,12 +38,11 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
         AddRoomFacilitiesFragment.OnFragmentInteractionListener,
         AddRoomRatingFragment.OnFragmentInteractionListener {
 
-    private static HashMap<String, StudyRoom> studyrooms = new HashMap<>();
+    private HashMap<String, StudyRoom> studyrooms = new HashMap<>();
 
     private enum FADE {IN, OUT};
 
     private FloatingActionButton accountButton, addButton;
-    private FirebaseAuth mAuth;
     private Context mContext;
 
     private SearchFragment searchFragment;
@@ -61,8 +60,8 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
         addButton = (FloatingActionButton) findViewById(R.id.add_button);
         addButton.setOnClickListener(addButtonListener);
 
+        Firebase.updateActivity(this);
         Firebase.getInstance().logInAnonymously(this);
-
 
         /**
          * Start the maps fragment
@@ -266,12 +265,13 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
 
     }
 
-    public static HashMap<String, StudyRoom> getStudyrooms() {
+    public HashMap<String, StudyRoom> getStudyrooms() {
         return studyrooms;
     }
 
-    public static void setStudyrooms(HashMap<String, StudyRoom> studyroom) {
+    public void setStudyrooms(HashMap<String, StudyRoom> studyroom) {
         studyrooms = studyroom;
+        searchFragment.insertStudyRoomsToListView();
     }
 
 

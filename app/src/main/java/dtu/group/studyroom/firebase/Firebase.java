@@ -22,6 +22,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -34,14 +35,16 @@ import dtu.group.studyroom.addRoom.StudyRoom;
 
 public class Firebase {
 
+    private static WeakReference<Activity> mActivityReference;
+
     private static Firebase firebase;
 
     private StorageReference mStorage = FirebaseStorage.getInstance().getReference();
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("studyrooms");
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
+
     private Firebase () {
-        Log.i("lol1", "hejhej");
         /**
          * Set up listener
          */
@@ -88,7 +91,9 @@ public class Firebase {
 
     private void downloadStudyRoom(DataSnapshot dataSnapshot) {
 
-        HashMap<String, StudyRoom> localStudyRooms = Main.getStudyrooms();
+        Activity a = mActivityReference.get();
+
+        HashMap<String, StudyRoom> localStudyRooms = ((Main) a).getStudyrooms();
 
         for (DataSnapshot studyRoomSnapshot : dataSnapshot.getChildren()) {
 
@@ -96,7 +101,7 @@ public class Firebase {
             localStudyRooms.put(studyRoomSnapshot.getKey(),studyRoom);
 
         }
-        Main.setStudyrooms(localStudyRooms);
+        ((Main) a).setStudyrooms(localStudyRooms);
     }
 
     private StudyRoom createStudyRoomFromSnapshot(DataSnapshot studyRoomSnapshot) {
@@ -209,6 +214,10 @@ public class Firebase {
         usersRef.child(key).child("facilities").child("toilet").setValue(toilet);
         usersRef.child(key).child("rating").setValue(rating);
 
+    }
+
+    public static void updateActivity(Activity a) {
+        mActivityReference = new WeakReference<Activity>(a);
     }
 
 }
