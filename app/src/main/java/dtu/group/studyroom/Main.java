@@ -1,8 +1,6 @@
 package dtu.group.studyroom;
 
 
-import android.animation.ArgbEvaluator;
-import android.animation.ValueAnimator;
 import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
@@ -10,24 +8,16 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.transition.AutoTransition;
 import android.transition.ChangeBounds;
 import android.transition.Transition;
-import android.transition.TransitionManager;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -38,25 +28,16 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.gson.Gson;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import dtu.group.studyroom.addRoom.AddRoomAddressFragment;
-import dtu.group.studyroom.addRoom.AddRoomFacilitiesFragment;
 import dtu.group.studyroom.addRoom.AddRoomNameFragment;
 import dtu.group.studyroom.addRoom.AddRoomRatingFragment;
-import dtu.group.studyroom.addRoom.StudyRoom;
 import dtu.group.studyroom.utils.Utils;
-
-import static android.view.View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
 
 public class Main extends AppCompatActivity implements MapsFragment.OnFragmentInteractionListener,
         SearchFragment.OnFragmentInteractionListener,
         AddRoomNameFragment.OnFragmentInteractionListener,
         AddRoomAddressFragment.OnFragmentInteractionListener,
-        AddRoomFacilitiesFragment.OnFragmentInteractionListener,
         AddRoomRatingFragment.OnFragmentInteractionListener {
 
     private enum FADE {IN, OUT};

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
@@ -37,6 +38,8 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 
+import org.w3c.dom.Text;
+
 import java.io.File;
 
 import dtu.group.studyroom.AddRoomActivity;
@@ -61,10 +64,14 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
     private View fragmentView;
     private Bundle data;
     private ImageView view;
-    private TextView address, areaName;
+    private TextView address, areaName, title, facilityTitle, mapTitle;
     private TextView wifi, power, coffee, group, toilet, quiet;
     private File img;
-    private Button submit;
+    private Button submit, cancel;
+
+    private Typeface opensansFont;
+
+
 
 
     /**
@@ -88,7 +95,7 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean mLocationPermissionGranted;
 
-
+   
     public AddRoomReviewFragment() {
         // Required empty public constructor
     }
@@ -122,18 +129,31 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
 
         mapView = SupportMapFragment.newInstance();
 
+        opensansFont = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
+
         /**
          * Imageview is handled by setImage()
          */
         view = (ImageView) fragmentView.findViewById(R.id.mainImage);
 
+        opensansFont = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
+
         data = getArguments();
+
 
         address = (TextView) fragmentView.findViewById(R.id.addressReview);
         address.setText(data.getString("address"));
+        address.setTypeface(opensansFont);
 
         areaName = (TextView) fragmentView.findViewById(R.id.areaName);
         areaName.setText(data.getString("name"));
+        areaName.setTypeface(opensansFont);
+
+        facilityTitle = (TextView) fragmentView.findViewById(R.id.review_facilityTitle);
+        facilityTitle.setTypeface(opensansFont);
+
+        mapTitle = (TextView) fragmentView.findViewById(R.id.review_MapTitle);
+        mapTitle.setTypeface(opensansFont);
 
         submit = (Button) fragmentView.findViewById(R.id.review_submit);
         submit.setOnClickListener(new View.OnClickListener() {
@@ -143,7 +163,22 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
             }
         });
 
+        cancel = (Button) fragmentView.findViewById(R.id.review_cancel);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cancelReview();
+            }
+        });
+
         foundLatLng = data.getParcelable("latlng");
+
+
+
+
+
+
+
 
         /**
          * Hmm.
@@ -158,11 +193,17 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
         setImage();
 
         wifi = (TextView) fragmentView.findViewById(R.id.review_wifi);
+        wifi.setTypeface(opensansFont);
         power = (TextView) fragmentView.findViewById(R.id.review_power);
+        power.setTypeface(opensansFont);
         coffee = (TextView) fragmentView.findViewById(R.id.review_coffee);
+        coffee.setTypeface(opensansFont);
         group = (TextView) fragmentView.findViewById(R.id.review_groupspace);
+        group.setTypeface(opensansFont);
         toilet = (TextView) fragmentView.findViewById(R.id.review_bathroom);
+        toilet.setTypeface(opensansFont);
         quiet = (TextView) fragmentView.findViewById(R.id.review_food);
+        quiet.setTypeface(opensansFont);
 
         if(data.getBoolean("wifi"))
             wifi.setCompoundDrawables(getDraw(R.drawable.ic_wifi_black_24px),null,getDraw(R.drawable.ic_green_accept), null);
@@ -189,6 +230,7 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
         } catch (Exception e) {
             Log.e("ELEVATION ERROR", "ELEVATION FAILED in OCW af");
         }
+
 
         // Connect to the API CLIENT for location
         if (mGoogleApiClient == null) {
@@ -229,6 +271,12 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
 
         StudyRoom studyRoom = new StudyRoom(data.getString("name"), data.getString("address"), facilites, data.getInt("rating"));
         ((AddRoomActivity)getActivity()).saveStudyRoom(studyRoom);
+
+    }
+
+    private void cancelReview() {
+
+        ((AddRoomActivity)getActivity()).onBackPressed();
 
     }
 
@@ -315,7 +363,7 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
         mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.google_map_style));
 
-        updateLocationUI();
+        //updateLocationUI();
 
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(

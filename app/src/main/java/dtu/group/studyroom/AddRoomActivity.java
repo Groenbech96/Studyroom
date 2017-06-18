@@ -3,24 +3,13 @@ package dtu.group.studyroom;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -33,20 +22,14 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.google.gson.Gson;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 import dtu.group.studyroom.addRoom.AddRoomAddressFragment;
-import dtu.group.studyroom.addRoom.AddRoomFacilitiesFragment;
 import dtu.group.studyroom.addRoom.AddRoomNameFragment;
 import dtu.group.studyroom.addRoom.AddRoomRatingFragment;
 import dtu.group.studyroom.addRoom.AddRoomReviewFragment;
@@ -55,7 +38,6 @@ import dtu.group.studyroom.utils.Utils;
 
 public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFragment.OnFragmentInteractionListener,
         AddRoomAddressFragment.OnFragmentInteractionListener,
-        AddRoomFacilitiesFragment.OnFragmentInteractionListener,
         AddRoomRatingFragment.OnFragmentInteractionListener,
         AddRoomReviewFragment.OnFragmentInteractionListener {
 
@@ -249,6 +231,16 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
             finish();
             overridePendingTransition(R.anim.stayinplace, R.anim.slidedown);
 
+
+        }
+
+        AddRoomReviewFragment addRoomReviewFragment = (AddRoomReviewFragment) getSupportFragmentManager().findFragmentByTag(Utils.ADDROOM_REVEW_FRAGMENT_TAG);
+        if(addRoomReviewFragment != null && addRoomReviewFragment.isVisible()) {
+
+            //addRoomNameFragment.onDetach();
+
+            finish();
+            overridePendingTransition(R.anim.stayinplace, R.anim.slidedown);
 
         }
 

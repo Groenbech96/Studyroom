@@ -2,6 +2,9 @@ package dtu.group.studyroom.addRoom;
 
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
@@ -46,6 +49,7 @@ import java.util.Locale;
 
 import dtu.group.studyroom.R;
 import dtu.group.studyroom.utils.OnSwipeTouchListener;
+import dtu.group.studyroom.utils.Utils;
 
 import static dtu.group.studyroom.utils.Utils.LOG_GOOGLE_MAP_API;
 
@@ -79,6 +83,8 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
     private LatLng foundLatLng;
     private Location mLastKnownLocation;
 
+    private String postalText, cityText;
+
     public static boolean debug = false;
 
     /**
@@ -93,6 +99,11 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
      */
     EditText searchBar;
     Button btnNext, btnBack;
+
+    /**
+     * Font
+     */
+    Typeface opensansFont, opensansFontSemiBold;
 
 
 
@@ -143,17 +154,18 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
             public void onSwipeRight() {
                 goToPage1();
             }
-            public void onSwipeLeft() {
-
-            }
+            public void onSwipeLeft() { goToPage3(); }
 
         });
+
+        opensansFont = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
 
         mapView = SupportMapFragment.newInstance();
 
         searchBar = (EditText) fragmentView.findViewById(R.id.add_room_address_text);
         searchBar.setOnKeyListener(searchTextListener);
         searchBar.setSoundEffectsEnabled(false);
+        searchBar.setTypeface(opensansFont);
 
         // Getting user input location
 
@@ -161,10 +173,10 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
 
 
             public void onSwipeRight() {
-                //TODO: Implement
+                goToPage3();
             }
             public void onSwipeLeft() {
-                goToPage3();
+                goToPage1();
             }
 
 
@@ -302,16 +314,23 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
                     // Getting a maximum of 3 Address that matches the input text
                     addresses = geocoder.getFromLocation(latLng.latitude, latLng.longitude, 1);
                     if(addresses != null) {
-                        addressText = addresses.get(0).getAddressLine(0).toString();
-                        searchBar.setText(addressText);
+                        String postal = addresses.get(0).getPostalCode();
+                        String city = addresses.get(0).getAddressLine(1).toString();
+                        String address = addresses.get(0).getAddressLine(0).toString();
+                        searchBar.setText(address);
+                        addressText = address;
+                        cityText = city;
+                        postalText= postal;
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
 
-
                 markerOptions.title(addressText);
-                BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher);
+
+                Bitmap bm = BitmapFactory.decodeResource(getResources(), R.mipmap.studyroom_mapmarker);
+                Bitmap map = Utils.scaleDown(bm, 80, true);
+                BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(map);
 
                 markerOptions.icon(icon);
 
@@ -330,39 +349,7 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
 
         if(getArguments() != null) {
             if (getArguments().containsKey("address") && getArguments().containsKey("latlng")) {
-              /*  foundLatLng = getArguments().getParcelable("latlng");
 
-                MarkerOptions markerOptions = new MarkerOptions();
-
-                // Setting the position for the marker
-                markerOptions.position(foundLatLng);
-
-                List<Address> addresses = null;
-                String addressText = "";
-                Geocoder geocoder = new Geocoder(getActivity().getApplicationContext(), Locale.getDefault());
-                try {
-                    // Getting a maximum of 3 Address that matches the input text
-                    addresses = geocoder.getFromLocation(foundLatLng.latitude, foundLatLng.longitude, 1);
-                    if (addresses != null) {
-                        addressText = addresses.get(0).getAddressLine(0).toString();
-                        searchBar.setText(addressText);
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-
-                BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher);
-
-                markerOptions.icon(icon);
-
-                // Clears the previously touched position
-                //mMap.clear();
-
-                // Placing a marker on the touched position
-                mMap.addMarker(markerOptions);
-
-                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(foundLatLng, DEFAULT_ZOOM));
-           */
                 String address = getArguments().getString("address");
                 new GeocoderTask().execute(address);
 
@@ -476,6 +463,12 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
 
             Bundle bundle = getArguments();
             bundle.putString("address", searchBar.getText().toString());
+
+            if(!postalText.trim().equals(""))
+                bundle.putString("postal", postalText);
+            if(!cityText.trim().equals(""))
+                bundle.putString("city", cityText);
+
             bundle.putParcelable("latlng", foundLatLng);
 
             AddRoomRatingFragment page3 = AddRoomRatingFragment.newInstance();
@@ -502,6 +495,10 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
 
         if(!searchBar.getText().toString().trim().equals("") && foundLatLng != null) {
             bundle.putString("address", searchBar.getText().toString());
+            if(!postalText.trim().equals(""))
+                bundle.putString("postal", postalText);
+            if(!cityText.trim().equals(""))
+                bundle.putString("city", cityText);
             bundle.putParcelable("latlng", foundLatLng);
         }
 
@@ -520,14 +517,11 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
     }
 
 
-
-
     View.OnKeyListener searchTextListener = new View.OnKeyListener() {
         @Override
         public boolean onKey(View v, int keyCode, KeyEvent event) {
             if(keyCode == KeyEvent.KEYCODE_ENTER) {
                 Log.i("TEXT", "SEARCH");
-
 
                 String location = searchBar.getText().toString();
 
@@ -582,7 +576,9 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
 
             // Setting the position for the marker
             markerOptions.position(foundLatLng);
-            BitmapDescriptor icon = BitmapDescriptorFactory.fromResource(R.mipmap.ic_launcher);
+            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.mipmap.studyroom_mapmarker);
+            Bitmap map = Utils.scaleDown(bm, 80, true);
+            BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(map);
 
             markerOptions.icon(icon);
 

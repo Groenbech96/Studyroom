@@ -1,10 +1,8 @@
 package dtu.group.studyroom.addRoom;
 
 import android.app.Activity;
-import android.app.ActivityOptions;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -19,9 +17,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import dtu.group.studyroom.AddRoomActivity;
 import dtu.group.studyroom.Main;
 import dtu.group.studyroom.R;
 import dtu.group.studyroom.utils.OnSwipeTouchListener;
@@ -40,12 +37,18 @@ public class AddRoomNameFragment extends Fragment {
     private View fragmentView;
     private OnFragmentInteractionListener mListener;
 
-    private Button btnNext, btnBack;
-    private EditText text;
+    private Button mBtnNext, mBtnBack;
+    private EditText mRoomNameText;
 
     private boolean wifiS, powerS, coffeeS, quietS, toiletS, groupS;
     private ConstraintLayout wifi, power, coffee, group, toilet, quiet;
     private CheckBox cbWifi, cbPower, cbGroupSpaces, cbCoffee, cbQuiet, cbToilet;
+
+    /**
+     * Font
+     */
+    Typeface opensansFont, opensansFontSemiBold;
+
 
     public AddRoomNameFragment() {
         // Required empty public constructor
@@ -71,18 +74,21 @@ public class AddRoomNameFragment extends Fragment {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_add_room_name, container, false);
 
+        opensansFont = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
+        opensansFontSemiBold = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Semibold.ttf");
+
         /**
          * Buttons
          */
-        btnNext = (Button) fragmentView.findViewById(R.id.add_room_btNameNext);
-        btnNext.setOnClickListener(new View.OnClickListener(){
+        mBtnNext = (Button) fragmentView.findViewById(R.id.add_room_btNameNext);
+        mBtnNext.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 goToPage2();
             }
         });
 
-        btnBack  = (Button) fragmentView.findViewById(R.id.add_room_btNameBack);
-        btnBack.setOnClickListener(new View.OnClickListener(){
+        mBtnBack = (Button) fragmentView.findViewById(R.id.add_room_btNameBack);
+        mBtnBack.setOnClickListener(new View.OnClickListener(){
             public void onClick(View view){
                 goToPage0();
             }
@@ -102,7 +108,22 @@ public class AddRoomNameFragment extends Fragment {
         /**
          * Text field
          */
-        text = (EditText) fragmentView.findViewById(R.id.add_room_name_text);
+        mRoomNameText = (EditText) fragmentView.findViewById(R.id.add_room_name_text);
+        mRoomNameText.setTypeface(opensansFont);
+
+
+        /**
+         * Custom Font set
+         */
+
+        ((TextView) fragmentView.findViewById(R.id.add_room_facility_title)).setTypeface(opensansFont);
+        ((TextView) fragmentView.findViewById(R.id.add_room_textWifi)).setTypeface(opensansFont);
+        ((TextView) fragmentView.findViewById(R.id.add_toom_textPower)).setTypeface(opensansFont);
+        ((TextView) fragmentView.findViewById(R.id.add_room_textCoffee)).setTypeface(opensansFont);
+        ((TextView) fragmentView.findViewById(R.id.add_room_textGroup)).setTypeface(opensansFont);
+        ((TextView) fragmentView.findViewById(R.id.add_room_textToilet)).setTypeface(opensansFont);
+        ((TextView) fragmentView.findViewById(R.id.add_room_textQuiet)).setTypeface(opensansFont);
+
 
         /**
          * Facilities
@@ -126,6 +147,10 @@ public class AddRoomNameFragment extends Fragment {
         cbToilet = (CheckBox) fragmentView.findViewById(R.id.add_room_toilet_checkBox);
         cbQuiet = (CheckBox) fragmentView.findViewById(R.id.add_room_quiet_checkBox);
 
+
+        /**
+         * Enable view click on checkbuttons
+         */
         wifi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -166,7 +191,7 @@ public class AddRoomNameFragment extends Fragment {
 
         if(getArguments() != null) {
             if (getArguments().containsKey("name"))
-                text.setText(getArguments().getString("name"));
+                mRoomNameText.setText(getArguments().getString("name"));
 
             if (getArguments().containsKey("wifi"))
                 wifiS = getArguments().getBoolean("wifi");
@@ -188,6 +213,21 @@ public class AddRoomNameFragment extends Fragment {
 
         }
 
+        /**
+         * Auto show keyboard and focus on text field
+         */
+        mRoomNameText.requestFocus();
+        mRoomNameText.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                InputMethodManager keyboard = (InputMethodManager)
+                        getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                keyboard.showSoftInput(mRoomNameText, 0);
+            }
+        }, 500); //use 300 to make it run when coming back from lock screen
+
         return fragmentView;
     }
 
@@ -204,17 +244,10 @@ public class AddRoomNameFragment extends Fragment {
         cbCoffee.setChecked(coffeeS);
         cbGroupSpaces.setChecked(groupS);
 
-        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(text, InputMethodManager.SHOW_IMPLICIT);
+
 
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -269,8 +302,8 @@ public class AddRoomNameFragment extends Fragment {
 
 
 
-        if(!text.getText().toString().trim().equals("")) {
-            if(text.getText().toString().trim().length() > 4) {
+        if(!mRoomNameText.getText().toString().trim().equals("")) {
+            if(mRoomNameText.getText().toString().trim().length() > 4) {
 
                 bundle.putBoolean("wifi", cbWifi.isChecked());
                 Log.i("WIFI", cbWifi.isChecked()+"");
@@ -280,7 +313,7 @@ public class AddRoomNameFragment extends Fragment {
                 bundle.putBoolean("quiet", cbQuiet.isChecked());
                 bundle.putBoolean("groups",cbGroupSpaces.isChecked());
 
-                bundle.putString("name", text.getText().toString() );
+                bundle.putString("name", mRoomNameText.getText().toString() );
                 page2.setArguments(bundle);
 
                 transaction.replace(R.id.add_layout ,page2);
@@ -290,12 +323,12 @@ public class AddRoomNameFragment extends Fragment {
             } else {
 
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.showSoftInput(text, InputMethodManager.SHOW_IMPLICIT);
+                imm.showSoftInput(mRoomNameText, InputMethodManager.SHOW_IMPLICIT);
 
             }
         } else {
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.showSoftInput(text, InputMethodManager.SHOW_IMPLICIT);
+            imm.showSoftInput(mRoomNameText, InputMethodManager.SHOW_IMPLICIT);
         }
 
     }

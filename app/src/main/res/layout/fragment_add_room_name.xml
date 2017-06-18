@@ -44,8 +44,9 @@
                     android:drawablePadding="30dp"
                     android:elevation="0dp"
                     android:gravity="center_vertical"
-                    android:hint="Name the study room"
+                    android:hint="@string/add_room_name_hint"
                     android:inputType="textNoSuggestions"
+                    android:focusableInTouchMode="true"
                     android:maxLines="2"
                     android:textAlignment="center"
                     android:textCursorDrawable="@drawable/cursor"
@@ -55,13 +56,13 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/editText"
+                    android:id="@+id/add_room_facility_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:textSize="16sp"
                     android:inputType="textNoSuggestions"
-                    android:text="Choose facilities"
+                    android:text="@string/add_room_facility_title"
                     android:background="@color/colorBackground"
                     android:layout_marginTop="20dp"
                     app:layout_constraintTop_toBottomOf="@+id/add_room_name_text"
@@ -76,7 +77,7 @@
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     android:layout_marginTop="15dp"
-                    app:layout_constraintTop_toBottomOf="@+id/editText">
+                    app:layout_constraintTop_toBottomOf="@+id/add_room_facility_title">
 
                         <ImageView
                             android:id="@+id/icon_wifi"
@@ -94,7 +95,7 @@
                             app:srcCompat="@drawable/ic_wifi_grey_24dp" />
 
                         <TextView
-                            android:id="@+id/textWifi"
+                            android:id="@+id/add_room_textWifi"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
@@ -102,7 +103,7 @@
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="8dp"
                             android:fontFamily="sans-serif"
-                            android:text="Wifi"
+                            android:text="@string/add_room_name_wifi_hint"
                             android:textSize="16sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toRightOf="@+id/icon_wifi"
@@ -156,10 +157,10 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toLeftOf="@+id/check2"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:srcCompat="@drawable/ic_wifi_grey_24dp" />
+                            app:srcCompat="@drawable/ic_power_grey_24px" />
 
                         <TextView
-                            android:id="@+id/textPower"
+                            android:id="@+id/add_toom_textPower"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
@@ -167,7 +168,7 @@
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="8dp"
                             android:fontFamily="sans-serif"
-                            android:text="Power"
+                            android:text="@string/add_room_name_power_hint"
                             android:textSize="16sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toRightOf="@+id/icon_power"
@@ -221,10 +222,10 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toLeftOf="@+id/check3"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:srcCompat="@drawable/ic_wifi_grey_24dp" />
+                            app:srcCompat="@drawable/ic_local_cafe_grey_24px" />
 
                         <TextView
-                            android:id="@+id/textCoffee"
+                            android:id="@+id/add_room_textCoffee"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
@@ -232,7 +233,7 @@
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="8dp"
                             android:fontFamily="sans-serif"
-                            android:text="Coffee"
+                            android:text="@string/add_room_name_coffee_hint"
                             android:textSize="16sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toRightOf="@+id/icon_coffee"
@@ -286,10 +287,10 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toLeftOf="@+id/check4"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:srcCompat="@drawable/ic_wifi_grey_24dp" />
+                            app:srcCompat="@drawable/ic_group_grey_24px" />
 
                         <TextView
-                            android:id="@+id/textGroup"
+                            android:id="@+id/add_room_textGroup"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
@@ -297,7 +298,7 @@
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="8dp"
                             android:fontFamily="sans-serif"
-                            android:text="Group"
+                            android:text="@string/add_room_name_group_hint"
                             android:textSize="16sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toRightOf="@+id/icon_group"
@@ -351,10 +352,10 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toLeftOf="@+id/check5"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:srcCompat="@drawable/ic_wifi_grey_24dp" />
+                            app:srcCompat="@drawable/ic_wc_grey_24px" />
 
                         <TextView
-                            android:id="@+id/textToilet"
+                            android:id="@+id/add_room_textToilet"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
@@ -362,7 +363,7 @@
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="8dp"
                             android:fontFamily="sans-serif"
-                            android:text="Toilet"
+                            android:text="@string/add_room_name_toilet_hint"
                             android:textSize="16sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toRightOf="@+id/icon_toilet"
@@ -416,10 +417,10 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toLeftOf="@+id/check6"
                             app:layout_constraintTop_toTopOf="parent"
-                            app:srcCompat="@drawable/ic_wifi_grey_24dp" />
+                            app:srcCompat="@drawable/ic_volume_up_grey_24px" />
 
                         <TextView
-                            android:id="@+id/textQuiet"
+                            android:id="@+id/add_room_textQuiet"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="8dp"
@@ -427,7 +428,7 @@
                             android:layout_marginStart="10dp"
                             android:layout_marginTop="8dp"
                             android:fontFamily="sans-serif"
-                            android:text="Quiet"
+                            android:text="@string/add_room_name_quiet_hint"
                             android:textSize="16sp"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintLeft_toRightOf="@+id/icon_quiet"

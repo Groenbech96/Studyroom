@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
@@ -100,6 +101,11 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
      */
     private View fragmentView;
 
+    /**
+     * Font
+     */
+    Typeface opensansFont;
+
 
     /**
      * ConstraintSet for searchbar
@@ -141,10 +147,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         // Inflate the layout for this fragment
         fragmentView =  inflater.inflate(R.layout.fragment_maps, container, false);
 
+        opensansFont = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
+
         // Search dummy
         searchBar = (EditText) fragmentView.findViewById(R.id.searchDummy);
         searchBar.setOnClickListener(searchDummyListener);
         searchBar.setSoundEffectsEnabled(false);
+        searchBar.setTypeface(opensansFont);
 
         searchBarDraw = getContext().getDrawable(R.drawable.ic_dot);
         searchBarDraw.setBounds( 0, 0, 15, 15 );
@@ -182,10 +191,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
         }
 
-
         setUpConstraintSets();
-
-
 
         return fragmentView;
     }

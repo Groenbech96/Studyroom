@@ -2,6 +2,7 @@ package dtu.group.studyroom.addRoom;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -21,10 +22,14 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +39,8 @@ import java.util.Date;
 import dtu.group.studyroom.AddRoomActivity;
 import dtu.group.studyroom.Main;
 import dtu.group.studyroom.R;
+import dtu.group.studyroom.utils.OnSwipeTouchListener;
+import dtu.group.studyroom.utils.Utils;
 
 import static android.app.Activity.RESULT_CANCELED;
 import static android.app.Activity.RESULT_OK;
@@ -52,9 +59,13 @@ public class AddRoomRatingFragment extends Fragment {
     private View fragmentView;
     private SeekBar rating;
     private ImageView view;
+    private TextView title, info;
     private Bundle allData;
     String mCurrentPhotoPath;
     private float lastIndex = 0;
+
+    private Button btGoToCamera, btBack;
+    private Typeface opensansFont;
 
     AnimationDrawable anim;
 
@@ -80,10 +91,15 @@ public class AddRoomRatingFragment extends Fragment {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_add_room_rating, container, false);
 
-        final Button btGoToCamera = (Button) fragmentView.findViewById(R.id.add_room_btRatingNext);
+        btGoToCamera = (Button) fragmentView.findViewById(R.id.add_room_btRatingNext);
+        btGoToCamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                goToCamera();
+            }
+        });
 
-
-        final Button btBack = (Button) fragmentView.findViewById(R.id.add_room_btRatingBack);
+        btBack = (Button) fragmentView.findViewById(R.id.add_room_btRatingBack);
         btBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,9 +107,14 @@ public class AddRoomRatingFragment extends Fragment {
             }
         });
 
+        opensansFont = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
+
         view = (ImageView) fragmentView.findViewById(R.id.imageView);
         view.setBackgroundResource(R.drawable.rating);
         anim = (AnimationDrawable) view.getBackground();
+
+        title = (TextView) fragmentView.findViewById(R.id.add_room_rating_title);
+        title.setTypeface(opensansFont);
 
         rating = (SeekBar) fragmentView.findViewById(R.id.add_room_seekBar);
 
@@ -109,20 +130,29 @@ public class AddRoomRatingFragment extends Fragment {
             }});
 
 
-        btGoToCamera.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        info = (TextView) fragmentView.findViewById(R.id.add_room_camera_info);
+        info.setTypeface(opensansFont);
+
+
+        fragmentView.setOnTouchListener(new OnSwipeTouchListener(getActivity()) {
+
+
+            public void onSwipeRight() {
                 goToCamera();
             }
+            public void onSwipeLeft() {
+                goToPage3();
+            }
+
+
         });
+
 
         if(getArguments() != null)
             if(getArguments().containsKey("rating")) {
                 rating.setProgress(getArguments().getInt("rating"));
                 setSmileymage(rating.getProgress());
             }
-
-
 
 
         return fragmentView;
@@ -326,7 +356,7 @@ public class AddRoomRatingFragment extends Fragment {
 
         transaction.setCustomAnimations(R.anim.stayinplace, R.anim.slideout);
 
-        transaction.replace(R.id.add_layout ,page3);
+        transaction.replace(R.id.add_layout ,page3, Utils.ADDROOM_REVEW_FRAGMENT_TAG);
         transaction.commit();
 
 

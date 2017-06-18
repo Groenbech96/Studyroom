@@ -12,7 +12,30 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:elevation="5dp"
+        android:id="@+id/add_room_review_container"
+        android:background="@android:color/white"
+        >
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/add_room_rating_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@android:color/white"
+        android:layout_marginTop="32dp"
+        android:animateLayoutChanges="true"
+        android:elevation="5dp"
+        android:outlineProvider="bounds"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0">
 
         <ImageView
             android:id="@+id/mainImage"
@@ -59,8 +82,7 @@
                 android:id="@+id/distance"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginStart="24dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/ic_navigation_black_24px"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -74,31 +96,27 @@
                 android:id="@+id/location"
                 android:layout_width="15dp"
                 android:layout_height="15dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginStart="24dp"
                 android:background="@drawable/ic_location_on_black_24px"
-                app:layout_constraintLeft_toLeftOf="parent"
                 app:srcCompat="@drawable/ic_location_on_black_24px"
-                android:layout_marginTop="24dp"
-                app:layout_constraintTop_toBottomOf="@+id/areaName"
-                />
+                android:layout_marginLeft="16dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/areaName" />
 
             <TextView
                 android:id="@+id/areaName"
                 android:layout_width="200dp"
                 android:layout_height="40dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
                 android:background="@color/addButtonColor"
-                android:fontFamily="sans-serif-smallcaps"
-                android:padding="10dp"
+                android:textSize="18sp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:text=""
+                android:gravity="center_vertical"
                 android:textAlignment="center"
                 android:textColor="#FFFFFF"
-                android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -119,35 +137,37 @@
 
             <TextView
                 android:id="@+id/review_facilityTitle"
-                android:layout_width="200dp"
+                android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
                 android:background="@color/addButtonColor"
-                android:fontFamily="sans-serif-smallcaps"
                 android:padding="10dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:text="Facilities"
                 android:textAlignment="center"
+                android:gravity="center_vertical"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintHorizontal_bias="0.0" />
 
             <LinearLayout
                 android:id="@+id/facilityFirstRow"
                 android:layout_width="0dp"
                 android:layout_height="60dp"
-                android:layout_marginEnd="24dp"
-                android:layout_marginRight="24dp"
-                android:layout_marginStart="24dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/review_facilityTitle">
+                app:layout_constraintTop_toBottomOf="@+id/review_facilityTitle"
+                app:layout_constraintHorizontal_bias="1.0">
 
 
                 <TextView
@@ -160,7 +180,7 @@
                     android:background="@color/colorBackgroundSecondaryDarker"
                     android:drawableStart="@drawable/ic_wifi_black_24px"
                     android:drawablePadding="12dp"
-                    android:drawableEnd="@drawable/ic_grey_accept"
+                    android:drawableEnd="@drawable/ic_approve_not_circular_button"
                     android:fontFamily="sans-serif-condensed"
                     android:gravity="center_vertical"
                     android:padding="12dp"
@@ -180,7 +200,7 @@
                     android:background="@color/colorBackgroundSecondaryDarker"
                     android:drawableLeft="@drawable/ic_power_black_24px"
                     android:drawablePadding="12dp"
-                    android:drawableRight="@drawable/ic_grey_accept"
+                    android:drawableRight="@drawable/ic_approve_not_circular_button"
                     android:fontFamily="sans-serif-condensed"
                     android:gravity="center_vertical"
                     android:padding="12dp"
@@ -196,9 +216,8 @@
                 android:id="@+id/facilitySecondRow"
                 android:layout_width="0dp"
                 android:layout_height="60dp"
-                android:layout_marginEnd="24dp"
-                android:layout_marginRight="0dp"
-                android:layout_marginStart="24dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -215,7 +234,7 @@
                     android:background="@color/colorBackgroundSecondaryDarker"
                     android:drawableLeft="@drawable/ic_local_cafe_black_24px"
                     android:drawablePadding="12dp"
-                    android:drawableRight="@drawable/ic_grey_accept"
+                    android:drawableRight="@drawable/ic_approve_not_circular_button"
                     android:fontFamily="sans-serif-condensed"
                     android:gravity="center_vertical"
                     android:padding="12dp"
@@ -235,7 +254,7 @@
                     android:background="@color/colorBackgroundSecondaryDarker"
                     android:drawableLeft="@drawable/ic_group_black_24px"
                     android:drawablePadding="12dp"
-                    android:drawableRight="@drawable/ic_grey_accept"
+                    android:drawableRight="@drawable/ic_approve_not_circular_button"
                     android:fontFamily="sans-serif-condensed"
                     android:gravity="center_vertical"
                     android:padding="12dp"
@@ -251,9 +270,8 @@
 
                 android:layout_width="0dp"
                 android:layout_height="60dp"
-                android:layout_marginEnd="24dp"
-                android:layout_marginRight="0dp"
-                android:layout_marginStart="24dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -270,7 +288,7 @@
                     android:background="@color/colorBackgroundSecondaryDarker"
                     android:drawableLeft="@drawable/ic_wc_black_24px"
                     android:drawablePadding="12dp"
-                    android:drawableRight="@drawable/ic_grey_accept"
+                    android:drawableRight="@drawable/ic_approve_not_circular_button"
                     android:fontFamily="sans-serif-condensed"
                     android:gravity="center_vertical"
                     android:padding="12dp"
@@ -290,7 +308,7 @@
                     android:background="@color/colorBackgroundSecondaryDarker"
                     android:drawableLeft="@drawable/ic_restaurant_black_24px"
                     android:drawablePadding="12dp"
-                    android:drawableRight="@drawable/ic_grey_accept"
+                    android:drawableRight="@drawable/ic_approve_not_circular_button"
                     android:fontFamily="sans-serif-condensed"
                     android:gravity="center_vertical"
                     android:padding="12dp"
@@ -315,22 +333,23 @@
 
             <TextView
                 android:id="@+id/review_MapTitle"
-                android:layout_width="200dp"
+                android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_marginLeft="24dp"
-                android:layout_marginStart="24dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
                 android:background="@color/addButtonColor"
-                android:fontFamily="sans-serif-smallcaps"
                 android:padding="10dp"
                 android:paddingLeft="5dp"
                 android:paddingRight="5dp"
                 android:text="Map"
+                android:gravity="center_vertical"
                 android:textAlignment="center"
                 android:textColor="#FFFFFF"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -348,22 +367,46 @@
                 tools:context=".AddRoomReviewFragment"
                  />
 
-            <Button
-                android:id="@+id/review_submit"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:text="Upload studyroom?"
-                app:layout_constraintTop_toBottomOf="@+id/reviewMapView"
-                android:layout_marginTop="16dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                android:layout_marginLeft="24dp"
-                app:layout_constraintHorizontal_bias="0.0"
-                android:layout_marginRight="24dp" />
 
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/reviewMapView"
+                    app:layout_constraintBottom_toBottomOf="parent">
+
+
+                    <Button
+                        android:id="@+id/review_submit"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="4dp"
+                        android:layout_weight="0.5"
+                        android:text="Upload studyroom?"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toLeftOf="@id/review_submit" />
+                    <Button
+                        android:id="@+id/review_cancel"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0.5"
+                        android:text="Cancel"
+                        app:layout_constraintLeft_toRightOf="@id/review_cancel"
+                        app:layout_constraintRight_toRightOf="parent"
+                        android:layout_marginLeft="4dp"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        android:layout_marginRight="0dp" />
+
+                </LinearLayout>
+
+            </android.support.constraint.ConstraintLayout>
 
         </android.support.constraint.ConstraintLayout>
-
-
     </android.support.constraint.ConstraintLayout>
 </ScrollView>
