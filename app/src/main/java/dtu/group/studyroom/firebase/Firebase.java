@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.constraint.solver.widgets.Snapshot;
 import android.util.Log;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -121,6 +123,12 @@ public class Firebase {
                 case "address" :
                     studyRoom.setAddress(attributeSnapshot.getValue().toString());
                     break;
+                case "postal" :
+                    studyRoom.setPostal(attributeSnapshot.getValue().toString());
+                    break;
+                case "city" :
+                    studyRoom.setCity(attributeSnapshot.getValue().toString());
+                    break;
                 case "rating" :
                     try{
                         studyRoom.setRating((double)attributeSnapshot.getValue());
@@ -133,6 +141,10 @@ public class Firebase {
                 case "facilities" :
                     StudyRoomFacilities facilites = createFacilitiesFromSnapshot(attributeSnapshot);
                     studyRoom.setFacilites(facilites);
+                    break;
+                case "coordinates" :
+                    LatLng coordinates = createCoordinatesFromSnapshot(attributeSnapshot);
+                    studyRoom.setCoordinates(coordinates);
                     break;
             }
         }
@@ -185,6 +197,24 @@ public class Firebase {
         return facilites;
     }
 
+    public LatLng createCoordinatesFromSnapshot(DataSnapshot attributeSnapshot) {
+        double lat = 0, lng = 0;
+
+        for (DataSnapshot coordinateSnapshot : attributeSnapshot.getChildren()) {
+            switch (coordinateSnapshot.getKey()) {
+                case "latitude" :
+                    lat = (double) coordinateSnapshot.getValue();
+                    break;
+                case "longitude" :
+                    lng = (double) coordinateSnapshot.getValue();
+                    break;
+            }
+        }
+
+        return new LatLng(lat, lng);
+
+    }
+
     public void uploadStudyRoom(StudyRoom studyRoom, String photoPath) {
 
         /**
@@ -193,6 +223,8 @@ public class Firebase {
 
         final String name = studyRoom.getName();
         final String address = studyRoom.getAddress();
+        final String city = studyRoom.getCity();
+        final String postal = studyRoom.getPostal();
         final int wifi = studyRoom.getFacilites().getWifi();
         final int coffee = studyRoom.getFacilites().getCoffee();
         final int food = studyRoom.getFacilites().getFood();
@@ -200,6 +232,7 @@ public class Firebase {
         final int power = studyRoom.getFacilites().getPower();
         final int toilet = studyRoom.getFacilites().getToilet();
         final double rating = studyRoom.getRating();
+        final LatLng coordinates = studyRoom.getCoordinates();
 
 
         /**
@@ -239,6 +272,8 @@ public class Firebase {
 
                 mDatabase.child(key).child("name").setValue(name);
                 mDatabase.child(key).child("address").setValue(address);
+                mDatabase.child(key).child("city").setValue(city);
+                mDatabase.child(key).child("postal").setValue(postal);
                 mDatabase.child(key).child("facilites").child("wifi").setValue(wifi);
                 mDatabase.child(key).child("facilites").child("coffee").setValue(coffee);
                 mDatabase.child(key).child("facilites").child("food").setValue(food);
@@ -247,6 +282,7 @@ public class Firebase {
                 mDatabase.child(key).child("facilites").child("toilet").setValue(toilet);
                 mDatabase.child(key).child("rating").setValue(rating);
                 mDatabase.child(key).child("image").setValue(downloadUrl.toString());
+                mDatabase.child(key).child("coordinates").setValue(coordinates);
             }
         });
 

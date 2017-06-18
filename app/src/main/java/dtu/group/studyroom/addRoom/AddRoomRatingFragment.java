@@ -335,7 +335,7 @@ public class AddRoomRatingFragment extends Fragment {
                 allData.getBoolean("groups")
         );
 
-        StudyRoom studyRoom = new StudyRoom(allData.getString("name"), allData.getString("address"), facilites, rating.getProgress());
+        // StudyRoom studyRoom = new StudyRoom(allData.getString("name"), allData.getString("address"), allData.getString("postal"), allData.getString("city"), facilites, rating.getProgress());
 
         //((AddRoomActivity)getActivity()).saveStudyRoom(studyRoom);
     }
@@ -348,7 +348,7 @@ public class AddRoomRatingFragment extends Fragment {
         if(rating != null && rating.getProgress() >= 0)
             bundle.putInt("rating", rating.getProgress());
 
-        AddRoomReviewFragment page3 = AddRoomReviewFragment.newInstance();
+        AddRoomAddressFragment page3 = AddRoomAddressFragment.newInstance();
         page3.setArguments(bundle);
 
         FragmentManager manager = getActivity().getSupportFragmentManager();

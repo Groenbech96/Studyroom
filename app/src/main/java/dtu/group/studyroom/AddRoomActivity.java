@@ -94,8 +94,84 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
     public void saveStudyRoom(StudyRoom studyRoom) {
         mProgress.setMessage("Uploading studyroom..");
         mProgress.show();
+//<<<<<<< HEAD
+
+//        /**
+//         * Extract fields from studyroom model
+//         */
+//        final String name = studyRoom.name;
+//        final String address = studyRoom.address;
+//        final String city = studyRoom.city;
+//        final String postal = studyRoom.postal;
+//        final int wifi = studyRoom.facilites.wifi;
+//        final int coffee = studyRoom.facilites.coffee;
+//        final int food = studyRoom.facilites.food;
+//        final int groups = studyRoom.facilites.groups;
+//        final int power = studyRoom.facilites.power;
+//        final int toilet = studyRoom.facilites.toilet;
+//        final float rating = studyRoom.rating;
+//
+//        /**
+//         * Generate unique id for the image
+//         */
+//        String uuid = UUID.randomUUID().toString();
+//
+//        /**
+//         * Set file path with the unique ID
+//         */
+//        StorageReference filepath = mStorage.child("studyroomImages").child(uuid);
+//
+//        /**
+//         * Compress the bitmap into jpeg format
+//         */
+//
+//        Uri file = Uri.fromFile(new File(mPhotoPath));
+//
+//        /**
+//         * Upload the file to the the firebase storage
+//         */
+//        filepath.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//
+//                /**
+//                 * Get the reference to the image
+//                 */
+//                Uri downloadUrl = taskSnapshot.getDownloadUrl();
+//
+//
+//                /**
+//                 * Save the study room under a unique ID
+//                 */
+//                DatabaseReference usersRef = mDatabase.child("studyrooms");
+//
+//                String key = usersRef.push().getKey();
+//
+//                usersRef.child(key).child("name").setValue(name);
+//                usersRef.child(key).child("address").setValue(address);
+//                usersRef.child(key).child("city").setValue(city);
+//                usersRef.child(key).child("postal").setValue(postal);
+//                usersRef.child(key).child("facilites").child("wifi").setValue(wifi);
+//                usersRef.child(key).child("facilites").child("coffee").setValue(coffee);
+//                usersRef.child(key).child("facilites").child("food").setValue(food);
+//                usersRef.child(key).child("facilites").child("groups").setValue(groups);
+//                usersRef.child(key).child("facilites").child("power").setValue(power);
+//                usersRef.child(key).child("facilites").child("toilet").setValue(toilet);
+//                usersRef.child(key).child("rating").setValue(rating);
+//                usersRef.child(key).child("image").setValue(downloadUrl.toString());
+//
+//                mProgress.dismiss();
+//
+//                onBackPressed();
+//            }
+//        });
+
+
         Firebase.getInstance().uploadStudyRoom(studyRoom, mPhotoPath);
         mProgress.dismiss();
+
+        onBackPressed();
+
     }
 
     @Override
@@ -103,25 +179,6 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
         super.onActivityResult(requestCode,resultCode,data);
     }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        /**
-//         * If request and resultcode are okay, we save the picture just taken.
-//         */
-//        if (requestCode == 1 && resultCode == RESULT_OK) {
-//
-//            Log.i("Test", "Jubii Ac");
-//            //AddRoomReviewFragment fragment = (AddRoomReviewFragment) getSupportFragmentManager().findFragmentByTag("FRAG_REVIEW");
-//            //fragment.setImage();
-//
-//
-//        } else if (resultCode == RESULT_CANCELED) {
-//
-//            Toast.makeText(this, "You must take a picture!", Toast.LENGTH_SHORT).show();;
-//
-//        }
-//
-//    }
 
     public Bundle getBundleData() {
         return this.bundleData;
@@ -132,24 +189,9 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
     @Override
     public void onBackPressed() {
 
-        AddRoomNameFragment addRoomNameFragment = (AddRoomNameFragment) getSupportFragmentManager().findFragmentByTag(Utils.ADDROOM_NAME_FRAGMENT_TAG);
-        if(addRoomNameFragment != null && addRoomNameFragment.isVisible()) {
 
-            finish();
-            overridePendingTransition(R.anim.stayinplace, R.anim.slidedown);
-
-
-        }
-
-        AddRoomReviewFragment addRoomReviewFragment = (AddRoomReviewFragment) getSupportFragmentManager().findFragmentByTag(Utils.ADDROOM_REVEW_FRAGMENT_TAG);
-        if(addRoomReviewFragment != null && addRoomReviewFragment.isVisible()) {
-
-            //addRoomNameFragment.onDetach();
-
-            finish();
-            overridePendingTransition(R.anim.stayinplace, R.anim.slidedown);
-
-        }
+        finish();
+        overridePendingTransition(R.anim.stayinplace, R.anim.slidedown);
 
 
     }

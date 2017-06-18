@@ -39,6 +39,7 @@
     <string name="studyroom_image_string">Studyroom image</string>
 
     <!-- Add room name and facilities page -->
+
     <string name="add_room_name_hint">Name the study room</string>
     <string name="add_room_facility_title">Choose facilities</string>
     <string name="add_room_name_wifi_hint">Wifi</string>
@@ -47,7 +48,6 @@
     <string name="add_room_name_group_hint">Group friendly</string>
     <string name="add_room_name_toilet_hint">Toilets nearby</string>
     <string name="add_room_name_quiet_hint">Quiet space</string>
-
 
 
 
