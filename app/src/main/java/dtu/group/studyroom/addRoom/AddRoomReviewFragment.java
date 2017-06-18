@@ -34,9 +34,12 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.w3c.dom.Text;
 
@@ -44,6 +47,7 @@ import java.io.File;
 
 import dtu.group.studyroom.AddRoomActivity;
 import dtu.group.studyroom.R;
+import dtu.group.studyroom.utils.Utils;
 
 import static dtu.group.studyroom.utils.Utils.LOG_GOOGLE_MAP_API;
 
@@ -64,15 +68,12 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
     private View fragmentView;
     private Bundle data;
     private ImageView view;
-    private TextView address, areaName, title, facilityTitle, mapTitle;
+    private TextView address, areaName, title, facilityTitle, mapTitle, currentDistance;
     private TextView wifi, power, coffee, group, toilet, quiet;
     private File img;
     private Button submit, cancel;
 
     private Typeface opensansFont;
-
-
-
 
     /**
      * Google maps items
@@ -95,7 +96,7 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean mLocationPermissionGranted;
 
-   
+
     public AddRoomReviewFragment() {
         // Required empty public constructor
     }
@@ -140,6 +141,8 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
 
         data = getArguments();
 
+        currentDistance = (TextView) fragmentView.findViewById(R.id.distanceText);
+        currentDistance.setTypeface(opensansFont);
 
         address = (TextView) fragmentView.findViewById(R.id.addressReview);
         address.setText(data.getString("address"));
@@ -172,12 +175,6 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
         });
 
         foundLatLng = data.getParcelable("latlng");
-
-
-
-
-
-
 
 
         /**
@@ -269,7 +266,12 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
                 data.getBoolean("groups")
         );
 
-        StudyRoom studyRoom = new StudyRoom(data.getString("name"), data.getString("address"), facilites, data.getInt("rating"));
+        StudyRoom studyRoom = new StudyRoom(data.getString("name"),
+                data.getString("address"),
+                data.getString("postal"),
+                data.getString("city"),
+                facilites,
+                data.getInt("rating"));
         ((AddRoomActivity)getActivity()).saveStudyRoom(studyRoom);
 
     }
@@ -363,6 +365,20 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
         mMap.getUiSettings().setMapToolbarEnabled(false);
         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.google_map_style));
 
+        // Creating a marker
+        MarkerOptions markerOptions = new MarkerOptions();
+
+        // Setting the position for the marker
+        markerOptions.position(foundLatLng);
+        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.mipmap.studyroom_mapmarker);
+        Bitmap map = Utils.scaleDown(bm, 80, true);
+        BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(map);
+
+        markerOptions.icon(icon);
+
+        markerOptions.title(data.getString("address"));
+        mMap.addMarker(markerOptions);
+
         //updateLocationUI();
 
 
@@ -384,8 +400,15 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
 
         // Set the map's camera position to the current location of the device.
         if (mLastKnownLocation != null) {
-            //TODO: CALCULATE DISTANCE
+            Location location = new Location("");
+            location.setLatitude(foundLatLng.latitude);
+            location.setLongitude(foundLatLng.longitude);
 
+
+            float distanceInMeters = mLastKnownLocation.distanceTo(location);
+            float km = distanceInMeters / 1000;
+
+            currentDistance.setText(String.format(java.util.Locale.US,"%.1f", km) + " km from you" );
 
 
         } else {

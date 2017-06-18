@@ -185,6 +185,7 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
         if(getArguments() != null)
             if(getArguments().containsKey("address")) {
                 searchBar.setText(getArguments().getString("address"));
+
             }
 
 
@@ -213,6 +214,7 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
                 mGoogleApiClient.connect();
                 Log.i(LOG_GOOGLE_MAP_API, "API CONNECTED");
             }
+
 
         }
         SharedPreferences pref = getActivity().getSharedPreferences(getString(R.string.sharedprefs), Context.MODE_PRIVATE);
@@ -351,6 +353,8 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
             if (getArguments().containsKey("address") && getArguments().containsKey("latlng")) {
 
                 String address = getArguments().getString("address");
+                postalText = getArguments().getString("postal");
+                cityText = getArguments().getString("city");
                 new GeocoderTask().execute(address);
 
             } else {
@@ -464,13 +468,16 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
             Bundle bundle = getArguments();
             bundle.putString("address", searchBar.getText().toString());
 
-            if(!postalText.trim().equals(""))
-                bundle.putString("postal", postalText);
-            if(!cityText.trim().equals(""))
-                bundle.putString("city", cityText);
+            if(postalText != null)
+                if(!postalText.trim().equals(""))
+                    bundle.putString("postal", postalText);
+            if(cityText != null)
+                if(!cityText.trim().equals(""))
+                    bundle.putString("city", cityText);
 
             bundle.putParcelable("latlng", foundLatLng);
 
+            Log.i("Data send", bundle.toString());
             AddRoomRatingFragment page3 = AddRoomRatingFragment.newInstance();
             page3.setArguments(bundle);
 

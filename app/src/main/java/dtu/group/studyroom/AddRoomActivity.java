@@ -131,6 +131,8 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
          */
         final String name = studyRoom.name;
         final String address = studyRoom.address;
+        final String city = studyRoom.city;
+        final String postal = studyRoom.postal;
         final int wifi = studyRoom.facilites.wifi;
         final int coffee = studyRoom.facilites.coffee;
         final int food = studyRoom.facilites.food;
@@ -177,6 +179,8 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
 
                 usersRef.child(key).child("name").setValue(name);
                 usersRef.child(key).child("address").setValue(address);
+                usersRef.child(key).child("city").setValue(city);
+                usersRef.child(key).child("postal").setValue(postal);
                 usersRef.child(key).child("facilites").child("wifi").setValue(wifi);
                 usersRef.child(key).child("facilites").child("coffee").setValue(coffee);
                 usersRef.child(key).child("facilites").child("food").setValue(food);
@@ -187,6 +191,8 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
                 usersRef.child(key).child("image").setValue(downloadUrl.toString());
 
                 mProgress.dismiss();
+
+                onBackPressed();
             }
         });
 
@@ -196,25 +202,6 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
         super.onActivityResult(requestCode,resultCode,data);
     }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        /**
-//         * If request and resultcode are okay, we save the picture just taken.
-//         */
-//        if (requestCode == 1 && resultCode == RESULT_OK) {
-//
-//            Log.i("Test", "Jubii Ac");
-//            //AddRoomReviewFragment fragment = (AddRoomReviewFragment) getSupportFragmentManager().findFragmentByTag("FRAG_REVIEW");
-//            //fragment.setImage();
-//
-//
-//        } else if (resultCode == RESULT_CANCELED) {
-//
-//            Toast.makeText(this, "You must take a picture!", Toast.LENGTH_SHORT).show();;
-//
-//        }
-//
-//    }
 
     public Bundle getBundleData() {
         return this.bundleData;
@@ -225,24 +212,9 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
     @Override
     public void onBackPressed() {
 
-        AddRoomNameFragment addRoomNameFragment = (AddRoomNameFragment) getSupportFragmentManager().findFragmentByTag(Utils.ADDROOM_NAME_FRAGMENT_TAG);
-        if(addRoomNameFragment != null && addRoomNameFragment.isVisible()) {
 
-            finish();
-            overridePendingTransition(R.anim.stayinplace, R.anim.slidedown);
-
-
-        }
-
-        AddRoomReviewFragment addRoomReviewFragment = (AddRoomReviewFragment) getSupportFragmentManager().findFragmentByTag(Utils.ADDROOM_REVEW_FRAGMENT_TAG);
-        if(addRoomReviewFragment != null && addRoomReviewFragment.isVisible()) {
-
-            //addRoomNameFragment.onDetach();
-
-            finish();
-            overridePendingTransition(R.anim.stayinplace, R.anim.slidedown);
-
-        }
+        finish();
+        overridePendingTransition(R.anim.stayinplace, R.anim.slidedown);
 
 
     }

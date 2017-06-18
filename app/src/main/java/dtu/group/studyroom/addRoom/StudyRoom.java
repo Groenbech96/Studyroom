@@ -6,7 +6,7 @@ package dtu.group.studyroom.addRoom;
 
 public class StudyRoom {
 
-    public String name, address;
+    public String name, address, city, postal;
     public StudyRoomFacilites facilites;
     public float rating;
 
@@ -15,11 +15,13 @@ public class StudyRoom {
 
     }
 
-    public StudyRoom(String name, String address, StudyRoomFacilites facilites, float rating) {
+    public StudyRoom(String name, String address, String postal, String city, StudyRoomFacilites facilites, float rating) {
         this.rating = rating;
         this.name = name;
         this.address = address;
         this.facilites = facilites;
+        this.city = city;
+        this.postal = postal;
     }
 
 
