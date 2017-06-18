@@ -335,9 +335,9 @@ public class AddRoomRatingFragment extends Fragment {
                 allData.getBoolean("groups")
         );
 
-        StudyRoom studyRoom = new StudyRoom(allData.getString("name"), allData.getString("address"), facilites, rating.getProgress());
+        StudyRoom studyRoom = new StudyRoom(allData.getString("name"), allData.getString("address"), allData.getString("postal"), allData.getString("city"), facilites, rating.getProgress());
 
-        ((AddRoomActivity)getActivity()).saveStudyRoom(studyRoom);
+        //((AddRoomActivity)getActivity()).saveStudyRoom(studyRoom);
     }
 
 

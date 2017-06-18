@@ -1,4 +1,4 @@
-package dtu.group.studyroom;
+package dtu.group.studyroom.search;
 
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
@@ -9,21 +9,23 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v4.app.Fragment;
-import android.transition.AutoTransition;
-import android.transition.ChangeBounds;
-import android.transition.Scene;
-import android.transition.Slide;
-import android.transition.TransitionManager;
-import android.util.Log;
-import android.view.Gravity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
+
+import java.util.HashMap;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
+import dtu.group.studyroom.Main;
+import dtu.group.studyroom.R;
+import dtu.group.studyroom.addRoom.StudyRoom;
 
 
 /**
@@ -42,6 +44,8 @@ public class SearchFragment extends Fragment {
     private ConstraintSet defaultSet, expandedSet;
     private ConstraintLayout constraintLayout;
     private boolean facilityMenuVisible = true;
+    private ListView listView;
+    private SearchAdapter searchAdapter;
 
     private OnFragmentInteractionListener mListener;
 
@@ -59,9 +63,10 @@ public class SearchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         facilityMenuVisible = false;
 
-
+        searchAdapter = new SearchAdapter(getActivity());
     }
 
     @Override
@@ -102,6 +107,28 @@ public class SearchFragment extends Fragment {
         //imgr.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
         searchBar.requestFocus();
         searchBar.setCursorVisible(true);
+
+        listView = (ListView) fragmentView.findViewById(R.id.searchResultListView);
+
+        listView.setAdapter(searchAdapter);
+
+
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                searchAdapter.getFilter().filter(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         return fragmentView;
 
@@ -237,6 +264,13 @@ public class SearchFragment extends Fragment {
         };
 
     };
+
+
+
+    public void onResume() {
+        super.onResume();
+
+    }
 
 
 }

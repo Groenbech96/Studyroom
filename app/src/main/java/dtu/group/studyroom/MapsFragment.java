@@ -42,7 +42,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
 
-import dtu.group.studyroom.addRoom.AddRoomAddressFragment;
+import dtu.group.studyroom.search.SearchFragment;
 import dtu.group.studyroom.utils.Utils;
 
 import static dtu.group.studyroom.utils.Utils.LOG_GOOGLE_MAP_API;
@@ -413,9 +413,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
         Log.i(LOG_GOOGLE_MAP_API, "LOCATION TURNED OFF");
         if (mLocationPermissionGranted) {
-            mMap.setMyLocationEnabled(false);
+            //mMap.setMyLocationEnabled(false);
         } else {
-            mMap.setMyLocationEnabled(false);
+            //mMap.setMyLocationEnabled(false);
         }
 
     }

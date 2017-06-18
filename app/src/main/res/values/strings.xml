@@ -39,15 +39,15 @@
     <string name="studyroom_image_string">Studyroom image</string>
 
     <!-- Add room name and facilities page -->
-    <string name="add_room_name_hint">Name for your studyroom?</string>
-    <string name="add_room_facility_title">Choose facilities</string>
-    <string name="add_room_name_wifi_hint">Is there wifi?</string>
-    <string name="add_room_name_power_hint">Is there power?</string>
-    <string name="add_room_name_coffee_hint">Is there coffee nearby?</string>
-    <string name="add_room_name_group_hint">Is it group friendly?</string>
-    <string name="add_room_name_toilet_hint">Is there toilets nearby?</string>
-    <string name="add_room_name_quiet_hint">Is it a quiet space?</string>
 
+    <string name="add_room_name_hint">Name the study room</string>
+    <string name="add_room_facility_title">Choose facilities</string>
+    <string name="add_room_name_wifi_hint">Wifi</string>
+    <string name="add_room_name_power_hint">Power outlets</string>
+    <string name="add_room_name_coffee_hint">Coffee nearby</string>
+    <string name="add_room_name_group_hint">Group friendly</string>
+    <string name="add_room_name_toilet_hint">Toilets nearby</string>
+    <string name="add_room_name_quiet_hint">Quiet space</string>
 
 
 
