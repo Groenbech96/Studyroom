@@ -138,9 +138,9 @@ public class SearchFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                //View selectedView = ((View) listView.getSelectedItem());
+                View selectedView = ((View) view.findViewById(R.id.searchItemWrapper));
 
-                SearchAdapter.ViewHolder viewHolder = (SearchAdapter.ViewHolder) view.getTag();
+                SearchAdapter.ViewHolder viewHolder = (SearchAdapter.ViewHolder) selectedView.getTag();
 
                 String studyRoomId = viewHolder.id;
                 StudyRoom studyRoom = ((Main) SearchFragment.this.getActivity()).getStudyrooms().get(studyRoomId);

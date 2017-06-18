@@ -34,7 +34,8 @@ public class ContentActivity extends Activity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         StudyRoom studyRoom = bundle.getParcelable("studyroom");
-        Log.i("lol", "lol");
+        adresse = (TextView)findViewById(R.id.adresse);
+        adresse.setText(studyRoom.getAddress());
         //setPage(studyRoom);
 
     }
