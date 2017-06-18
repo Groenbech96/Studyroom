@@ -38,11 +38,11 @@ public class ContentActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_content);
 
-        setPage(studyRoom);
+        //setPage(studyRoom);
 
     }
 
-
+/*
     public void setPage(StudyRoom studyroom){
         Områdenavn = (TextView)findViewById(R.id.OmrådeNavn);
         Områdenavn.setText(studyroom.name);
@@ -90,7 +90,7 @@ public class ContentActivity extends Activity {
 
     }
 
-
+*/
 
 
 

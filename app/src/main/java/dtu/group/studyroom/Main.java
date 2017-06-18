@@ -18,20 +18,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
+import java.util.HashMap;
 import dtu.group.studyroom.addRoom.AddRoomAddressFragment;
 import dtu.group.studyroom.addRoom.AddRoomNameFragment;
 import dtu.group.studyroom.addRoom.AddRoomRatingFragment;
+import dtu.group.studyroom.addRoom.StudyRoom;
+import dtu.group.studyroom.firebase.Firebase;
+import dtu.group.studyroom.search.SearchFragment;
 import dtu.group.studyroom.utils.Utils;
 
 public class Main extends AppCompatActivity implements MapsFragment.OnFragmentInteractionListener,
@@ -40,17 +33,15 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
         AddRoomAddressFragment.OnFragmentInteractionListener,
         AddRoomRatingFragment.OnFragmentInteractionListener {
 
+    private HashMap<String, StudyRoom> studyrooms = new HashMap<>();
+
     private enum FADE {IN, OUT};
 
     private FloatingActionButton accountButton, addButton;
-    private FirebaseAuth mAuth;
     private Context mContext;
 
     private SearchFragment searchFragment;
     private MapsFragment mapFragment;
-
-    private StorageReference mStorage;
-    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,45 +49,14 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
         mContext = getApplicationContext();
         setContentView(R.layout.activity_main);
 
-        /**
-         * Create button click listener
-         */
-
-
         accountButton = (FloatingActionButton) findViewById(R.id.account_button);
         accountButton.setOnClickListener(accountButtonListener);
 
         addButton = (FloatingActionButton) findViewById(R.id.add_button);
         addButton.setOnClickListener(addButtonListener);
 
-        mAuth = FirebaseAuth.getInstance();
-
-        mAuth.signInAnonymously()
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("FIREBASE", "signInAnonymously:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            //updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w("FIREBASE", "signInAnonymously:failure", task.getException());
-
-                            //updateUI(null);
-                        }
-
-                        // ...
-                    }
-                });
-
-        /**
-         * Set up references to firebase storage and database
-         */
-        mStorage = FirebaseStorage.getInstance().getReference();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
-
+        Firebase.updateActivity(this);
+        Firebase.getInstance().logInAnonymously(this);
 
         /**
          * Start the maps fragment
@@ -298,6 +258,14 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
 
         }
 
+    }
+
+    public HashMap<String, StudyRoom> getStudyrooms() {
+        return studyrooms;
+    }
+
+    public void setStudyrooms(HashMap<String, StudyRoom> studyroom) {
+        studyrooms = studyroom;
     }
 
 
