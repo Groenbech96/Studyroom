@@ -271,7 +271,6 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
 
     public void setStudyrooms(HashMap<String, StudyRoom> studyroom) {
         studyrooms = studyroom;
-        searchFragment.insertStudyRoomsToListView();
     }
 
 

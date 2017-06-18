@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,7 +66,7 @@ public class SearchFragment extends Fragment {
 
         facilityMenuVisible = false;
 
-        searchAdapter = new SearchAdapter(getActivity().getApplicationContext());
+        searchAdapter = new SearchAdapter(getActivity());
     }
 
     @Override
@@ -110,21 +112,20 @@ public class SearchFragment extends Fragment {
 
         listView.setAdapter(searchAdapter);
 
-        insertStudyRoomsToListView();
 
-        Button testtn = (Button) fragmentView.findViewById(R.id.testBtn);
-        testtn.setOnClickListener(new View.OnClickListener() {
+        searchBar.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View v) {
-                HashMap<String, StudyRoom> localStudyRooms = ((Main) getActivity()).getStudyrooms();
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                StudyRoom studyRoom3 = new StudyRoom("Cafe Laksen", "København Ø", new StudyRoom().new StudyRoomFacilites(true,true,true,true,true,true), 3);
+            }
 
-                String uuid = UUID.randomUUID().toString();
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                searchAdapter.getFilter().filter(s);
+            }
 
-                localStudyRooms.put(uuid, studyRoom3);
-                ((Main) getActivity()).setStudyrooms(localStudyRooms);
-                insertStudyRoomsToListView();
+            @Override
+            public void afterTextChanged(Editable s) {
 
             }
         });
@@ -264,13 +265,11 @@ public class SearchFragment extends Fragment {
 
     };
 
-    public void insertStudyRoomsToListView() {
-        HashMap<String, StudyRoom> studyrooms = ((Main) getActivity()).getStudyrooms();
-        searchAdapter.clear();
 
-        for (StudyRoom studyRoom : studyrooms.values()) {
-            searchAdapter.add(studyRoom);
-        }
+
+    public void onResume() {
+        super.onResume();
+
     }
 
 

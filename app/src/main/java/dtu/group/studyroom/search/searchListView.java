@@ -4,6 +4,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.ListView;
 
 /**
@@ -16,6 +17,7 @@ public class searchListView extends ListView {
     private int previousCount = 0;
     private int previousHeight = 0;
     private int newHeight = 0;
+    private int childHeight = 0;
 
     public searchListView(Context context, AttributeSet attributes) {
         super(context, attributes);
@@ -24,14 +26,20 @@ public class searchListView extends ListView {
     @Override
     protected void onDraw(Canvas canvas)
     {
-        if (getCount() != previousCount)
+        if (getCount() != previousCount && getCount() != 0)
         {
-            int childHeight = getChildAt(0).getHeight() + 1 ;
+            childHeight = getChildAt(0).getHeight() + 1 ;
 
             previousHeight = childHeight * previousCount;
             previousCount = getCount();
 
             newHeight = getCount() * childHeight;
+
+            animateHeightChange();
+        } else if (getCount() != previousCount && getCount() == 0){
+            previousHeight = childHeight * previousCount;
+            previousCount = 0;
+            newHeight = 0;
 
             animateHeightChange();
         }
@@ -41,7 +49,7 @@ public class searchListView extends ListView {
 
     public void animateHeightChange(){
         ValueAnimator va = ValueAnimator.ofInt(previousHeight, newHeight);
-        int mDuration = 200;
+        int mDuration = 300;
         va.setDuration(mDuration);
 
         va.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {

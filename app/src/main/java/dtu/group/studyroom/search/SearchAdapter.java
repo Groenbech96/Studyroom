@@ -1,14 +1,19 @@
 package dtu.group.studyroom.search;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import dtu.group.studyroom.Main;
 import dtu.group.studyroom.R;
 import dtu.group.studyroom.addRoom.StudyRoom;
 
@@ -16,20 +21,26 @@ import dtu.group.studyroom.addRoom.StudyRoom;
  * Created by christianschmidt on 16/06/2017.
  */
 
-public class SearchAdapter extends BaseAdapter{
+public class SearchAdapter extends BaseAdapter implements Filterable{
 
-    Context context;
-    ArrayList<StudyRoom> studyRooms = new ArrayList<>();
+    private Context context;
+    private Activity activity;
+    private HashMap<String, StudyRoom> studyRooms;
+    private ArrayList<StudyRoom> tempStudyRooms = new ArrayList<>();
+    private NameFilter nameFilter;
 
-    public SearchAdapter(Context context) {
 
+    public SearchAdapter(Activity activity) {
         super();
-        this.context = context;
+        this.context = activity.getApplicationContext();
+        this.activity = activity;
+        studyRooms = ((Main)activity).getStudyrooms();
+        getFilter();
     }
 
     @Override
     public int getCount() {
-        return studyRooms.size();
+        return tempStudyRooms.size();
     }
 
     @Override
@@ -38,13 +49,12 @@ public class SearchAdapter extends BaseAdapter{
     }
 
     public void add(StudyRoom studyRoom) {
-        this.studyRooms.add(studyRoom);
         notifyDataSetChanged();
     }
 
     @Override
     public View getView(int i, View convertView, ViewGroup parent) {
-        final StudyRoom studyRoom = studyRooms.get(i);
+        final StudyRoom studyRoom = tempStudyRooms.get(i);
 
         ViewHolder viewHolder;
 
@@ -82,6 +92,52 @@ public class SearchAdapter extends BaseAdapter{
     private static class ViewHolder {
         TextView name;
         TextView address;
+    }
+
+    public Filter getFilter() {
+        return nameFilter == null ? new NameFilter() : nameFilter;
+    }
+
+    private class NameFilter extends Filter {
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+
+
+            FilterResults results = new FilterResults();
+            tempStudyRooms.clear();
+
+            if (constraint == null ||constraint.length() == 0) {
+                results.count = studyRooms.size();
+                results.values = studyRooms;
+
+                for (StudyRoom studyRoom : studyRooms.values()) {
+                    tempStudyRooms.add(studyRoom);
+                }
+            } else {
+                constraint = constraint.toString().toLowerCase();
+
+                for (StudyRoom studyRoom : studyRooms.values()) {
+
+                    String name = studyRoom.getName();
+
+                    if (name.toLowerCase().contains(constraint.toString())) {
+                        tempStudyRooms.add(studyRoom);
+                    }
+                }
+
+                results.count = tempStudyRooms.size();
+                results.values = tempStudyRooms;
+            }
+
+            return  results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraints, FilterResults results) {
+            notifyDataSetChanged();
+        }
+
     }
 
 }

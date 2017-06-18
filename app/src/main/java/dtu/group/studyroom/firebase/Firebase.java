@@ -93,7 +93,8 @@ public class Firebase {
 
         Activity a = mActivityReference.get();
 
-        HashMap<String, StudyRoom> localStudyRooms = ((Main) a).getStudyrooms();
+        HashMap<String, StudyRoom> localStudyRooms = new HashMap<>();
+
 
         for (DataSnapshot studyRoomSnapshot : dataSnapshot.getChildren()) {
 
