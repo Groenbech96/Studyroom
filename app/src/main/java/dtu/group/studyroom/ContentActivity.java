@@ -1,13 +1,16 @@
 package dtu.group.studyroom;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import dtu.group.studyroom.addRoom.StudyRoom;
+import dtu.group.studyroom.search.SearchFragment;
 
 
 /**
@@ -21,16 +24,6 @@ public class ContentActivity extends Activity {
     private Bundle allData;
     private RatingBar rateing;
 
-    StudyRoom.StudyRoomFacilites facilites = new StudyRoom().new StudyRoomFacilites(
-            allData.getBoolean("wifi"),
-            allData.getBoolean("toilet"),
-            allData.getBoolean("power"),
-            allData.getBoolean("coffee"),
-            allData.getBoolean("food"),
-            allData.getBoolean("groups")
-    );
-
-    // StudyRoom studyRoom = new StudyRoom("navnet her", "adressen på stedet", facilites, rateing.getRating());
 
 
     @Override
@@ -38,6 +31,11 @@ public class ContentActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_content);
 
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        StudyRoom studyRoom = bundle.getParcelable("studyroom");
+        adresse = (TextView)findViewById(R.id.adresse);
+        adresse.setText(studyRoom.getAddress());
         //setPage(studyRoom);
 
     }

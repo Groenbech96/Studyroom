@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.constraint.solver.widgets.Snapshot;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -29,7 +30,8 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import dtu.group.studyroom.Main;
-import dtu.group.studyroom.addRoom.StudyRoom;
+import dtu.group.studyroom.addRoom.*;
+
 
 /**
  * Created by christianschmidt on 16/06/2017.
@@ -101,6 +103,8 @@ public class Firebase {
         for (DataSnapshot studyRoomSnapshot : dataSnapshot.getChildren()) {
 
             StudyRoom studyRoom = createStudyRoomFromSnapshot(studyRoomSnapshot);
+            studyRoom.setId(studyRoomSnapshot.getKey());
+
             localStudyRooms.put(studyRoomSnapshot.getKey(),studyRoom);
 
         }
@@ -135,8 +139,12 @@ public class Firebase {
                     }
                     break;
                 case "facilities" :
-                    StudyRoom.StudyRoomFacilites facilites = createFacilitiesFromSnapshot(attributeSnapshot);
+                    StudyRoomFacilities facilites = createFacilitiesFromSnapshot(attributeSnapshot);
                     studyRoom.setFacilites(facilites);
+                    break;
+                case "coordinates" :
+                    LatLng coordinates = createCoordinatesFromSnapshot(attributeSnapshot);
+                    studyRoom.setCoordinates(coordinates);
                     break;
             }
         }
@@ -144,8 +152,8 @@ public class Firebase {
         return studyRoom;
     }
 
-    private StudyRoom.StudyRoomFacilites createFacilitiesFromSnapshot(DataSnapshot attributeSnapshot) {
-        StudyRoom.StudyRoomFacilites facilites = new StudyRoom().new StudyRoomFacilites();
+    private StudyRoomFacilities createFacilitiesFromSnapshot(DataSnapshot attributeSnapshot) {
+        StudyRoomFacilities facilites = new StudyRoomFacilities();
 
         for (DataSnapshot facilitySnapshot : attributeSnapshot.getChildren()) {
 
@@ -187,6 +195,24 @@ public class Firebase {
         }
 
         return facilites;
+    }
+
+    public LatLng createCoordinatesFromSnapshot(DataSnapshot attributeSnapshot) {
+        double lat = 0, lng = 0;
+
+        for (DataSnapshot coordinateSnapshot : attributeSnapshot.getChildren()) {
+            switch (coordinateSnapshot.getKey()) {
+                case "latitude" :
+                    lat = (double) coordinateSnapshot.getValue();
+                    break;
+                case "longitude" :
+                    lng = (double) coordinateSnapshot.getValue();
+                    break;
+            }
+        }
+
+        return new LatLng(lat, lng);
+
     }
 
     public void uploadStudyRoom(StudyRoom studyRoom, String photoPath) {

@@ -456,9 +456,10 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
         Log.i(LOG_GOOGLE_MAP_API, "LOCATION TURNED OFF");
         if (mLocationPermissionGranted) {
-            // mMap.setMyLocationEnabled(false);
+            mMap.setMyLocationEnabled(false);
+
         } else {
-            //mMap.setMyLocationEnabled(false);
+            mMap.setMyLocationEnabled(false);
         }
 
     }

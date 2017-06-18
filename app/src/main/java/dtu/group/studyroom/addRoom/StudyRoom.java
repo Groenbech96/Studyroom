@@ -1,15 +1,24 @@
 package dtu.group.studyroom.addRoom;
 
+
+import android.os.Parcel;
+import android.os.Parcelable;
 import com.google.android.gms.maps.model.LatLng;
+
 
 /**
  * Created by groenbech on 15/06/2017.
  */
 
-public class StudyRoom {
+public class StudyRoom implements Parcelable {
 
-    private String name, address, city, postal;
-    private StudyRoomFacilites facilites;
+    private String id;
+    private String name;
+    private String address;
+    private String city;
+    private String postal;
+    private StudyRoomFacilities facilities;
+
     private double rating;
 
 
@@ -20,15 +29,16 @@ public class StudyRoom {
 
     }
 
-    public StudyRoom(String name, String address, String postal, String city, LatLng coordinates, StudyRoomFacilites facilites, float rating) {
+    public StudyRoom(String name, String address, String postal, String city, LatLng coordinates, StudyRoomFacilities facilites, float rating) {
         this.rating = rating;
         this.name = name;
         this.address = address;
-        this.facilites = facilites;
+        this.facilities = facilites;
         this.city = city;
         this.postal = postal;
         this.coordinates = coordinates;
     }
+
 
     public void setName(String name) {
         this.name = name;
@@ -38,8 +48,8 @@ public class StudyRoom {
         this.address = address;
     }
 
-    public void setFacilites(StudyRoomFacilites facilites) {
-        this.facilites = facilites;
+    public void setFacilites(StudyRoomFacilities facilites) {
+        this.facilities = facilites;
     }
 
     public void setRating(double rating) {
@@ -54,12 +64,21 @@ public class StudyRoom {
         return address;
     }
 
-    public StudyRoomFacilites getFacilites() {
-        return facilites;
+    public StudyRoomFacilities getFacilites() {
+        return facilities;
     }
 
     public double getRating() {
         return rating;
+    }
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public void setPostal(String postal) {
@@ -86,82 +105,45 @@ public class StudyRoom {
         this.coordinates = coordinates;
     }
 
-    public class StudyRoomFacilites {
 
-        private int wifi;
-        private int toilet;
-        private int power;
-        private int coffee;
-        private int food;
-        private int groups;
-
-        public StudyRoomFacilites() {
-
-        }
-
-        public StudyRoomFacilites(boolean wifi,
-                                  boolean toilet,
-                                  boolean power,
-                                  boolean coffee,
-                                  boolean food,
-                                  boolean groups) {
-
-            this.wifi = wifi ? 1 :  0;
-            this.coffee = coffee ? 1 :  0;
-            this.food = food ? 1 :  0;
-            this.power = power ? 1 :  0;
-            this.groups = groups ? 1 :  0;
-            this.toilet = toilet ? 1 :  0;
-        }
-
-        public void setWifi(int wifi) {
-            this.wifi = wifi;
-        }
-
-        public void setToilet(int toilet) {
-            this.toilet = toilet;
-        }
-
-        public void setPower(int power) {
-            this.power = power;
-        }
-
-        public void setCoffee(int coffee) {
-            this.coffee = coffee;
-        }
-
-        public void setFood(int food) {
-            this.food = food;
-        }
-
-        public void setGroups(int groups) {
-            this.groups = groups;
-        }
-
-        public int getWifi() {
-            return wifi;
-        }
-
-        public int getToilet() {
-            return toilet;
-        }
-
-        public int getPower() {
-            return power;
-        }
-
-        public int getCoffee() {
-            return coffee;
-        }
-
-        public int getFood() {
-            return food;
-        }
-
-        public int getGroups() {
-            return groups;
-        }
+    protected StudyRoom(Parcel in) {
+        id = in.readString();
+        name = in.readString();
+        address = in.readString();
+        city = in.readString();
+        postal = in.readString();
+        facilities = (StudyRoomFacilities) in.readValue(StudyRoomFacilities.class.getClassLoader());
+        rating = in.readDouble();
+        coordinates = (LatLng) in.readValue(LatLng.class.getClassLoader());
     }
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
+        dest.writeString(name);
+        dest.writeString(address);
+        dest.writeString(city);
+        dest.writeString(postal);
+        dest.writeValue(facilities);
+        dest.writeDouble(rating);
+        dest.writeValue(coordinates);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<StudyRoom> CREATOR = new Parcelable.Creator<StudyRoom>() {
+        @Override
+        public StudyRoom createFromParcel(Parcel in) {
+            return new StudyRoom(in);
+        }
+
+        @Override
+        public StudyRoom[] newArray(int size) {
+            return new StudyRoom[size];
+        }
+    };
 }
