@@ -56,7 +56,21 @@ public class StudyRoom {
         return rating;
     }
 
+    public void setPostal(String postal) {
+        this.postal = postal;
+    }
 
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public String getPostal() {
+        return postal;
+    }
 
 
     public class StudyRoomFacilites {

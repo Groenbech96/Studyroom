@@ -118,6 +118,12 @@ public class Firebase {
                 case "address" :
                     studyRoom.setAddress(attributeSnapshot.getValue().toString());
                     break;
+                case "postal" :
+                    studyRoom.setPostal(attributeSnapshot.getValue().toString());
+                    break;
+                case "city" :
+                    studyRoom.setCity(attributeSnapshot.getValue().toString());
+                    break;
                 case "rating" :
                     try{
                         studyRoom.setRating((double)attributeSnapshot.getValue());
@@ -190,6 +196,8 @@ public class Firebase {
 
         final String name = studyRoom.getName();
         final String address = studyRoom.getAddress();
+        final String city = studyRoom.getCity();
+        final String postal = studyRoom.getPostal();
         final int wifi = studyRoom.getFacilites().getWifi();
         final int coffee = studyRoom.getFacilites().getCoffee();
         final int food = studyRoom.getFacilites().getFood();
@@ -236,6 +244,8 @@ public class Firebase {
 
                 mDatabase.child(key).child("name").setValue(name);
                 mDatabase.child(key).child("address").setValue(address);
+                mDatabase.child(key).child("city").setValue(city);
+                mDatabase.child(key).child("postal").setValue(postal);
                 mDatabase.child(key).child("facilites").child("wifi").setValue(wifi);
                 mDatabase.child(key).child("facilites").child("coffee").setValue(coffee);
                 mDatabase.child(key).child("facilites").child("food").setValue(food);
