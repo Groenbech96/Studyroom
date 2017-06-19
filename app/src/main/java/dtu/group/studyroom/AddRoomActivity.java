@@ -225,7 +225,8 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
 //        });
 
 
-        Firebase.getInstance().uploadStudyRoom(studyRoom, mPhotoPath);
+        FirebaseUser user = Firebase.getInstance().getUser();
+        Firebase.getInstance().uploadStudyRoom(studyRoom, mPhotoPath, user.getUid());
         mProgress.dismiss();
 
         onBackPressed();

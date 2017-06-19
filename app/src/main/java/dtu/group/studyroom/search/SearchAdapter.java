@@ -2,6 +2,7 @@ package dtu.group.studyroom.search;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import java.util.Map;
 import dtu.group.studyroom.Main;
 import dtu.group.studyroom.R;
 import dtu.group.studyroom.addRoom.StudyRoom;
+import dtu.group.studyroom.firebase.Firebase;
 
 /**
  * Created by christianschmidt on 16/06/2017.
@@ -36,9 +38,20 @@ public class SearchAdapter extends BaseAdapter implements Filterable{
         super();
         this.context = activity.getApplicationContext();
         this.activity = activity;
+
         studyRooms = ((Main)activity).getStudyrooms();
+
         getFilter();
+
+
+
     }
+
+    public void updateData(HashMap<String, StudyRoom> result) {
+        studyRooms = result;
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public int getCount() {

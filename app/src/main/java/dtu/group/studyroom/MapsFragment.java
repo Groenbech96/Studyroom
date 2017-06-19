@@ -54,6 +54,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import dtu.group.studyroom.addRoom.StudyRoom;
 import dtu.group.studyroom.firebase.Firebase;
@@ -66,14 +67,13 @@ import static dtu.group.studyroom.utils.Utils.LOG_GOOGLE_MAP_API;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MapsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link MapsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class MapsFragment extends Fragment implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener  {
+        GoogleApiClient.OnConnectionFailedListener, Main.StudyRoomListener {
 
 
     /**
@@ -85,11 +85,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
     private HashMap<String, StudyRoom> studyrooms = new HashMap<>();
 
-
-
-
-
-
+    private boolean dataFetched;
 
 
     public static boolean debug = false;
@@ -137,14 +133,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     public ConstraintSet defaultConstraintSet = new ConstraintSet();
     public ConstraintSet animatedConstraintSet = new ConstraintSet();
 
-    private OnFragmentInteractionListener mListener;
-
-
     public MapsFragment() {
         // Required empty public constructor
     }
-
-    public HashMap<String, StudyRoom> results;
 
 
     /**
@@ -171,6 +162,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
         opensansFont = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
 
+
+        dataFetched = false;
+
         // Search dummy
         searchBar = (EditText) fragmentView.findViewById(R.id.searchDummy);
         searchBar.setOnClickListener(searchDummyListener);
@@ -185,22 +179,24 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         getActivity().findViewById(R.id.status_bar_below_layer).setBackgroundColor(Color.TRANSPARENT);
 
         Activity act = getActivity();
-        if (act instanceof Main)
+        if (act instanceof Main) {
             ((Main) act).drawButtons();
+
+        }
 
         mapView = SupportMapFragment.newInstance();
 
 
-        Firebase base = Firebase.getInstance();
-        base.setListener(new Firebase.StudyroomDataCallbacks() {
-            @Override
-            public void studyroomDataSuccessCallback(HashMap<String, StudyRoom> result) {
-
-                results = result;
-                updateMap(result);
-
-            }
-        });
+//        Firebase base = Firebase.getInstance();
+//        base.setListenerMap(new Firebase.StudyroomDataCallbacks() {
+//            @Override
+//            public void studyroomDataSuccessCallback(HashMap<String, StudyRoom> result) {
+//
+//                results = result;
+//                updateMap(result);
+//
+//            }
+//        });
 
 
 
@@ -233,24 +229,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         return fragmentView;
     }
 
-    private void saveMarkers(HashMap<String, StudyRoom> result) {
-
-        Iterator it = result.entrySet().iterator();
-        while(it.hasNext()) {
-
-
-
-
-
-
-
-
-
-
-
-        }
-
-    }
 
     /**
      * Set up constraint sets
@@ -284,38 +262,36 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         mMap.getUiSettings().setCompassEnabled(false);
         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.google_map_style));
 
-
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
 
+                Set<Map.Entry<String, StudyRoom>> entries = ((Main)getActivity()).getStudyrooms().entrySet();
+                if(entries != null)
+                    for (Map.Entry<String, StudyRoom> entry : entries)
+                    {
 
-                Iterator it = results.entrySet().iterator();
+                        StudyRoom room = (StudyRoom)entry.getValue();
+                        if(room.getCoordinates().equals(marker.getPosition()))  {
 
+                            Bundle b = new Bundle();
+                            b.putString("id", room.getId());
+                            StudyRoomRatingDialog dialog = new StudyRoomRatingDialog();
+                            dialog.setArguments(b);
+                            dialog.show(getActivity().getFragmentManager(), "DIS");
 
-                for (Map.Entry<String, StudyRoom> entry : results.entrySet())
-                {
-
-                    StudyRoom room = (StudyRoom)entry.getValue();
-                    if(room.getCoordinates().equals(marker.getPosition()))  {
-
-
-
-                        Bundle b = new Bundle();
-                        b.putString("id", room.getId());
-                        StudyRoomDialog dialog = new StudyRoomDialog();
-                        dialog.setArguments(b);
-                        dialog.show(getActivity().getFragmentManager(), "DIS");
-
+                        }
 
                     }
-
-                }
 
                 return true;
             }
         });
 
+
+        // Was data fetched, but google map was not ready on callback, update again
+        if(dataFetched)
+            updateMap(((Main)getActivity()).getStudyrooms());
 
         updateLocationUI();
 
@@ -417,28 +393,19 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     }
 
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+        ((Main) getActivity()).addListener(this);
+
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        ((Main)getActivity()).removeListener(this);
+
     }
 
     /**
@@ -452,6 +419,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
             mGoogleApiClient.disconnect();
             Log.i(LOG_GOOGLE_MAP_API, "API DISCONNECTED");
         }
+
     }
 
 
@@ -565,23 +533,28 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
     }
 
+    @Override
+    public void update() {
+
+        Log.i("MAP UPDATE", "UPDATE");
 
 
+        /**
+         * Check if map is ready to revice markers
+         * If not, then update again when ready.
+         */
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
+        if(mMap == null)
+            dataFetched = true;
+        else
+            dataFetched = false;
+
+
+        updateMap(((Main)getActivity()).getStudyrooms());
+
+
     }
+
 
     /**
      * Search dummy animation
@@ -604,6 +577,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
         }
     };
+
+
 
     /**
      * Do a searchdummy animation

@@ -34,6 +34,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -51,11 +52,17 @@ import dtu.group.studyroom.utils.Utils;
 
 public class Firebase {
 
-    private static WeakReference<Activity> mActivityReference;
+    //private static WeakReference<Activity> mActivityReference;
 
     private static Firebase firebase;
 
     private String path;
+
+    public FirebaseUser getUser() {
+        return mAuth.getCurrentUser();
+    }
+
+
 
     // Interface for async callbacks when data has loaded
     public  interface StudyroomDataCallbacks {
@@ -63,12 +70,15 @@ public class Firebase {
 
     }
 
-    private StudyroomDataCallbacks listener = null;
+    private StudyroomDataCallbacks listenerMap = null;
 
 
     private StorageReference mStorage = FirebaseStorage.getInstance().getReference();
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("studyrooms");
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+
+
 
     private Firebase () {
         /**
@@ -77,17 +87,26 @@ public class Firebase {
         mDatabase.addValueEventListener(changeListener);
     }
 
+    public void fetchData() {
 
-
-    public void setListener(StudyroomDataCallbacks listener) {
-        this.listener = listener;
     }
+
+    public static void Restart() {
+        Log.i("FIREBASE RESET", "DPME");
+        firebase = null;
+    }
+
+    public void setDataListener(StudyroomDataCallbacks listener) {
+        this.listenerMap = listener;
+    }
+
 
     private void success(HashMap<String, StudyRoom> result) {
-        if(listener != null) {
-            listener.studyroomDataSuccessCallback(result);
+        if(listenerMap != null) {
+            listenerMap.studyroomDataSuccessCallback(result);
         }
     }
+
 
 
     public ValueEventListener changeListener = new ValueEventListener() {
@@ -140,7 +159,7 @@ public class Firebase {
     public HashMap<String, StudyRoom> downloadStudyRoom(DataSnapshot dataSnapshot) {
 
 
-        Activity a = mActivityReference.get();
+        //Activity a = mActivityReference.get();
 
 
         HashMap<String, StudyRoom> localStudyRooms = new HashMap<>();
@@ -150,13 +169,12 @@ public class Firebase {
 
             StudyRoom studyRoom = createStudyRoomFromSnapshot(studyRoomSnapshot);
             studyRoom.setId(studyRoomSnapshot.getKey());
-
             localStudyRooms.put(studyRoomSnapshot.getKey(),studyRoom);
 
         }
 
 
-        ((Main) a).setStudyrooms(localStudyRooms);
+        //((Main) a).setStudyrooms(localStudyRooms);
         return localStudyRooms;
     }
 
@@ -264,7 +282,7 @@ public class Firebase {
 
     }
 
-    public void uploadStudyRoom(StudyRoom studyRoom, String photoPath) {
+    public void uploadStudyRoom(StudyRoom studyRoom, String photoPath, final String uid) {
 
         /**
          * Extract fields from studyroom model
@@ -301,7 +319,7 @@ public class Firebase {
 
         try {
             Bitmap map;
-            map = downscaleBitmapUsingDensities(new FileInputStream(photoPath));
+            map = downscaleBitmapUsingDensities(5, new FileInputStream(photoPath));
             map.compress(Bitmap.CompressFormat.PNG, 100, new FileOutputStream(photoPath));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -338,30 +356,44 @@ public class Firebase {
                 mDatabase.child(key).child("facilities").child("groups").setValue(groups);
                 mDatabase.child(key).child("facilities").child("power").setValue(power);
                 mDatabase.child(key).child("facilities").child("toilet").setValue(toilet);
-                mDatabase.child(key).child("rating") .setValue(rating);
                 mDatabase.child(key).child("image").setValue(downloadUrl.toString());
                 mDatabase.child(key).child("coordinates").setValue(coordinates);
+
+
+                rateStudyRoom(uid, key, (int) rating);
+
+
             }
         });
 
     }
 
-    private Bitmap downscaleBitmapUsingDensities(final InputStream stream)
+    public void rateStudyRoom(final String uid, final String id, final int progress) {
+
+        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("ratings");
+        ref.child(id).child(uid).child("rating").setValue(progress);
+
+    }
+
+    private Bitmap downscaleBitmapUsingDensities(final int sampleSize, final InputStream stream)
     {
-        final BitmapFactory.Options bitmapOptions=new BitmapFactory.Options();
-        bitmapOptions.inJustDecodeBounds = true;
-        Bitmap map = BitmapFactory.decodeStream(stream, new Rect(), bitmapOptions);
-        int height = bitmapOptions.outHeight;
-        int width = bitmapOptions.outWidth;
-        Activity a = mActivityReference.get();
-        int requiredWidth = (int)(500 * ((Main)(a)).getResources().getDisplayMetrics().density);
-        int sampleSize = (int) width / requiredWidth;
-        if(sampleSize < 1) { sampleSize = 1; }
-        bitmapOptions.inSampleSize = sampleSize;
-        bitmapOptions.inPreferredConfig = Bitmap.Config.RGB_565;
-        bitmapOptions.inJustDecodeBounds = false;
-        final Bitmap scaledBitmap=BitmapFactory.decodeStream(stream,new Rect(),bitmapOptions);
-        return scaledBitmap;
+        BitmapFactory.Options bitmapOptions=new BitmapFactory.Options();
+        Bitmap firstMap = BitmapFactory.decodeStream(stream,new Rect(),bitmapOptions);
+
+        float height = bitmapOptions.outHeight;
+        float width = bitmapOptions.outWidth;
+
+        float ratio = width / height;
+
+        int widthFinal = 600;
+        int heightFinal = (int)(widthFinal*ratio);
+
+
+        Bitmap map = Bitmap.createScaledBitmap(firstMap, widthFinal, heightFinal, false);
+        //final Bitmap scaledBitmap=BitmapFactory.decodeStream(stream,new Rect(),bitmapOptions);
+        //Bitmap map = Bitmap.createScaledBitmap(sc)
+        //scaledBitmap.setDensity(Bitmap.DENSITY_NONE);
+        return map;
     }
 
 
@@ -369,6 +401,7 @@ public class Firebase {
 
 
         DatabaseReference ref = mDatabase.child(id);
+
 
         // Attach a listener to read the data at our posts reference
         ref.addValueEventListener(new ValueEventListener() {
@@ -399,19 +432,13 @@ public class Firebase {
             }
         });
 
+    }
+
+    public void downloadRating(String id, final ValueEventListener success) {
 
 
-//        Log.i("DOWNLOAD", path);
-//        StorageReference image = FirebaseStorage.getInstance().getReferenceFromUrl(path);
-//
-//        final long ONE_MEGABYTE = 1024 * 1024 * 5;
-//        image.getBytes(ONE_MEGABYTE).addOnSuccessListener(listener).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception exception) {
-//                Log.i("FAIL", "DOWNLOAD IMAGE");
-//            }
-//        });
-
+        DatabaseReference ref = mDatabase.child(id);
+        ref.addValueEventListener(success);
 
 
     }
@@ -420,11 +447,12 @@ public class Firebase {
 
 
 
+    /*
     public static void updateActivity(Activity a) {
         mActivityReference = new WeakReference<Activity>(a);
     }
 
-
+*/
     public static void getMapData() {
 
     }

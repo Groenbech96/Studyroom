@@ -75,7 +75,7 @@ public class ContentActivity extends AppCompatActivity implements OnMapReadyCall
     private GoogleApiClient mGoogleApiClient;
     private CameraPosition mCameraPosition = null;
     // DTU LOCATION
-   
+
     private LatLng mDefaultLocation = new LatLng(55.785574, 12.521381);
     private Location mLastKnownLocation;
 
