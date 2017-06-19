@@ -51,7 +51,7 @@ import dtu.group.studyroom.utils.Utils;
 
 public class Firebase {
 
-    private static WeakReference<Activity> mActivityReference;
+    //private static WeakReference<Activity> mActivityReference;
 
     private static Firebase firebase;
 
@@ -63,7 +63,8 @@ public class Firebase {
 
     }
 
-    private StudyroomDataCallbacks listener = null;
+    private StudyroomDataCallbacks listenerMap = null;
+    private StudyroomDataCallbacks listenerList = null;
 
 
     private StorageReference mStorage = FirebaseStorage.getInstance().getReference();
@@ -79,14 +80,18 @@ public class Firebase {
 
 
 
-    public void setListener(StudyroomDataCallbacks listener) {
-        this.listener = listener;
+    public void setListenerMap(StudyroomDataCallbacks listener) {
+        this.listenerMap = listener;
     }
+    public void setListenerList(StudyroomDataCallbacks listener) { this.listenerList = listener; }
 
     private void success(HashMap<String, StudyRoom> result) {
-        if(listener != null) {
-            listener.studyroomDataSuccessCallback(result);
+        if(listenerMap != null) {
+            listenerMap.studyroomDataSuccessCallback(result);
         }
+        if(listenerList != null)
+            listenerList.studyroomDataSuccessCallback(result);
+
     }
 
 
@@ -140,7 +145,7 @@ public class Firebase {
     public HashMap<String, StudyRoom> downloadStudyRoom(DataSnapshot dataSnapshot) {
 
 
-        Activity a = mActivityReference.get();
+        //Activity a = mActivityReference.get();
 
 
         HashMap<String, StudyRoom> localStudyRooms = new HashMap<>();
@@ -150,13 +155,12 @@ public class Firebase {
 
             StudyRoom studyRoom = createStudyRoomFromSnapshot(studyRoomSnapshot);
             studyRoom.setId(studyRoomSnapshot.getKey());
-
             localStudyRooms.put(studyRoomSnapshot.getKey(),studyRoom);
 
         }
 
 
-        ((Main) a).setStudyrooms(localStudyRooms);
+        //((Main) a).setStudyrooms(localStudyRooms);
         return localStudyRooms;
     }
 
@@ -301,7 +305,7 @@ public class Firebase {
 
         try {
             Bitmap map;
-            map = downscaleBitmapUsingDensities(new FileInputStream(photoPath));
+            map = downscaleBitmapUsingDensities(5, new FileInputStream(photoPath));
             map.compress(Bitmap.CompressFormat.PNG, 100, new FileOutputStream(photoPath));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -346,22 +350,25 @@ public class Firebase {
 
     }
 
-    private Bitmap downscaleBitmapUsingDensities(final InputStream stream)
+    private Bitmap downscaleBitmapUsingDensities(final int sampleSize, final InputStream stream)
     {
-        final BitmapFactory.Options bitmapOptions=new BitmapFactory.Options();
-        bitmapOptions.inJustDecodeBounds = true;
-        Bitmap map = BitmapFactory.decodeStream(stream, new Rect(), bitmapOptions);
-        int height = bitmapOptions.outHeight;
-        int width = bitmapOptions.outWidth;
-        Activity a = mActivityReference.get();
-        int requiredWidth = (int)(500 * ((Main)(a)).getResources().getDisplayMetrics().density);
-        int sampleSize = (int) width / requiredWidth;
-        if(sampleSize < 1) { sampleSize = 1; }
-        bitmapOptions.inSampleSize = sampleSize;
-        bitmapOptions.inPreferredConfig = Bitmap.Config.RGB_565;
-        bitmapOptions.inJustDecodeBounds = false;
-        final Bitmap scaledBitmap=BitmapFactory.decodeStream(stream,new Rect(),bitmapOptions);
-        return scaledBitmap;
+        BitmapFactory.Options bitmapOptions=new BitmapFactory.Options();
+        Bitmap firstMap = BitmapFactory.decodeStream(stream,new Rect(),bitmapOptions);
+
+        float height = bitmapOptions.outHeight;
+        float width = bitmapOptions.outWidth;
+
+        float ratio = width / height;
+
+        int widthFinal = 600;
+        int heightFinal = (int)(widthFinal*ratio);
+
+
+        Bitmap map = Bitmap.createScaledBitmap(firstMap, widthFinal, heightFinal, false);
+        //final Bitmap scaledBitmap=BitmapFactory.decodeStream(stream,new Rect(),bitmapOptions);
+        //Bitmap map = Bitmap.createScaledBitmap(sc)
+        //scaledBitmap.setDensity(Bitmap.DENSITY_NONE);
+        return map;
     }
 
 
@@ -401,30 +408,18 @@ public class Firebase {
 
 
 
-//        Log.i("DOWNLOAD", path);
-//        StorageReference image = FirebaseStorage.getInstance().getReferenceFromUrl(path);
-//
-//        final long ONE_MEGABYTE = 1024 * 1024 * 5;
-//        image.getBytes(ONE_MEGABYTE).addOnSuccessListener(listener).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception exception) {
-//                Log.i("FAIL", "DOWNLOAD IMAGE");
-//            }
-//        });
-
-
 
     }
 
 
 
 
-
+/*
     public static void updateActivity(Activity a) {
         mActivityReference = new WeakReference<Activity>(a);
     }
 
-
+*/
     public static void getMapData() {
 
     }

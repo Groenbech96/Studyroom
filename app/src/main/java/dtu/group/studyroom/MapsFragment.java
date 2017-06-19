@@ -192,7 +192,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
 
         Firebase base = Firebase.getInstance();
-        base.setListener(new Firebase.StudyroomDataCallbacks() {
+        base.setListenerMap(new Firebase.StudyroomDataCallbacks() {
             @Override
             public void studyroomDataSuccessCallback(HashMap<String, StudyRoom> result) {
 

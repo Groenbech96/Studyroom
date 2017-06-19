@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,12 +12,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import dtu.group.studyroom.addRoom.StudyRoom;
 import dtu.group.studyroom.firebase.Firebase;
+import dtu.group.studyroom.search.SearchFragment;
 
 /**
  * Created by groenbech on 19/06/2017.
@@ -37,6 +42,7 @@ public class StudyRoomDialog extends DialogFragment {
 
     private Dialog dialog;
     private String id;
+    private StudyRoom room;
 
 
     public StudyRoomDialog() {
@@ -67,13 +73,39 @@ public class StudyRoomDialog extends DialogFragment {
 
         dialog = super.onCreateDialog(savedInstanceState);
 
-        Firebase.getInstance().downloadImage(getArguments().getString("id"), new OnSuccessListener<byte[]>() {
+        Firebase.getInstance().downloadImage(room.getId(), new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 Log.i("SUCCESS", "DOWNLOAD IMAGE");
+                room = ((Main) getActivity()).getStudyrooms().get(getArguments().getString("id"));
                 ((RelativeLayout) dialog.findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
                 ((ImageView) dialog.findViewById(R.id.dialog_room_picture)).setVisibility(View.VISIBLE);
                 ((ImageView) dialog.findViewById(R.id.dialog_room_picture)).setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
+                ((TextView) dialog.findViewById(R.id.dialog_room_title)).setText(room.getName());
+
+                ((Button) dialog.findViewById(R.id.review_goto)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Intent intent = new Intent(getActivity(), ContentActivity.class);
+
+                        Bundle bundle = new Bundle();
+                        bundle.putParcelable("studyroom", room);
+                        intent.putExtras(bundle);
+                        startActivity(intent);
+
+                    }
+                });
+
+                ((Button) dialog.findViewById(R.id.review_goto_cancel)).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+
+
             }
         });
 

@@ -30,6 +30,7 @@ import dtu.group.studyroom.ContentActivity;
 import dtu.group.studyroom.Main;
 import dtu.group.studyroom.R;
 import dtu.group.studyroom.addRoom.StudyRoom;
+import dtu.group.studyroom.firebase.Firebase;
 
 
 /**
@@ -71,6 +72,10 @@ public class SearchFragment extends Fragment {
         facilityMenuVisible = false;
 
         searchAdapter = new SearchAdapter(getActivity());
+
+
+
+
     }
 
     @Override
@@ -143,6 +148,7 @@ public class SearchFragment extends Fragment {
                 SearchAdapter.ViewHolder viewHolder = (SearchAdapter.ViewHolder) selectedView.getTag();
 
                 String studyRoomId = viewHolder.id;
+
                 StudyRoom studyRoom = ((Main) SearchFragment.this.getActivity()).getStudyrooms().get(studyRoomId);
 
                 Intent intent = new Intent(SearchFragment.this.getActivity(), ContentActivity.class);
@@ -151,6 +157,8 @@ public class SearchFragment extends Fragment {
                 bundle.putParcelable("studyroom", studyRoom);
                 intent.putExtras(bundle);
                 startActivity(intent);
+
+
             }
         });
 

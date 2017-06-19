@@ -39,6 +39,7 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
     private HashMap<String, StudyRoom> studyrooms = new HashMap<>();
 
     private enum FADE {IN, OUT};
+    private boolean dataFetched;
 
     private FloatingActionButton accountButton, addButton;
     private Context mContext;
@@ -52,14 +53,27 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
         mContext = getApplicationContext();
         setContentView(R.layout.activity_main);
 
+        dataFetched = false;
+
         Firebase.getInstance().logInAnonymously(this);
-        Firebase.updateActivity(this);
+        //Firebase.updateActivity(this);
 
         accountButton = (FloatingActionButton) findViewById(R.id.account_button);
         accountButton.setOnClickListener(accountButtonListener);
 
         addButton = (FloatingActionButton) findViewById(R.id.add_button);
         addButton.setOnClickListener(addButtonListener);
+
+
+//        Firebase.getInstance().setListenerMap(new Firebase.StudyroomDataCallbacks() {
+//            @Override
+//            public void studyroomDataSuccessCallback(HashMap<String, StudyRoom> result) {
+//                studyrooms = result;
+//                dataFetched = true;
+//
+//            }
+//        });
+
 
 
 
@@ -269,10 +283,17 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
     }
 
     public HashMap<String, StudyRoom> getStudyrooms() {
-        return studyrooms;
+
+        if(dataFetched)
+            return studyrooms;
+
+
+        return null;
     }
 
     public void setStudyrooms(HashMap<String, StudyRoom> studyroom) {
+
+
         studyrooms = studyroom;
     }
 
