@@ -1,40 +1,46 @@
-package dtu.group.studyroom;
+package dtu.group.studyroom.search;
 
 import android.animation.AnimatorSet;
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v4.app.Fragment;
-import android.transition.AutoTransition;
-import android.transition.ChangeBounds;
-import android.transition.Scene;
-import android.transition.Slide;
-import android.transition.TransitionManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.AnimationUtils;
-import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
+
+import java.util.HashMap;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+
+import dtu.group.studyroom.ContentActivity;
+import dtu.group.studyroom.Main;
+import dtu.group.studyroom.R;
+import dtu.group.studyroom.addRoom.StudyRoom;
+import dtu.group.studyroom.firebase.Firebase;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SearchFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link SearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements Main.StudyRoomListener {
 
 
     private EditText searchBar, citySearch, facilityBtn;
@@ -42,8 +48,8 @@ public class SearchFragment extends Fragment {
     private ConstraintSet defaultSet, expandedSet;
     private ConstraintLayout constraintLayout;
     private boolean facilityMenuVisible = true;
-
-    private OnFragmentInteractionListener mListener;
+    private ListView listView;
+    private SearchAdapter searchAdapter;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -59,7 +65,11 @@ public class SearchFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         facilityMenuVisible = false;
+        searchAdapter = new SearchAdapter(getActivity());
+
+
 
 
     }
@@ -69,6 +79,8 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_search, container, false);
+
+        ((Main) getActivity()).addListener(this);
 
         searchBar = (EditText) fragmentView.findViewById(R.id.searchBar);
         searchBar.setSoundEffectsEnabled(false);
@@ -103,51 +115,81 @@ public class SearchFragment extends Fragment {
         searchBar.requestFocus();
         searchBar.setCursorVisible(true);
 
+        listView = (ListView) fragmentView.findViewById(R.id.searchResultListView);
+
+        listView.setAdapter(searchAdapter);
+
+
+        searchBar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                searchAdapter.getFilter().filter(s);
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                View selectedView = ((View) view.findViewById(R.id.searchItemWrapper));
+
+                SearchAdapter.ViewHolder viewHolder = (SearchAdapter.ViewHolder) selectedView.getTag();
+
+                String studyRoomId = viewHolder.id;
+
+                StudyRoom studyRoom = ((Main) SearchFragment.this.getActivity()).getStudyrooms().get(studyRoomId);
+
+                Intent intent = new Intent(SearchFragment.this.getActivity(), ContentActivity.class);
+
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("studyroom", studyRoom);
+                intent.putExtras(bundle);
+                startActivity(intent);
+
+
+            }
+        });
+
         return fragmentView;
 
     }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        ((Main) getActivity()).removeListener(this);
+    }
+
+    @Override
+    public void update() {
+        if(searchAdapter != null)
+            searchAdapter.updateData(((Main) getActivity()).getStudyrooms());
+
     }
 
 
-
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 
 
     View.OnClickListener facilityClickListener = new View.OnClickListener() {
@@ -237,6 +279,13 @@ public class SearchFragment extends Fragment {
         };
 
     };
+
+
+
+    public void onResume() {
+        super.onResume();
+
+    }
 
 
 }

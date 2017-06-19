@@ -12,198 +12,44 @@
     <string name="searchbar_title">Find study room</string>
     <string name="title_activity_maps">Map</string>
 
+    <string name="title_activity_add_room">AddRoomActivity</string>
+    <string name="sharedprefs">sharedPrefs</string>
+    <string name="add_room_address_first_run">add_room_address_first_run</string>
 
-    <string name="style_json">
-  [
-    {
-      \"featureType\": \"all\",
-      \"elementType\": \"geometry\",
-      \"stylers\": [
-        {
-          \"color\": \"#242f3e\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"all\",
-      \"elementType\": \"labels.text.stroke\",
-      \"stylers\": [
-        {
-          \"lightness\": -80
-        }
-      ]
-    },
-    {
-      \"featureType\": \"administrative\",
-      \"elementType\": \"labels.text.fill\",
-      \"stylers\": [
-        {
-          \"color\": \"#746855\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"administrative.locality\",
-      \"elementType\": \"labels.text.fill\",
-      \"stylers\": [
-        {
-          \"color\": \"#d59563\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"poi\",
-      \"elementType\": \"labels.text.fill\",
-      \"stylers\": [
-        {
-          \"color\": \"#d59563\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"poi.park\",
-      \"elementType\": \"geometry\",
-      \"stylers\": [
-        {
-          \"color\": \"#263c3f\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"poi.park\",
-      \"elementType\": \"labels.text.fill\",
-      \"stylers\": [
-        {
-          \"color\": \"#6b9a76\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"road\",
-      \"elementType\": \"geometry.fill\",
-      \"stylers\": [
-        {
-          \"color\": \"#2b3544\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"road\",
-      \"elementType\": \"labels.text.fill\",
-      \"stylers\": [
-        {
-          \"color\": \"#9ca5b3\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"road.arterial\",
-      \"elementType\": \"geometry.fill\",
-      \"stylers\": [
-        {
-          \"color\": \"#38414e\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"road.arterial\",
-      \"elementType\": \"geometry.stroke\",
-      \"stylers\": [
-        {
-          \"color\": \"#212a37\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"road.highway\",
-      \"elementType\": \"geometry.fill\",
-      \"stylers\": [
-        {
-          \"color\": \"#746855\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"road.highway\",
-      \"elementType\": \"geometry.stroke\",
-      \"stylers\": [
-        {
-          \"color\": \"#1f2835\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"road.highway\",
-      \"elementType\": \"labels.text.fill\",
-      \"stylers\": [
-        {
-          \"color\": \"#f3d19c\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"road.local\",
-      \"elementType\": \"geometry.fill\",
-      \"stylers\": [
-        {
-          \"color\": \"#38414e\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"road.local\",
-      \"elementType\": \"geometry.stroke\",
-      \"stylers\": [
-        {
-          \"color\": \"#212a37\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"transit\",
-      \"elementType\": \"geometry\",
-      \"stylers\": [
-        {
-          \"color\": \"#2f3948\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"transit.station\",
-      \"elementType\": \"labels.text.fill\",
-      \"stylers\": [
-        {
-          \"color\": \"#d59563\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"water\",
-      \"elementType\": \"geometry\",
-      \"stylers\": [
-        {
-          \"color\": \"#17263c\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"water\",
-      \"elementType\": \"labels.text.fill\",
-      \"stylers\": [
-        {
-          \"color\": \"#515c6d\"
-        }
-      ]
-    },
-    {
-      \"featureType\": \"water\",
-      \"elementType\": \"labels.text.stroke\",
-      \"stylers\": [
-        {
-          \"lightness\": -20
-        }
-      ]
-    }
-  ]
-  </string>
+    <!-- Add room strings  -->
+
+    <string name="add_room_address_hint">What is the address?</string>
+    <string name="add_study_room_title">Add study room</string>
+    <string name="add_study_room_buttonNext">Next</string>
+    <string name="add_study_room_facilitiesText">Which facilities does the study area have?</string>
+    <string name="add_study_room_ratingText">How do you rate this place?</string>
+    <string name="add_study_room_go_to_camera_button">Go to camera</string>
+
+
+    <!--contentPage Strings -->
+    <string name="wifi_string">WIFI</string>
+    <string name="power_string">Power</string>
+    <string name="coffee_string">Coffee</string>
+    <string name="group_string">Group spaces</string>
+    <string name="bathroom_string">Bathroom</string>
+    <string name="food_string">Food</string>
+    <string name="studyroom_string">Studyroom name</string>
+    <string name="address_string">AdresseStreng</string>
+    <string name="distance_string">afstand fra dig</string>
+    <string name="studyroom_image_string">Studyroom image</string>
+
+    <!-- Add room name and facilities page -->
+
+    <string name="add_room_name_hint">Name the study room</string>
+    <string name="add_room_facility_title">Choose facilities</string>
+    <string name="add_room_name_wifi_hint">Wifi</string>
+    <string name="add_room_name_power_hint">Power outlets</string>
+    <string name="add_room_name_coffee_hint">Coffee nearby</string>
+    <string name="add_room_name_group_hint">Group friendly</string>
+    <string name="add_room_name_toilet_hint">Toilets nearby</string>
+    <string name="add_room_name_quiet_hint">Quiet space</string>
+
+
+
+
 </resources>

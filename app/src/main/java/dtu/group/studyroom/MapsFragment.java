@@ -5,14 +5,17 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
+import android.net.sip.SipAudioCall;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.constraint.ConstraintLayout;
 import android.support.constraint.ConstraintSet;
 import android.support.v4.app.ActivityCompat;
@@ -29,7 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.EditText;
-import android.os.*;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -37,26 +40,40 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
+
+import dtu.group.studyroom.addRoom.StudyRoom;
+import dtu.group.studyroom.firebase.Firebase;
+import dtu.group.studyroom.search.SearchFragment;
+import dtu.group.studyroom.utils.Utils;
+
+import static dtu.group.studyroom.utils.Utils.LOG_GOOGLE_MAP_API;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MapsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link MapsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class MapsFragment extends Fragment implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener  {
+        GoogleApiClient.OnConnectionFailedListener, Main.StudyRoomListener {
 
 
     /**
@@ -66,6 +83,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
 
+    private HashMap<String, StudyRoom> studyrooms = new HashMap<>();
+
+    private boolean dataFetched;
+
+
+    public static boolean debug = false;
     /**
      * Google maps items
      */
@@ -85,14 +108,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     private static final int PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 1;
     private boolean mLocationPermissionGranted;
 
-
     /**
      * Search dummt
      */
-    EditText searchDummy;
-    Drawable searchDummyDraw;
-    ConstraintSet searchDummyConsttraints = new ConstraintSet();
-    ChangeBounds searchDummyTransistion;
+    EditText searchBar;
+    Drawable searchBarDraw;
+    ChangeBounds searchBarTransistion;
 
 
     /**
@@ -100,13 +121,22 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
      */
     private View fragmentView;
 
-    private OnFragmentInteractionListener mListener;
+    /**
+     * Font
+     */
+    Typeface opensansFont;
 
 
+    /**
+     * ConstraintSet for searchbar
+     */
+    public ConstraintSet defaultConstraintSet = new ConstraintSet();
+    public ConstraintSet animatedConstraintSet = new ConstraintSet();
 
     public MapsFragment() {
         // Required empty public constructor
     }
+
 
     /**
      *
@@ -130,49 +160,94 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         // Inflate the layout for this fragment
         fragmentView =  inflater.inflate(R.layout.fragment_maps, container, false);
 
-        // Search dummy
-        searchDummy = (EditText) fragmentView.findViewById(R.id.searchDummy);
-        searchDummy.setOnClickListener(searchDummyListener);
-        searchDummy.setSoundEffectsEnabled(false);
+        opensansFont = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
 
-        searchDummyDraw = getContext().getDrawable(R.drawable.ic_dot);
-        searchDummyDraw.setBounds( 0, 0, 15, 15 );
-        searchDummy.setCompoundDrawables(searchDummyDraw, null,null,null);
-        searchDummyTransistion = new ChangeBounds();
-        searchDummyTransistion.setDuration(150);
-        searchDummyTransistion.addListener(searchDummyTransistionListener);
+
+        dataFetched = false;
+
+        // Search dummy
+        searchBar = (EditText) fragmentView.findViewById(R.id.searchDummy);
+        searchBar.setOnClickListener(searchDummyListener);
+        searchBar.setSoundEffectsEnabled(false);
+        searchBar.setTypeface(opensansFont);
+
+        searchBarDraw = getContext().getDrawable(R.drawable.ic_dot);
+        searchBarDraw.setBounds( 0, 0, 15, 15 );
+        searchBar.setCompoundDrawables(searchBarDraw, null,null,null);
 
         // Make status bar transparent
         getActivity().findViewById(R.id.status_bar_below_layer).setBackgroundColor(Color.TRANSPARENT);
 
         Activity act = getActivity();
-        if (act instanceof Main)
+        if (act instanceof Main) {
             ((Main) act).drawButtons();
 
-
-
+        }
 
         mapView = SupportMapFragment.newInstance();
 
 
+//        Firebase base = Firebase.getInstance();
+//        base.setListenerMap(new Firebase.StudyroomDataCallbacks() {
+//            @Override
+//            public void studyroomDataSuccessCallback(HashMap<String, StudyRoom> result) {
+//
+//                results = result;
+//                updateMap(result);
+//
+//            }
+//        });
 
 
-        // Connect to the API CLIENT for location
-        if(mGoogleApiClient == null)
-            mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-                .enableAutoManage(getActivity() /* FragmentActivity */,
-                        this /* OnConnectionFailedListener */)
-                .addConnectionCallbacks(this)
-                .addApi(LocationServices.API)
-                .addApi(Places.GEO_DATA_API)
-                .addApi(Places.PLACE_DETECTION_API)
-                .build();
-
-        mGoogleApiClient.connect();
 
 
+        if(!debug) {
+
+            // Connect to the API CLIENT for location
+            if (mGoogleApiClient == null) {
+                Log.i(LOG_GOOGLE_MAP_API, "API BUILD");
+                mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+                        .enableAutoManage(getActivity() /* FragmentActivity */,
+                                this /* OnConnectionFailedListener */)
+                        .addConnectionCallbacks(this)
+                        .addApi(LocationServices.API)
+                        .addApi(Places.GEO_DATA_API)
+                        .addApi(Places.PLACE_DETECTION_API)
+                        .build();
+            }
+
+            if (!mGoogleApiClient.isConnected()) {
+                mGoogleApiClient.connect();
+                Log.i(LOG_GOOGLE_MAP_API, "API CONNECTED");
+            }
+
+        }
+
+
+        setUpConstraintSets();
 
         return fragmentView;
+    }
+
+
+    /**
+     * Set up constraint sets
+     */
+    private void setUpConstraintSets() {
+
+        defaultConstraintSet.clone((ConstraintLayout) fragmentView.findViewById(R.id.mapsContainer));
+        animatedConstraintSet.clone((ConstraintLayout) fragmentView.findViewById(R.id.mapsContainer));
+
+        /**
+         * Set up constraint settings for searchbar animation
+         */
+        animatedConstraintSet.clear(R.id.searchDummy);
+        animatedConstraintSet.constrainHeight(R.id.searchDummy, searchBar.getLayoutParams().height);
+        animatedConstraintSet.connect(R.id.mapsContainer, ConstraintSet.TOP, R.id.status_bar, ConstraintSet.BOTTOM, 0);
+        animatedConstraintSet.connect(R.id.searchDummy, ConstraintSet.LEFT, R.id.mapsContainer, ConstraintSet.LEFT,0);
+        animatedConstraintSet.connect(R.id.searchDummy, ConstraintSet.RIGHT, R.id.mapsContainer, ConstraintSet.RIGHT, 0);
+        animatedConstraintSet.connect(R.id.searchDummy, ConstraintSet.TOP, R.id.mapsContainer, ConstraintSet.TOP, getActivity().findViewById(R.id.status_bar).getLayoutParams().height);
+
     }
 
 
@@ -186,6 +261,37 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         mMap = googleMap;
         mMap.getUiSettings().setCompassEnabled(false);
         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.google_map_style));
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
+
+                Set<Map.Entry<String, StudyRoom>> entries = ((Main)getActivity()).getStudyrooms().entrySet();
+                if(entries != null)
+                    for (Map.Entry<String, StudyRoom> entry : entries)
+                    {
+
+                        StudyRoom room = (StudyRoom)entry.getValue();
+                        if(room.getCoordinates().equals(marker.getPosition()))  {
+
+                            Bundle b = new Bundle();
+                            b.putString("id", room.getId());
+                            StudyRoomRatingDialog dialog = new StudyRoomRatingDialog();
+                            dialog.setArguments(b);
+                            dialog.show(getActivity().getFragmentManager(), "DIS");
+
+                        }
+
+                    }
+
+                return true;
+            }
+        });
+
+
+        // Was data fetched, but google map was not ready on callback, update again
+        if(dataFetched)
+            updateMap(((Main)getActivity()).getStudyrooms());
 
         updateLocationUI();
 
@@ -226,8 +332,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
     }
 
-
-
     /**
      * Gets the current location of the device, and positions the mMap's camera.
      */
@@ -252,9 +356,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
         // Set the map's camera position to the current location of the device.
         if (mCameraPosition != null) {
-            mMap.moveCamera(CameraUpdateFactory.newCameraPosition(mCameraPosition));
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(mCameraPosition));
         } else if (mLastKnownLocation != null) {
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                     new LatLng(mLastKnownLocation.getLatitude(),
                             mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
         } else {
@@ -289,38 +393,53 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     }
 
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+        ((Main) getActivity()).addListener(this);
+
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
+        ((Main)getActivity()).removeListener(this);
 
-        mListener = null;
     }
 
+    /**
+     * When fragment is destroyed, disconnect app
+     */
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mGoogleApiClient.stopAutoManage(getActivity());
-        mGoogleApiClient.disconnect();
+        if(!debug) {
+            mGoogleApiClient.stopAutoManage(getActivity());
+            mGoogleApiClient.disconnect();
+            Log.i(LOG_GOOGLE_MAP_API, "API DISCONNECTED");
+        }
 
     }
+
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        /**
+         * In order not to have a error:
+         * Already managing a GoogleApiClient with id
+         * APIClient must be disconnected on fragment pause
+         */
+        if(!debug) {
+            mGoogleApiClient.stopAutoManage(getActivity());
+            mGoogleApiClient.disconnect();
+            Log.i(LOG_GOOGLE_MAP_API, "API DISCONNECTED");
+        }
+    }
+
+
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
@@ -329,6 +448,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         mapView.getMapAsync(this);
 
     }
+
 
     @Override
     public void onConnectionSuspended(int i) {
@@ -340,82 +460,190 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
     }
 
+    public void pauseMapServices() {
 
+        if (ContextCompat.checkSelfPermission(this.getActivity().getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(this.getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        }
+
+        Log.i(LOG_GOOGLE_MAP_API, "LOCATION TURNED OFF");
+        if (mLocationPermissionGranted) {
+            mMap.setMyLocationEnabled(false);
+
+        } else {
+            mMap.setMyLocationEnabled(false);
+        }
+
+    }
+
+
+    public void startMapServices() {
+        if (ContextCompat.checkSelfPermission(this.getActivity().getApplicationContext(), android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            mLocationPermissionGranted = true;
+        } else {
+            ActivityCompat.requestPermissions(this.getActivity(), new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION);
+        }
+
+        Log.i(LOG_GOOGLE_MAP_API, "LOCATION TURNED ON");
+        if (mLocationPermissionGranted) {
+            mMap.setMyLocationEnabled(true);
+        } else {
+            //mMap.setMyLocationEnabled(false);
+        }
+    }
+
+    public void updateMap(HashMap<String, StudyRoom> studyRoomHashMap) {
+
+        if(mMap != null) {
+
+            Iterator it = studyRoomHashMap.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry pair = (Map.Entry) it.next();
+
+                String roomID = pair.getKey().toString();
+                StudyRoom room = (StudyRoom) pair.getValue();
+
+                // TODO: WIERD BUG WHEN you add a new room.
+                // THis method is called, but with a null studyroom
+                if(room.getCoordinates() != null) {
+
+                    // Log.i("drawing marker", room.getId());
+
+                    // Creating a marker
+                    MarkerOptions markerOptions = new MarkerOptions();
+
+                    // Setting the position for the marker
+                    markerOptions.position(room.getCoordinates());
+                    Bitmap bm = BitmapFactory.decodeResource(getResources(), R.mipmap.studyroom_mapmarker);
+                    Bitmap map = Utils.scaleDown(bm, 160, true);
+                    BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(map);
+
+                    markerOptions.icon(icon);
+
+                    markerOptions.title(room.getName());
+                    markerOptions.draggable(false);
+                    mMap.addMarker(markerOptions);
+                }
+
+            }
+        }
+
+
+    }
+
+    @Override
+    public void update() {
+
+        Log.i("MAP UPDATE", "UPDATE");
+
+
+        /**
+         * Check if map is ready to revice markers
+         * If not, then update again when ready.
+         */
+
+        if(mMap == null)
+            dataFetched = true;
+        else
+            dataFetched = false;
+
+
+        updateMap(((Main)getActivity()).getStudyrooms());
+
+
+    }
 
 
     /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
+     * Search dummy animation
      */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
-
     View.OnClickListener searchDummyListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
 
-            animateSearchDummy();
+
+            searchBarTransistion = new ChangeBounds();
+            searchBarTransistion.setDuration(getActivity().getResources().getInteger(R.integer.DEFAULT_ANIMATION_TIME));
+            searchBarTransistion.addListener(searchDummyTransistionOutListener);
+
+            animateSearchDummyToSearch(searchBarTransistion);
 
             Activity act = getActivity();
             if (act instanceof Main)
                 ((Main) act).hideButtons();
 
 
-
         }
     };
+
+
 
     /**
      * Do a searchdummy animation
      */
-    public void animateSearchDummy() {
+    public void animateSearchDummyToSearch(Transition transition) {
 
 
-        searchDummyConsttraints.clone((ConstraintLayout) fragmentView.findViewById(R.id.mapsContainer));
-
-        //TODO: Rewrite with r.strings
-        int colorFrom = Color.TRANSPARENT;
-        int colorTo = Color.WHITE;
-
-        ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
-        colorAnimation.setInterpolator(new AccelerateInterpolator());
-        colorAnimation.setDuration(150L); // milliseconds
-        //colorAnimation.setStartDelay(100L);
-        colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
-            @Override
-            public void onAnimationUpdate(ValueAnimator animator) {
-                getActivity().findViewById(R.id.status_bar_below_layer).setBackgroundColor((int) animator.getAnimatedValue());
-            }
-
-        });
-        colorAnimation.start();
+        // Animate status bar color
+        animateViewColor(getActivity().findViewById(R.id.status_bar_below_layer),
+                ContextCompat.getColor(getActivity().getApplicationContext(), R.color.colorStatusBarSecondary),
+                ContextCompat.getColor(getActivity().getApplicationContext(), R.color.colorStatusBarPrimary)).start();
 
 
         /**
          * Change the layout params for the search bar
          */
 
-        ViewGroup.LayoutParams param = getActivity().findViewById(R.id.status_bar).getLayoutParams();
-        searchDummyConsttraints.clear(R.id.searchDummy);
-        searchDummyConsttraints.constrainHeight(R.id.searchDummy, searchDummy.getLayoutParams().height);
-        searchDummyConsttraints.connect(R.id.mapsContainer, ConstraintSet.TOP, R.id.status_bar, ConstraintSet.BOTTOM, 0);
-        searchDummyConsttraints.connect(R.id.searchDummy, ConstraintSet.LEFT, R.id.mapsContainer, ConstraintSet.LEFT,0);
-        searchDummyConsttraints.connect(R.id.searchDummy, ConstraintSet.RIGHT, R.id.mapsContainer, ConstraintSet.RIGHT, 0);
-        searchDummyConsttraints.connect(R.id.searchDummy, ConstraintSet.TOP, R.id.mapsContainer, ConstraintSet.TOP, param.height);
-        searchDummyConsttraints.applyTo((ConstraintLayout) fragmentView.findViewById(R.id.mapsContainer));
+        animatedConstraintSet.applyTo((ConstraintLayout) fragmentView.findViewById(R.id.mapsContainer));
 
         // start animation
-        TransitionManager.beginDelayedTransition((ConstraintLayout) fragmentView.findViewById(R.id.mapsContainer), searchDummyTransistion);
+        TransitionManager.beginDelayedTransition((ConstraintLayout) fragmentView.findViewById(R.id.mapsContainer), transition);
 
+    }
+
+
+    public void animateSearchDummyToMapView(Transition transition) {
+
+        // Animate status bar color
+        animateViewColor(getActivity().findViewById(R.id.status_bar_below_layer),
+                ContextCompat.getColor(getActivity().getApplicationContext(), R.color.colorStatusBarPrimary),
+                ContextCompat.getColor(getActivity().getApplicationContext(), R.color.colorStatusBarSecondary)).start();
+
+        defaultConstraintSet.applyTo((ConstraintLayout) fragmentView.findViewById(R.id.mapsContainer));
+
+        // start animation
+        TransitionManager.beginDelayedTransition((ConstraintLayout) fragmentView.findViewById(R.id.mapsContainer), transition);
+
+    }
+
+
+
+
+    /**
+     * Animate the color of the status bar
+     * @param from - From color
+     * @param to - To color
+     * @return Animator instance
+     */
+    private ValueAnimator animateViewColor(View id, int from, int to) {
+
+        final View v = id;
+        ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), from, to);
+        colorAnimation.setInterpolator(new AccelerateInterpolator());
+        colorAnimation.setDuration(getActivity().getResources().getInteger(R.integer.DEFAULT_ANIMATION_TIME));
+
+        colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                v.setBackgroundColor((int) animator.getAnimatedValue());
+            }
+
+        });
+
+        return colorAnimation;
     }
 
     @Override
@@ -427,10 +655,12 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
+
+
     /**
      * When the search dummy is animated, we want to change fragment
      */
-    Transition.TransitionListener searchDummyTransistionListener = new Transition.TransitionListener() {
+    Transition.TransitionListener searchDummyTransistionOutListener = new Transition.TransitionListener() {
         @Override
         public void onTransitionStart(Transition transition) {
 
@@ -443,13 +673,16 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
              */
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.setCustomAnimations(R.anim.fadein, R.anim.fadeout);
+            //fragmentTransaction.setCustomAnimations(R.anim.fadein, R.anim.stayinplace);
 
-            SearchFragment mf = SearchFragment.newInstance();
-            fragmentTransaction.replace(R.id.content, mf);
+            SearchFragment searchFragment = SearchFragment.newInstance();
+
+
+            fragmentTransaction.replace(R.id.contentLayer, searchFragment, Utils.SEARCH_FRAGMENT_TAG);
             fragmentTransaction.addToBackStack(null);
 
-            fragmentTransaction.commit();
+             MapsFragment.this.pauseMapServices();
+             fragmentTransaction.commit();
         }
 
         @Override
@@ -467,6 +700,8 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
         }
     };
+
+
 
 
 
