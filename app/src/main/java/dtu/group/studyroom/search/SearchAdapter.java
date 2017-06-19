@@ -139,8 +139,9 @@ public class SearchAdapter extends BaseAdapter implements Filterable{
                 for (StudyRoom studyRoom : studyRooms.values()) {
 
                     String name = studyRoom.getName();
+                    String address = studyRoom.getAddress();
 
-                    if (name.toLowerCase().contains(constraint.toString())) {
+                    if (name.toLowerCase().contains(constraint.toString()) || address.toLowerCase().contains(constraint.toString())) {
                         tempStudyRooms.add(studyRoom);
                     }
                 }
