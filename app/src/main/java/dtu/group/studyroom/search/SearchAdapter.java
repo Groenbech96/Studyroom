@@ -72,11 +72,12 @@ public class SearchAdapter extends BaseAdapter implements Filterable{
         }
 
         final TextView name = viewHolder.name;
-        String name1 = studyRoom.getName();
-        name.setText(name1);
+        name.setText(studyRoom.getName());
 
         final TextView address = viewHolder.address;
         address.setText(studyRoom.getAddress());
+
+        viewHolder.id = studyRoom.getId();
 
         return convertView;
     }
