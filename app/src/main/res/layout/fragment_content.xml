@@ -1,391 +1,416 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<android.support.constraint.ConstraintLayout
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:fillViewport="true"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintRight_toRightOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
 
-    <ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:fillViewport="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/content_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        android:elevation="5dp">
 
         <android.support.constraint.ConstraintLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:id="@+id/content_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="0dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginRight="0dp"
+            android:layout_marginTop="0dp"
+            android:animateLayoutChanges="true"
+            android:background="@android:color/white"
+            android:elevation="5dp"
+            android:outlineProvider="bounds"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.6"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            tools:layout_editor_absoluteX="-5dp"
+            tools:layout_editor_absoluteY="31dp">
 
             <ImageView
-                android:id="@+id/StudyroomImage"
+                android:id="@+id/content_Image"
                 android:layout_width="0dp"
-                android:layout_height="250dp"
-                android:background="@mipmap/ic_test_image"
-                android:visibility="visible"
-                android:contentDescription="@string/studyroom_image_string"
+                android:layout_height="300dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                tools:layout_editor_absoluteX="368dp"
+                tools:layout_editor_absoluteY="0dp" />
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/content_room_info"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/edittext_bottom_line" />
+                app:layout_constraintTop_toBottomOf="@+id/content_Image">
 
-            <TextView
-                android:id="@+id/OmrådeNavn"
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:layout_marginTop="20dp"
-                android:background="@color/addButtonColor"
-                android:contentDescription="@string/studyroom_string"
-                android:fontFamily="sans-serif-smallcaps"
-                android:padding="10dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="@string/studyroom_string"
-                android:textAlignment="center"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintLeft_toLeftOf="@+id/WIFI"
-                app:layout_constraintTop_toBottomOf="@+id/StudyroomImage" />
 
-            <RatingBar
-                android:id="@+id/ratingBar"
-                style="@android:style/Widget.Material.RatingBar.Small"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/content_distanceText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:text="2 km"
+                    app:layout_constraintBottom_toBottomOf="@+id/content_distance"
+                    app:layout_constraintLeft_toRightOf="@+id/content_distance"
+                    app:layout_constraintTop_toTopOf="@+id/content_distance" />
+
+                <TextView
+                    android:id="@+id/content_address"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:text="Anker Engelunds Vej 1, 2800 Kongens Lyngby"
+                    android:textAlignment="viewStart"
+                    app:layout_constraintBottom_toBottomOf="@+id/content_location"
+                    app:layout_constraintLeft_toRightOf="@+id/content_location" />
+
+                <ImageView
+                    android:id="@+id/content_distance"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginBottom="32dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/ic_navigation_black_24px"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/content_location"
+                    app:layout_constraintVertical_bias="0.0"
+                    app:srcCompat="@drawable/ic_navigation_black_24px" />
+
+                <ImageView
+                    android:id="@+id/content_location"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/ic_location_on_black_24px"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/content_areaName"
+                    app:srcCompat="@drawable/ic_location_on_black_24px" />
+
+                <TextView
+                    android:id="@+id/content_areaName"
+                    android:layout_width="200dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@color/addButtonColor"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:text=""
+                    android:textAlignment="center"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </android.support.constraint.ConstraintLayout>
+
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/content_room_facility"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:numStars="5"
-                android:rating="3.5"
-                app:layout_constraintLeft_toLeftOf="@+id/OmrådeNavn"
-                app:layout_constraintTop_toBottomOf="@+id/OmrådeNavn" />
-
-            <TextView
-                android:id="@+id/WIFI"
-                android:layout_width="155dp"
-                android:layout_height="60dp"
-                android:layout_marginTop="72dp"
-                android:background="@color/greyBox"
-                android:fontFamily="sans-serif-condensed"
-                android:paddingStart="45dp"
-                android:paddingEnd="0dp"
-                android:paddingTop="25dp"
-                android:text="@string/wifi_string"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/Power"
-                app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
-
-            <TextView
-                android:id="@+id/Power"
-                android:layout_width="155dp"
-                android:layout_height="60dp"
-                android:background="@color/greyBox"
-                android:fontFamily="sans-serif-condensed"
-                android:paddingStart="45dp"
-                android:paddingEnd="0dp"
-                android:paddingTop="25dp"
-                android:text="@string/power_string"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                app:layout_constraintLeft_toRightOf="@+id/WIFI"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/WIFI" />
-
-            <TextView
-                android:id="@+id/textView6"
-                android:layout_width="155dp"
-                android:layout_height="60dp"
-                android:background="@color/greyBox"
-                android:fontFamily="sans-serif-condensed"
-                android:paddingStart="45dp"
-                android:paddingEnd="0dp"
-                android:paddingTop="25dp"
-                android:text="@string/power_string"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                app:layout_constraintLeft_toRightOf="@+id/WIFI"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/WIFI" />
-
-            <TextView
-                android:id="@+id/Coffee"
-                android:layout_width="155dp"
-                android:layout_height="60dp"
-                android:layout_marginTop="20dp"
-                android:background="@color/greyBox"
-                android:fontFamily="sans-serif-condensed"
-                android:paddingStart="45dp"
-                android:paddingEnd="0dp"
-                android:paddingTop="25dp"
-                android:text="@string/coffee_string"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                app:layout_constraintLeft_toLeftOf="@+id/WIFI"
-                app:layout_constraintTop_toBottomOf="@+id/WIFI" />
-
-            <TextView
-                android:id="@+id/Group"
-                android:layout_width="155dp"
-                android:layout_height="60dp"
-                android:background="@color/greyBox"
-                android:fontFamily="sans-serif-condensed"
-                android:paddingStart="45dp"
-                android:paddingEnd="0dp"
-                android:paddingTop="25dp"
-                android:text="@string/group_string"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/Coffee"
-                app:layout_constraintLeft_toLeftOf="@+id/Power" />
-
-            <TextView
-                android:id="@+id/bathroom"
-                android:layout_width="155dp"
-                android:layout_height="60dp"
-                android:layout_marginTop="20dp"
-                android:background="@color/greyBox"
-                android:fontFamily="sans-serif-condensed"
-                android:paddingStart="45dp"
-                android:paddingEnd="0dp"
-                android:paddingTop="25dp"
-                android:text="@string/bathroom_string"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                app:layout_constraintLeft_toLeftOf="@+id/WIFI"
-                app:layout_constraintTop_toBottomOf="@+id/Coffee" />
-
-            <TextView
-                android:id="@+id/food"
-                android:layout_width="155dp"
-                android:layout_height="60dp"
-                android:background="@color/greyBox"
-                android:fontFamily="sans-serif-condensed"
-                android:paddingStart="45dp"
-                android:paddingEnd="0dp"
-                android:paddingTop="25dp"
-                android:text="@string/bathroom_string"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="@+id/bathroom"
-                app:layout_constraintLeft_toLeftOf="@+id/Power" />
-
-            <ImageView
-                android:id="@+id/WIFI_icon"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_marginStart="10dp"
-                android:background="@drawable/ic_wifi_black_24px"
-                android:visibility="visible"
-                android:contentDescription="@string/wifi_string"
-                app:layout_constraintBottom_toBottomOf="@+id/WIFI"
-                app:layout_constraintLeft_toLeftOf="@+id/WIFI"
-                app:layout_constraintTop_toTopOf="@+id/WIFI"
-                app:srcCompat="@drawable/ic_wifi_black_24px" />
-
-            <ImageView
-                android:id="@+id/check_wifi"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/ic_cancel_black_24px"
-                android:visibility="visible"
-                android:contentDescription="@string/wifi_string"
-                app:layout_constraintBottom_toBottomOf="@+id/WIFI"
-                app:layout_constraintRight_toRightOf="@+id/WIFI"
-                app:layout_constraintTop_toTopOf="@+id/WIFI"
-                app:srcCompat="@drawable/ic_cancel_black_24px" />
-
-
-            <ImageView
-                android:id="@+id/power_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:background="@drawable/ic_power_black_24px"
-                android:visibility="visible"
-                android:contentDescription="@string/power_string"
-                app:layout_constraintBottom_toBottomOf="@+id/Power"
-                app:layout_constraintLeft_toLeftOf="@+id/Power"
-                app:layout_constraintTop_toTopOf="@+id/Power"
-                app:srcCompat="@drawable/ic_power_black_24px" />
-
-            <ImageView
-                android:id="@+id/check_power"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/ic_cancel_black_24px"
-                android:visibility="visible"
-                android:contentDescription="@string/power_string"
-                app:layout_constraintBottom_toBottomOf="@+id/Power"
-                app:layout_constraintRight_toRightOf="@+id/Power"
-                app:layout_constraintTop_toTopOf="@+id/Power"
-                app:srcCompat="@drawable/ic_cancel_black_24px" />
-
-
-            <ImageView
-                android:id="@+id/coffee_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:background="@drawable/ic_local_cafe_black_24px"
-                android:visibility="visible"
-                android:contentDescription="@string/coffee_string"
-                app:layout_constraintBottom_toBottomOf="@+id/Coffee"
-                app:layout_constraintLeft_toLeftOf="@+id/Coffee"
-                app:layout_constraintTop_toTopOf="@+id/Coffee"
-                app:srcCompat="@drawable/ic_local_cafe_black_24px" />
-
-            <ImageView
-                android:id="@+id/check_coffee"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/ic_cancel_black_24px"
-                android:visibility="visible"
-                android:contentDescription="@string/coffee_string"
-                app:layout_constraintBottom_toBottomOf="@+id/Coffee"
-                app:layout_constraintRight_toRightOf="@+id/Coffee"
-                app:layout_constraintTop_toTopOf="@+id/Coffee"
-                app:srcCompat="@drawable/ic_cancel_black_24px" />
-
-            <ImageView
-                android:id="@+id/group_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:background="@drawable/ic_group_black_24px"
-                android:visibility="visible"
-                android:contentDescription="@string/group_string"
-                app:layout_constraintBottom_toBottomOf="@+id/Group"
-                app:layout_constraintLeft_toLeftOf="@+id/Group"
-                app:layout_constraintTop_toTopOf="@+id/Group"
-                app:srcCompat="@drawable/ic_group_black_24px" />
-
-            <ImageView
-                android:id="@+id/check_group"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/ic_cancel_black_24px"
-                android:visibility="visible"
-                android:contentDescription="@string/group_string"
-                app:layout_constraintBottom_toBottomOf="@+id/Group"
-                app:layout_constraintRight_toRightOf="@+id/Group"
-                app:layout_constraintTop_toTopOf="@+id/Group"
-                app:srcCompat="@drawable/ic_cancel_black_24px" />
-
-            <ImageView
-                android:id="@+id/Bathroom_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:background="@drawable/ic_wc_black_24px"
-                android:visibility="visible"
-                android:contentDescription="@string/bathroom_string"
-                app:layout_constraintBottom_toBottomOf="@+id/bathroom"
-                app:layout_constraintLeft_toLeftOf="@+id/bathroom"
-                app:layout_constraintTop_toTopOf="@+id/bathroom"
-                app:srcCompat="@drawable/ic_wc_black_24px" />
-
-            <ImageView
-                android:id="@+id/check_bathroom"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/ic_cancel_black_24px"
-                android:visibility="visible"
-                android:contentDescription="@string/bathroom_string"
-                app:layout_constraintBottom_toBottomOf="@+id/bathroom"
-                app:layout_constraintRight_toRightOf="@+id/bathroom"
-                app:layout_constraintTop_toTopOf="@+id/bathroom"
-                app:srcCompat="@drawable/ic_cancel_black_24px" />
-
-
-            <ImageView
-                android:id="@+id/food_icon"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:background="@drawable/ic_restaurant_black_24px"
-                android:visibility="visible"
-                android:contentDescription="@string/food_string"
-                app:layout_constraintBottom_toBottomOf="@+id/food"
-                app:layout_constraintLeft_toLeftOf="@+id/food"
-                app:layout_constraintTop_toTopOf="@+id/food"
-                app:srcCompat="@drawable/ic_restaurant_black_24px" />
-
-            <ImageView
-                android:id="@+id/check_food"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginEnd="10dp"
-                android:background="@drawable/ic_cancel_black_24px"
-                android:visibility="visible"
-                android:contentDescription="@string/food_string"
-                app:layout_constraintBottom_toBottomOf="@+id/food"
-                app:layout_constraintRight_toRightOf="@+id/food"
-                app:layout_constraintTop_toTopOf="@+id/food"
-                app:srcCompat="@drawable/ic_cancel_black_24px" />
-
-
-            <TextView
-                android:id="@+id/adresse"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:paddingStart="18dp"
-                android:paddingEnd="0dp"
-                android:text="@string/address_string"
-                app:layout_constraintLeft_toLeftOf="@+id/OmrådeNavn"
-                app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
-
-            <TextView
-                android:id="@+id/afstand"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="6dp"
-                android:paddingStart="18dp"
-                android:paddingEnd="0dp"
-                android:text="@string/distance_string"
-                app:layout_constraintLeft_toLeftOf="@+id/OmrådeNavn"
-                app:layout_constraintTop_toBottomOf="@+id/adresse" />
-
-            <ImageView
-                android:id="@+id/location"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/ic_location_on_black_24px"
-                android:contentDescription="@string/address_string"
-                app:layout_constraintBottom_toTopOf="@+id/afstand"
-                app:layout_constraintLeft_toLeftOf="@+id/adresse"
-                app:srcCompat="@drawable/ic_location_on_black_24px" />
-
-            <ImageView
-                android:id="@+id/distance"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:background="@drawable/ic_navigation_black_24px"
-                android:contentDescription="@string/distance_string"
-                app:layout_constraintBottom_toBottomOf="@+id/afstand"
-                app:layout_constraintLeft_toLeftOf="@+id/afstand"
-                app:layout_constraintTop_toTopOf="@+id/afstand"
-                app:srcCompat="@drawable/ic_navigation_black_24px" />
-
-            <com.google.android.gms.maps.MapView
-                android:id="@+id/mapView2"
-                android:layout_width="360dp"
-                android:layout_height="200dp"
+                android:background="@color/colorBackgroundSecondary"
+                android:paddingBottom="24dp"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/bathroom" />
+                app:layout_constraintTop_toBottomOf="@+id/content_room_info">
+
+                <TextView
+                    android:id="@+id/content_facilityTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@color/addButtonColor"
+                    android:gravity="center_vertical"
+                    android:padding="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:text="Facilities"
+                    android:textAlignment="center"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <LinearLayout
+                    android:id="@+id/content_facilityFirstRow"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintHorizontal_bias="1.0"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/content_facilityTitle">
+
+
+                    <TextView
+                        android:id="@+id/content_wifi"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="0.5"
+                        android:background="@color/colorBackgroundSecondaryDarker"
+                        android:drawableEnd="@drawable/ic_approve_not_circular_button"
+                        android:drawablePadding="12dp"
+                        android:drawableStart="@drawable/ic_wifi_black_24px"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center_vertical"
+                        android:padding="12dp"
+                        android:text="WIFI"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/content_power"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="0.5"
+                        android:background="@color/colorBackgroundSecondaryDarker"
+                        android:drawableLeft="@drawable/ic_power_black_24px"
+                        android:drawablePadding="12dp"
+                        android:drawableRight="@drawable/ic_approve_not_circular_button"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center_vertical"
+                        android:padding="12dp"
+                        android:text="Power"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/content_facilitySecondRow"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/content_facilityFirstRow">
+
+
+                    <TextView
+                        android:id="@+id/content_coffee"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="0.5"
+                        android:background="@color/colorBackgroundSecondaryDarker"
+                        android:drawableLeft="@drawable/ic_local_cafe_black_24px"
+                        android:drawablePadding="12dp"
+                        android:drawableRight="@drawable/ic_approve_not_circular_button"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center_vertical"
+                        android:padding="12dp"
+                        android:text="Coffee"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/content_groupspace"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="0.5"
+                        android:background="@color/colorBackgroundSecondaryDarker"
+                        android:drawableLeft="@drawable/ic_group_black_24px"
+                        android:drawablePadding="12dp"
+                        android:drawableRight="@drawable/ic_approve_not_circular_button"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center_vertical"
+                        android:padding="12dp"
+                        android:text="Group spaces"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent" />
+
+                </LinearLayout>
+
+                <LinearLayout
+
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/content_facilitySecondRow">
+
+
+                    <TextView
+                        android:id="@+id/content_bathroom"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="0.5"
+                        android:background="@color/colorBackgroundSecondaryDarker"
+                        android:drawableLeft="@drawable/ic_wc_black_24px"
+                        android:drawablePadding="12dp"
+                        android:drawableRight="@drawable/ic_approve_not_circular_button"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center_vertical"
+                        android:padding="12dp"
+                        android:text="Bathroom"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/rcontent_food"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="4dp"
+                        android:layout_marginStart="4dp"
+                        android:layout_weight="0.5"
+                        android:background="@color/colorBackgroundSecondaryDarker"
+                        android:drawableLeft="@drawable/ic_restaurant_black_24px"
+                        android:drawablePadding="12dp"
+                        android:drawableRight="@drawable/ic_approve_not_circular_button"
+                        android:fontFamily="sans-serif-condensed"
+                        android:gravity="center_vertical"
+                        android:padding="12dp"
+                        android:text="Food"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent" />
+
+                </LinearLayout>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/content_map_con"
+                android:layout_width="0dp"
+                android:layout_height="500dp"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/content_room_facility">
+
+                <TextView
+                    android:id="@+id/content_MapTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@color/addButtonColor"
+                    android:gravity="center_vertical"
+                    android:padding="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:text="Map"
+                    android:textAlignment="center"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:app="http://schemas.android.com/apk/res-auto"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/content_MapView"
+                    android:layout_width="0dp"
+                    android:layout_height="300dp"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/content_MapTitle"
+                    app:layout_constraintVertical_bias="0.0"
+                    tools:context=".AddRoomReviewFragment" />
+
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/content_MapView">
+
+
+                    <Button
+                        android:id="@+id/content_submit"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="4dp"
+                        android:layout_weight="0.5"
+                        android:text="Upload studyroom?"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toLeftOf="@id/content_submit" />
+
+                    <Button
+                        android:id="@+id/content_cancel"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginLeft="4dp"
+                        android:layout_marginRight="0dp"
+                        android:layout_weight="0.5"
+                        android:text="Cancel"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintLeft_toRightOf="@id/content_cancel"
+                        app:layout_constraintRight_toRightOf="parent" />
+
+                </LinearLayout>
+
+            </android.support.constraint.ConstraintLayout>
 
         </android.support.constraint.ConstraintLayout>
-    </ScrollView>
-
-</android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
+</ScrollView>
