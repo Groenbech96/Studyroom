@@ -273,6 +273,7 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
                 (LatLng) data.getParcelable("latlng"),
                 facilites,
                 data.getInt("rating"));
+
         ((AddRoomActivity)getActivity()).saveStudyRoom(studyRoom);
 
     }

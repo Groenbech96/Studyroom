@@ -18,6 +18,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import dtu.group.studyroom.addRoom.AddRoomAddressFragment;
 import dtu.group.studyroom.addRoom.AddRoomNameFragment;
@@ -49,19 +52,20 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
         mContext = getApplicationContext();
         setContentView(R.layout.activity_main);
 
+        Firebase.getInstance().logInAnonymously(this);
+        Firebase.updateActivity(this);
+
         accountButton = (FloatingActionButton) findViewById(R.id.account_button);
         accountButton.setOnClickListener(accountButtonListener);
 
         addButton = (FloatingActionButton) findViewById(R.id.add_button);
         addButton.setOnClickListener(addButtonListener);
 
-        Firebase.updateActivity(this);
-        Firebase.getInstance().logInAnonymously(this);
+
 
         /**
          * Start the maps fragment
          */
-
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
 
@@ -70,15 +74,25 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
 
         fragmentTransaction.commit();
 
+
         drawButtons();
 
     }
 
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void onFragmentInteraction(Uri downloaded) {
 
     }
+
+
+    private PropertyChangeListener studyRoomListener = new PropertyChangeListener() {
+        @Override
+        public void propertyChange(PropertyChangeEvent evt) {
+
+        }
+    };
+
 
 
     /**
@@ -161,11 +175,7 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
             mapFragment.animateSearchDummyToMapView(searchBarTransistion);
             getSupportFragmentManager().beginTransaction().remove(searchFragment).commitAllowingStateLoss();
 
-
             drawButtons();
-
-
-
 
         }
 
@@ -192,8 +202,6 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
             Intent intent = new Intent(Main.this,AddRoomActivity.class);
             ActivityOptions options = ActivityOptions.makeCustomAnimation(mContext,R.anim.slideup,R.anim.stayinplace);
             startActivity(intent, options.toBundle());
-
-
 
         }
     };

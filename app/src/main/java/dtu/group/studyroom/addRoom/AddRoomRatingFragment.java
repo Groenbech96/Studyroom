@@ -290,6 +290,7 @@ public class AddRoomRatingFragment extends Fragment {
          //         */
         if (requestCode == 1 && resultCode == RESULT_OK) {
 
+
             FragmentManager manager = getActivity().getSupportFragmentManager();
             final FragmentTransaction transaction = manager.beginTransaction();
 
@@ -298,7 +299,6 @@ public class AddRoomRatingFragment extends Fragment {
             AddRoomReviewFragment page = AddRoomReviewFragment.newInstance();
             page.setArguments(getArguments());
             transaction.replace(R.id.add_layout, page, "FRAG_REVIEW").commit();
-
 
 
 
