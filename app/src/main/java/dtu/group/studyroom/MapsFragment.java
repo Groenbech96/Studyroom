@@ -88,6 +88,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
     private boolean dataFetched;
 
+    private Main.StudyRoomListener listener;
+
+
 
     public static boolean debug = false;
     /**
@@ -278,6 +281,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
                             StudyRoomDialog dialog = new StudyRoomDialog();
 
                             Bundle b = new Bundle();
+
+                            Firebase.getInstance().getStudyRoomAverageRating(Firebase.getInstance().getUser().getUid(), room.getId());
+
                             b.putString("id", room.getId());
 
                             dialog.setArguments(b);
@@ -401,6 +407,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     public void onAttach(Context context) {
         super.onAttach(context);
         ((Main) getActivity()).addListener(this);
+
 
     }
 
@@ -555,6 +562,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
         updateMap(((Main)getActivity()).getStudyrooms());
 
+
+    }
+
+    @Override
+    public void update(int i) {
+
+        Log.i("Downloaded rating", i+"");
 
     }
 

@@ -200,7 +200,10 @@ public class SearchFragment extends Fragment implements Main.StudyRoomListener {
 
     }
 
+    @Override
+    public void update(int i) {
 
+    }
 
 
     View.OnClickListener facilityClickListener = new View.OnClickListener() {

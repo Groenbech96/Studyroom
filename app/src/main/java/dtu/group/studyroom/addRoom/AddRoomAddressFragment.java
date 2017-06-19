@@ -522,7 +522,6 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
         transaction.replace(R.id.add_layout ,page1);
         transaction.commit();
 
-
     }
 
 
