@@ -23,6 +23,8 @@ import dtu.group.studyroom.Main;
 import dtu.group.studyroom.R;
 import dtu.group.studyroom.utils.OnSwipeTouchListener;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -154,37 +156,38 @@ public class AddRoomNameFragment extends Fragment {
         wifi.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cbWifi.performClick();
+                performClick(cbWifi);
             }
         });
         power.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cbPower.performClick();
+                performClick(cbPower);
+
             }
         });
         coffee.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cbCoffee.performClick();
+                performClick(cbCoffee);
             }
         });
         group.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cbGroupSpaces.performClick();
+                performClick(cbGroupSpaces);
             }
         });
         toilet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cbToilet.performClick();
+                performClick(cbToilet);
             }
         });
         quiet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cbQuiet.performClick();
+               performClick(cbQuiet);
             }
         });
 
@@ -229,6 +232,14 @@ public class AddRoomNameFragment extends Fragment {
         }, 500); //use 300 to make it run when coming back from lock screen
 
         return fragmentView;
+    }
+
+    private void performClick(CheckBox box) {
+        box.performClick();
+        InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+        if(imm.isAcceptingText()) { // verify if the soft keyboard is open
+            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        }
     }
 
 

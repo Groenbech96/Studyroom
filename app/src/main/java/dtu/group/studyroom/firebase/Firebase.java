@@ -362,7 +362,6 @@ public class Firebase {
 
                 rateStudyRoom(uid, key, (int) rating);
 
-
             }
         });
 
@@ -372,24 +371,39 @@ public class Firebase {
 
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("ratings");
         ref.child(id).child(uid).child("rating").setValue(progress);
-
     }
 
     private Bitmap downscaleBitmapUsingDensities(final int sampleSize, final InputStream stream)
     {
         BitmapFactory.Options bitmapOptions=new BitmapFactory.Options();
+        bitmapOptions.inScaled = false;
+
         Bitmap firstMap = BitmapFactory.decodeStream(stream,new Rect(),bitmapOptions);
 
         float height = bitmapOptions.outHeight;
         float width = bitmapOptions.outWidth;
 
-        float ratio = width / height;
-
-        int widthFinal = 600;
-        int heightFinal = (int)(widthFinal*ratio);
+        int maxWidth = 1000;
+        int maxHeight = 1000;
 
 
-        Bitmap map = Bitmap.createScaledBitmap(firstMap, widthFinal, heightFinal, false);
+        if (width > height) {
+            // landscape
+            float ratio = (float) width / maxWidth;
+            width = maxWidth;
+            height = (int)(height / ratio);
+        } else if (height > width) {
+            // portrait
+            float ratio = (float) height / maxHeight;
+            height = maxHeight;
+            width = (int)(width / ratio);
+        } else {
+            // square
+            height = maxHeight;
+            width = maxWidth;
+        }
+
+        Bitmap map = Bitmap.createScaledBitmap(firstMap, (int)width, (int)height, true);
         //final Bitmap scaledBitmap=BitmapFactory.decodeStream(stream,new Rect(),bitmapOptions);
         //Bitmap map = Bitmap.createScaledBitmap(sc)
         //scaledBitmap.setDensity(Bitmap.DENSITY_NONE);

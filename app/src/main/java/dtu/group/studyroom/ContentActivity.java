@@ -73,9 +73,8 @@ public class ContentActivity extends AppCompatActivity implements OnMapReadyCall
     private SupportMapFragment mapView;
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
-    private CameraPosition mCameraPosition = null;
     // DTU LOCATION
-    private LatLng mDefaultLocation = new LatLng(55.785574, 12.521381);
+
     private Location mLastKnownLocation;
 
     /**
@@ -177,6 +176,7 @@ public class ContentActivity extends AppCompatActivity implements OnMapReadyCall
         mProgress.setMessage("Downloading..");
         mProgress.show();
 
+
         Firebase.getInstance().downloadImage(id, new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
@@ -204,15 +204,13 @@ public class ContentActivity extends AppCompatActivity implements OnMapReadyCall
         // Setting the position for the marker
         markerOptions.position(studyRoom.getCoordinates());
         Bitmap bm = BitmapFactory.decodeResource(getResources(), R.mipmap.studyroom_mapmarker);
-        Bitmap map = Utils.scaleDown(bm, 80, true);
+        Bitmap map = Utils.scaleDown(bm, getResources().getInteger(R.integer.markerSize), true);
         BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(map);
 
         markerOptions.icon(icon);
 
         markerOptions.title(studyRoom.getAddress());
         mMap.addMarker(markerOptions);
-
-        //updateLocationUI();
 
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
