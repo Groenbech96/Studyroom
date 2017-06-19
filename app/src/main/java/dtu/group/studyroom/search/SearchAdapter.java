@@ -2,6 +2,7 @@ package dtu.group.studyroom.search;
 
 import android.app.Activity;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,16 +43,11 @@ public class SearchAdapter extends BaseAdapter implements Filterable{
 
         getFilter();
 
-        Firebase.getInstance().setListenerList(new Firebase.StudyroomDataCallbacks() {
-            @Override
-            public void studyroomDataSuccessCallback(HashMap<String, StudyRoom> result) {
-                updateData(result);
-            }
-        });
+
 
     }
 
-    private void updateData(HashMap<String, StudyRoom> result) {
+    public void updateData(HashMap<String, StudyRoom> result) {
         studyRooms = result;
         notifyDataSetChanged();
     }

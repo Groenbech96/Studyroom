@@ -19,9 +19,14 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+
 import dtu.group.studyroom.addRoom.AddRoomAddressFragment;
 import dtu.group.studyroom.addRoom.AddRoomNameFragment;
 import dtu.group.studyroom.addRoom.AddRoomRatingFragment;
@@ -30,13 +35,17 @@ import dtu.group.studyroom.firebase.Firebase;
 import dtu.group.studyroom.search.SearchFragment;
 import dtu.group.studyroom.utils.Utils;
 
-public class Main extends AppCompatActivity implements MapsFragment.OnFragmentInteractionListener,
-        SearchFragment.OnFragmentInteractionListener,
+public class Main extends AppCompatActivity implements
         AddRoomNameFragment.OnFragmentInteractionListener,
         AddRoomAddressFragment.OnFragmentInteractionListener,
         AddRoomRatingFragment.OnFragmentInteractionListener {
 
-    private HashMap<String, StudyRoom> studyrooms = new HashMap<>();
+
+    public interface StudyRoomListener {
+        void update();
+    }
+
+    private List<StudyRoomListener> listeners;
 
     private enum FADE {IN, OUT};
     private boolean dataFetched;
@@ -47,34 +56,38 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
     private SearchFragment searchFragment;
     private MapsFragment mapFragment;
 
+    private HashMap<String, StudyRoom> studyrooms = new HashMap<>();
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mContext = getApplicationContext();
         setContentView(R.layout.activity_main);
 
-        dataFetched = false;
+        listeners = new ArrayList<>();
 
+        // Data
         Firebase.getInstance().logInAnonymously(this);
-        //Firebase.updateActivity(this);
+        Firebase.getInstance().setDataListener(new Firebase.StudyroomDataCallbacks() {
+            @Override
+            public void studyroomDataSuccessCallback(HashMap<String, StudyRoom> result) {
+                Log.i("FIREBASE", "DATA is fetched");
+                studyrooms = result;
+
+                for(StudyRoomListener listener : listeners) {
+                    listener.update();
+                }
+
+            }
+        });
+
 
         accountButton = (FloatingActionButton) findViewById(R.id.account_button);
         accountButton.setOnClickListener(accountButtonListener);
 
         addButton = (FloatingActionButton) findViewById(R.id.add_button);
         addButton.setOnClickListener(addButtonListener);
-
-
-//        Firebase.getInstance().setListenerMap(new Firebase.StudyroomDataCallbacks() {
-//            @Override
-//            public void studyroomDataSuccessCallback(HashMap<String, StudyRoom> result) {
-//                studyrooms = result;
-//                dataFetched = true;
-//
-//            }
-//        });
-
-
 
 
         /**
@@ -91,6 +104,15 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
 
         drawButtons();
 
+    }
+
+    public void addListener(StudyRoomListener listener) {
+        listeners.add(listener);
+        listener.update();
+    }
+
+    public void removeListener(StudyRoomListener listener) {
+        listeners.remove(listener);
     }
 
 
@@ -117,7 +139,12 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
     public void onRestart() {
         super.onRestart();
         drawButtons();
+    }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        Firebase.Restart();
     }
 
     /**
@@ -283,12 +310,7 @@ public class Main extends AppCompatActivity implements MapsFragment.OnFragmentIn
     }
 
     public HashMap<String, StudyRoom> getStudyrooms() {
-
-        if(dataFetched)
-            return studyrooms;
-
-
-        return null;
+        return studyrooms;
     }
 
     public void setStudyrooms(HashMap<String, StudyRoom> studyroom) {

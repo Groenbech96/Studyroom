@@ -34,6 +34,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -57,6 +58,12 @@ public class Firebase {
 
     private String path;
 
+    public FirebaseUser getUser() {
+        return mAuth.getCurrentUser();
+    }
+
+
+
     // Interface for async callbacks when data has loaded
     public  interface StudyroomDataCallbacks {
         void studyroomDataSuccessCallback(HashMap<String, StudyRoom> result);
@@ -64,12 +71,14 @@ public class Firebase {
     }
 
     private StudyroomDataCallbacks listenerMap = null;
-    private StudyroomDataCallbacks listenerList = null;
 
 
     private StorageReference mStorage = FirebaseStorage.getInstance().getReference();
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("studyrooms");
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+
+
 
     private Firebase () {
         /**
@@ -78,21 +87,26 @@ public class Firebase {
         mDatabase.addValueEventListener(changeListener);
     }
 
+    public void fetchData() {
 
+    }
 
-    public void setListenerMap(StudyroomDataCallbacks listener) {
+    public static void Restart() {
+        Log.i("FIREBASE RESET", "DPME");
+        firebase = null;
+    }
+
+    public void setDataListener(StudyroomDataCallbacks listener) {
         this.listenerMap = listener;
     }
-    public void setListenerList(StudyroomDataCallbacks listener) { this.listenerList = listener; }
+
 
     private void success(HashMap<String, StudyRoom> result) {
         if(listenerMap != null) {
             listenerMap.studyroomDataSuccessCallback(result);
         }
-        if(listenerList != null)
-            listenerList.studyroomDataSuccessCallback(result);
-
     }
+
 
 
     public ValueEventListener changeListener = new ValueEventListener() {
@@ -268,7 +282,7 @@ public class Firebase {
 
     }
 
-    public void uploadStudyRoom(StudyRoom studyRoom, String photoPath) {
+    public void uploadStudyRoom(StudyRoom studyRoom, String photoPath, final String uid) {
 
         /**
          * Extract fields from studyroom model
@@ -336,17 +350,29 @@ public class Firebase {
                 mDatabase.child(key).child("address").setValue(address);
                 mDatabase.child(key).child("city").setValue(city);
                 mDatabase.child(key).child("postal").setValue(postal);
-                mDatabase.child(key).child("facilites").child("wifi").setValue(wifi);
-                mDatabase.child(key).child("facilites").child("coffee").setValue(coffee);
-                mDatabase.child(key).child("facilites").child("food").setValue(food);
-                mDatabase.child(key).child("facilites").child("groups").setValue(groups);
-                mDatabase.child(key).child("facilites").child("power").setValue(power);
-                mDatabase.child(key).child("facilites").child("toilet").setValue(toilet);
-                mDatabase.child(key).child("rating").setValue(rating);
+                mDatabase.child(key).child("facilities").child("wifi").setValue(wifi);
+                mDatabase.child(key).child("facilities").child("coffee").setValue(coffee);
+                mDatabase.child(key).child("facilities").child("food").setValue(food);
+                mDatabase.child(key).child("facilities").child("groups").setValue(groups);
+                mDatabase.child(key).child("facilities").child("power").setValue(power);
+                mDatabase.child(key).child("facilities").child("toilet").setValue(toilet);
+                //mDatabase.child(key).child("rating").setValue(rating);
                 mDatabase.child(key).child("image").setValue(downloadUrl.toString());
                 mDatabase.child(key).child("coordinates").setValue(coordinates);
+
+
+                rateStudyRoom(uid, key, (int) rating);
+
+
             }
         });
+
+    }
+
+    public void rateStudyRoom(final String uid, final String id, final int progress) {
+
+        final DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("ratings");
+        ref.child(id).child(uid).child("rating").setValue(progress);
 
     }
 
@@ -377,6 +403,7 @@ public class Firebase {
 
         DatabaseReference ref = mDatabase.child(id);
 
+
         // Attach a listener to read the data at our posts reference
         ref.addValueEventListener(new ValueEventListener() {
             @Override
@@ -406,7 +433,13 @@ public class Firebase {
             }
         });
 
+    }
 
+    public void downloadRating(String id, final ValueEventListener success) {
+
+
+        DatabaseReference ref = mDatabase.child(id);
+        ref.addValueEventListener(success);
 
 
     }
@@ -414,7 +447,8 @@ public class Firebase {
 
 
 
-/*
+
+    /*
     public static void updateActivity(Activity a) {
         mActivityReference = new WeakReference<Activity>(a);
     }

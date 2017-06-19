@@ -36,12 +36,11 @@ import dtu.group.studyroom.firebase.Firebase;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SearchFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link SearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements Main.StudyRoomListener {
 
 
     private EditText searchBar, citySearch, facilityBtn;
@@ -51,8 +50,6 @@ public class SearchFragment extends Fragment {
     private boolean facilityMenuVisible = true;
     private ListView listView;
     private SearchAdapter searchAdapter;
-
-    private OnFragmentInteractionListener mListener;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -70,7 +67,6 @@ public class SearchFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         facilityMenuVisible = false;
-
         searchAdapter = new SearchAdapter(getActivity());
 
 
@@ -83,6 +79,8 @@ public class SearchFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         fragmentView = inflater.inflate(R.layout.fragment_search, container, false);
+
+        ((Main) getActivity()).addListener(this);
 
         searchBar = (EditText) fragmentView.findViewById(R.id.searchBar);
         searchBar.setSoundEffectsEnabled(false);
@@ -139,6 +137,7 @@ public class SearchFragment extends Fragment {
             }
         });
 
+
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -168,45 +167,29 @@ public class SearchFragment extends Fragment {
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
+
     }
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+
     }
 
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
+        ((Main) getActivity()).removeListener(this);
+    }
+
+    @Override
+    public void update() {
+        if(searchAdapter != null)
+            searchAdapter.updateData(((Main) getActivity()).getStudyrooms());
+
     }
 
 
-
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onFragmentInteraction(Uri uri);
-    }
 
 
     View.OnClickListener facilityClickListener = new View.OnClickListener() {
