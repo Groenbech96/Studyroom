@@ -202,6 +202,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
         }
 
+
         setUpConstraintSets();
 
         return fragmentView;
@@ -456,6 +457,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         Log.i(LOG_GOOGLE_MAP_API, "LOCATION TURNED OFF");
         if (mLocationPermissionGranted) {
             mMap.setMyLocationEnabled(false);
+
         } else {
             mMap.setMyLocationEnabled(false);
         }
