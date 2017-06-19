@@ -188,8 +188,8 @@ public class Firebase {
                     }
                     break;
                 case "facilities" :
-                    StudyRoomFacilities facilites = createFacilitiesFromSnapshot(attributeSnapshot);
-                    studyRoom.setFacilites(facilites);
+                    StudyRoomFacilities facilities = createFacilitiesFromSnapshot(attributeSnapshot);
+                    studyRoom.setFacilities(facilities);
                     break;
                 case "coordinates" :
                     LatLng coordinates = createCoordinatesFromSnapshot(attributeSnapshot);
@@ -274,12 +274,12 @@ public class Firebase {
         final String address = studyRoom.getAddress();
         final String city = studyRoom.getCity();
         final String postal = studyRoom.getPostal();
-        final int wifi = studyRoom.getFacilites().getWifi();
-        final int coffee = studyRoom.getFacilites().getCoffee();
-        final int food = studyRoom.getFacilites().getFood();
-        final int groups = studyRoom.getFacilites().getGroups();
-        final int power = studyRoom.getFacilites().getPower();
-        final int toilet = studyRoom.getFacilites().getToilet();
+        final int wifi = studyRoom.getFacilities().getWifi();
+        final int coffee = studyRoom.getFacilities().getCoffee();
+        final int food = studyRoom.getFacilities().getFood();
+        final int groups = studyRoom.getFacilities().getGroups();
+        final int power = studyRoom.getFacilities().getPower();
+        final int toilet = studyRoom.getFacilities().getToilet();
         final double rating = studyRoom.getRating();
         final LatLng coordinates = studyRoom.getCoordinates();
 
@@ -332,13 +332,13 @@ public class Firebase {
                 mDatabase.child(key).child("address").setValue(address);
                 mDatabase.child(key).child("city").setValue(city);
                 mDatabase.child(key).child("postal").setValue(postal);
-                mDatabase.child(key).child("facilites").child("wifi").setValue(wifi);
-                mDatabase.child(key).child("facilites").child("coffee").setValue(coffee);
-                mDatabase.child(key).child("facilites").child("food").setValue(food);
-                mDatabase.child(key).child("facilites").child("groups").setValue(groups);
-                mDatabase.child(key).child("facilites").child("power").setValue(power);
-                mDatabase.child(key).child("facilites").child("toilet").setValue(toilet);
-                mDatabase.child(key).child("rating").setValue(rating);
+                mDatabase.child(key).child("facilities").child("wifi").setValue(wifi);
+                mDatabase.child(key).child("facilities").child("coffee").setValue(coffee);
+                mDatabase.child(key).child("facilities").child("food").setValue(food);
+                mDatabase.child(key).child("facilities").child("groups").setValue(groups);
+                mDatabase.child(key).child("facilities").child("power").setValue(power);
+                mDatabase.child(key).child("facilities").child("toilet").setValue(toilet);
+                mDatabase.child(key).child("rating") .setValue(rating);
                 mDatabase.child(key).child("image").setValue(downloadUrl.toString());
                 mDatabase.child(key).child("coordinates").setValue(coordinates);
             }

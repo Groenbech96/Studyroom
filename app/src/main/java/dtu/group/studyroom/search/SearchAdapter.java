@@ -69,6 +69,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable{
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
+            viewHolder.id = studyRoom.getId();
         }
 
         final TextView name = viewHolder.name;
@@ -77,7 +78,6 @@ public class SearchAdapter extends BaseAdapter implements Filterable{
         final TextView address = viewHolder.address;
         address.setText(studyRoom.getAddress());
 
-        viewHolder.id = studyRoom.getId();
 
         return convertView;
     }

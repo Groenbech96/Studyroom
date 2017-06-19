@@ -2,15 +2,13 @@ package dtu.group.studyroom;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
 import dtu.group.studyroom.addRoom.StudyRoom;
-import dtu.group.studyroom.search.SearchFragment;
+import dtu.group.studyroom.addRoom.StudyRoomFacilities;
 
 
 /**
@@ -19,8 +17,8 @@ import dtu.group.studyroom.search.SearchFragment;
 
 public class ContentActivity extends Activity {
 
-    private TextView områdenavn, adresse;
-    private ImageView checkBox, topImage;
+    private TextView areaName, address, checkBox;
+    private ImageView topImage;
     private Bundle allData;
     private RatingBar rateing;
 
@@ -34,67 +32,45 @@ public class ContentActivity extends Activity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         StudyRoom studyRoom = bundle.getParcelable("studyroom");
-        adresse = (TextView) findViewById(R.id.content_address);
-        adresse.setText(studyRoom.getAddress());
-
-        områdenavn = (TextView) findViewById(R.id.content_areaName);
-        områdenavn.setText(studyRoom.getName());
-
-        //setPage(studyRoom);
-
+        setPage(studyRoom);
     }
 
-/*
+
     public void setPage(StudyRoom studyroom){
-        Områdenavn = (TextView)findViewById(R.id.OmrådeNavn);
-        Områdenavn.setText(studyroom.name);
+        areaName = (TextView)findViewById(R.id.content_areaName);
+        areaName.setText(studyroom.getName());
 
-        adresse = (TextView)findViewById(R.id.adresse);
-        adresse.setText(studyroom.address);
+        address = (TextView)findViewById(R.id.content_address);
+        address.setText(studyroom.getAddress());
 
-        topImage = (ImageView)findViewById(R.id.StudyroomImage);
+        topImage = (ImageView)findViewById(R.id.content_Image);
         topImage.setBackground(getDrawable(R.mipmap.ic_test_image));
 
-        checkBox = (ImageView)findViewById(R.id.check_wifi);
-        if (studyroom.facilites.wifi==1){
-            checkBox.setImageResource(R.drawable.ic_check_circle_black_24px);
-            checkBox.setBackground(getDrawable(R.drawable.ic_check_circle_black_24px));}
-        checkBox = (ImageView)findViewById(R.id.check_power);
-        if (studyroom.facilites.power==1){
-        checkBox.setImageResource(R.drawable.ic_check_circle_black_24px);
-        checkBox.setBackground(getDrawable(R.drawable.ic_check_circle_black_24px));}
+        StudyRoomFacilities facilities = studyroom.getFacilities();
 
-        checkBox = (ImageView)findViewById(R.id.check_coffee);
-        if (studyroom.facilites.coffee==1){
-            checkBox.setImageResource(R.drawable.ic_check_circle_black_24px);
-            checkBox.setBackground(getDrawable(R.drawable.ic_check_circle_black_24px));}
+        checkBox = (TextView) findViewById(R.id.content_wifi);
+        if (studyroom.getFacilities().getWifi()==1){
+            checkBox.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_circle_black_24px,0,0,0);}
 
-        checkBox = (ImageView)findViewById(R.id.check_group);
-        if (studyroom.facilites.groups==1){
-            checkBox.setImageResource(R.drawable.ic_check_circle_black_24px);
-            checkBox.setBackground(getDrawable(R.drawable.ic_check_circle_black_24px));}
+        checkBox = (TextView) findViewById(R.id.content_power);
+        if (studyroom.getFacilities().getPower()==1){
+          checkBox.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_circle_black_24px,0,0,0);}
 
-        checkBox = (ImageView)findViewById(R.id.check_bathroom);
-        if (studyroom.facilites.toilet==1){
-            checkBox.setImageResource(R.drawable.ic_check_circle_black_24px);
-            checkBox.setBackground(getDrawable(R.drawable.ic_check_circle_black_24px));}
+        checkBox = (TextView) findViewById(R.id.content_coffee);
+        if (studyroom.getFacilities().getCoffee()==1){
+            checkBox.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_circle_black_24px,0,0,0);}
 
-        checkBox = (ImageView)findViewById(R.id.check_food);
-        if (studyroom.facilites.food==1){
-            checkBox.setImageResource(R.drawable.ic_check_circle_black_24px);
-            checkBox.setBackground(getDrawable(R.drawable.ic_check_circle_black_24px));}
+        checkBox = (TextView) findViewById(R.id.content_groupspace);
+        if (studyroom.getFacilities().getGroups()==1){
+            checkBox.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_circle_black_24px,0,0,0);}
 
+        checkBox = (TextView) findViewById(R.id.content_bathroom);
+        if (studyroom.getFacilities().getToilet()==1){
+            checkBox.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_circle_black_24px,0,0,0);}
 
-
-
-
-
-
+        checkBox = (TextView) findViewById(R.id.rcontent_food);
+        if (studyroom.getFacilities().getFood()==1){
+            checkBox.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_check_circle_black_24px,0,0,0);}
     }
-
-*/
-
-
-
 
 }

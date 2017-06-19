@@ -48,7 +48,7 @@ public class StudyRoom implements Parcelable {
         this.address = address;
     }
 
-    public void setFacilites(StudyRoomFacilities facilites) {
+    public void setFacilities(StudyRoomFacilities facilites) {
         this.facilities = facilites;
     }
 
@@ -64,7 +64,7 @@ public class StudyRoom implements Parcelable {
         return address;
     }
 
-    public StudyRoomFacilities getFacilites() {
+    public StudyRoomFacilities getFacilities() {
         return facilities;
     }
 
