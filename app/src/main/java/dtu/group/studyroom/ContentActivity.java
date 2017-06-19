@@ -19,7 +19,7 @@ import dtu.group.studyroom.search.SearchFragment;
 
 public class ContentActivity extends Activity {
 
-    private TextView Områdenavn, adresse;
+    private TextView områdenavn, adresse;
     private ImageView checkBox, topImage;
     private Bundle allData;
     private RatingBar rateing;
@@ -34,8 +34,12 @@ public class ContentActivity extends Activity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         StudyRoom studyRoom = bundle.getParcelable("studyroom");
-        adresse = (TextView)findViewById(R.id.adresse);
+        adresse = (TextView) findViewById(R.id.content_address);
         adresse.setText(studyRoom.getAddress());
+
+        områdenavn = (TextView) findViewById(R.id.content_areaName);
+        områdenavn.setText(studyRoom.getName());
+
         //setPage(studyRoom);
 
     }
