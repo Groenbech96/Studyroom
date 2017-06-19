@@ -12,6 +12,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.net.Uri;
+import android.net.sip.SipAudioCall;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -31,6 +32,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -45,7 +47,9 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MapStyleOptions;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -78,6 +82,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     private static final String GOOGLE_MAPS_TAG = "GOOGLE_MAPS_TAG";
     private static final String KEY_CAMERA_POSITION = "camera_position";
     private static final String KEY_LOCATION = "location";
+
+    private HashMap<String, StudyRoom> studyrooms = new HashMap<>();
+
+
+
+
+
+
+
 
     public static boolean debug = false;
     /**
@@ -124,16 +137,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     public ConstraintSet defaultConstraintSet = new ConstraintSet();
     public ConstraintSet animatedConstraintSet = new ConstraintSet();
 
-
-
     private OnFragmentInteractionListener mListener;
-
 
 
     public MapsFragment() {
         // Required empty public constructor
     }
 
+    public HashMap<String, StudyRoom> results;
 
 
     /**
@@ -177,8 +188,22 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         if (act instanceof Main)
             ((Main) act).drawButtons();
 
-
         mapView = SupportMapFragment.newInstance();
+
+
+        Firebase base = Firebase.getInstance();
+        base.setListener(new Firebase.StudyroomDataCallbacks() {
+            @Override
+            public void studyroomDataSuccessCallback(HashMap<String, StudyRoom> result) {
+
+                results = result;
+                updateMap(result);
+
+            }
+        });
+
+
+
 
         if(!debug) {
 
@@ -206,6 +231,25 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         setUpConstraintSets();
 
         return fragmentView;
+    }
+
+    private void saveMarkers(HashMap<String, StudyRoom> result) {
+
+        Iterator it = result.entrySet().iterator();
+        while(it.hasNext()) {
+
+
+
+
+
+
+
+
+
+
+
+        }
+
     }
 
     /**
@@ -240,35 +284,37 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         mMap.getUiSettings().setCompassEnabled(false);
         mMap.setMapStyle(MapStyleOptions.loadRawResourceStyle(getContext(), R.raw.google_map_style));
 
-        //TODO:
+
+        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+            @Override
+            public boolean onMarkerClick(Marker marker) {
 
 
-        HashMap<String, StudyRoom> studyRoomHashMap = ((Main)getActivity()).getStudyrooms();
+                Iterator it = results.entrySet().iterator();
 
 
-        Iterator it = studyRoomHashMap.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry pair = (Map.Entry)it.next();
+                for (Map.Entry<String, StudyRoom> entry : results.entrySet())
+                {
 
-            String roomID = pair.getKey().toString();
-            StudyRoom room = (StudyRoom) pair.getValue();
+                    StudyRoom room = (StudyRoom)entry.getValue();
+                    if(room.getCoordinates().equals(marker.getPosition()))  {
 
-            // Creating a marker
-            MarkerOptions markerOptions = new MarkerOptions();
 
-            // Setting the position for the marker
-            markerOptions.position(room.getCoordinates());
-            Bitmap bm = BitmapFactory.decodeResource(getResources(), R.mipmap.studyroom_mapmarker);
-            Bitmap map = Utils.scaleDown(bm, 80, true);
-            BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(map);
 
-            markerOptions.icon(icon);
+                        Bundle b = new Bundle();
+                        b.putString("id", room.getId());
+                        StudyRoomDialog dialog = new StudyRoomDialog();
+                        dialog.setArguments(b);
+                        dialog.show(getActivity().getFragmentManager(), "DIS");
 
-            markerOptions.title(room.getName());
-            markerOptions.draggable(false);
-            mMap.addMarker(markerOptions);
 
-        }
+                    }
+
+                }
+
+                return true;
+            }
+        });
 
 
         updateLocationUI();
@@ -479,6 +525,47 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
             //mMap.setMyLocationEnabled(false);
         }
     }
+
+    public void updateMap(HashMap<String, StudyRoom> studyRoomHashMap) {
+
+        if(mMap != null) {
+
+            Iterator it = studyRoomHashMap.entrySet().iterator();
+            while (it.hasNext()) {
+                Map.Entry pair = (Map.Entry) it.next();
+
+                String roomID = pair.getKey().toString();
+                StudyRoom room = (StudyRoom) pair.getValue();
+
+                // TODO: WIERD BUG WHEN you add a new room.
+                // THis method is called, but with a null studyroom
+                if(room.getCoordinates() != null) {
+
+                    // Log.i("drawing marker", room.getId());
+
+                    // Creating a marker
+                    MarkerOptions markerOptions = new MarkerOptions();
+
+                    // Setting the position for the marker
+                    markerOptions.position(room.getCoordinates());
+                    Bitmap bm = BitmapFactory.decodeResource(getResources(), R.mipmap.studyroom_mapmarker);
+                    Bitmap map = Utils.scaleDown(bm, 160, true);
+                    BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(map);
+
+                    markerOptions.icon(icon);
+
+                    markerOptions.title(room.getName());
+                    markerOptions.draggable(false);
+                    mMap.addMarker(markerOptions);
+                }
+
+            }
+        }
+
+
+    }
+
+
 
 
     /**

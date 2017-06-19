@@ -2,13 +2,17 @@ package dtu.group.studyroom.firebase;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.constraint.solver.widgets.Snapshot;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -25,12 +29,20 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 import dtu.group.studyroom.Main;
+import dtu.group.studyroom.MapsFragment;
 import dtu.group.studyroom.addRoom.*;
+import dtu.group.studyroom.utils.ScalingUtilities;
+import dtu.group.studyroom.utils.Utils;
 
 
 /**
@@ -43,27 +55,59 @@ public class Firebase {
 
     private static Firebase firebase;
 
+    private String path;
+
+    // Interface for async callbacks when data has loaded
+    public  interface StudyroomDataCallbacks {
+        void studyroomDataSuccessCallback(HashMap<String, StudyRoom> result);
+
+    }
+
+    private StudyroomDataCallbacks listener = null;
+
+
     private StorageReference mStorage = FirebaseStorage.getInstance().getReference();
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("studyrooms");
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-
 
     private Firebase () {
         /**
          * Set up listener
          */
-        mDatabase.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                downloadStudyRoom(dataSnapshot);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        mDatabase.addValueEventListener(changeListener);
     }
+
+
+
+    public void setListener(StudyroomDataCallbacks listener) {
+        this.listener = listener;
+    }
+
+    private void success(HashMap<String, StudyRoom> result) {
+        if(listener != null) {
+            listener.studyroomDataSuccessCallback(result);
+        }
+    }
+
+
+    public ValueEventListener changeListener = new ValueEventListener() {
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+
+            HashMap<String, StudyRoom> data = downloadStudyRoom(dataSnapshot);
+
+            // Send data to the listener
+            success(data);
+
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+
+    };
+
 
     public static Firebase getInstance() {
 
@@ -93,9 +137,11 @@ public class Firebase {
 
     }
 
-    private void downloadStudyRoom(DataSnapshot dataSnapshot) {
+    public HashMap<String, StudyRoom> downloadStudyRoom(DataSnapshot dataSnapshot) {
+
 
         Activity a = mActivityReference.get();
+
 
         HashMap<String, StudyRoom> localStudyRooms = new HashMap<>();
 
@@ -108,7 +154,10 @@ public class Firebase {
             localStudyRooms.put(studyRoomSnapshot.getKey(),studyRoom);
 
         }
+
+
         ((Main) a).setStudyrooms(localStudyRooms);
+        return localStudyRooms;
     }
 
     private StudyRoom createStudyRoomFromSnapshot(DataSnapshot studyRoomSnapshot) {
@@ -236,7 +285,7 @@ public class Firebase {
 
 
         /**
-         * Generate unique id for the image
+         *  Generate unique id for the image
          */
         String uuid = UUID.randomUUID().toString();
 
@@ -248,6 +297,15 @@ public class Firebase {
         /**
          * Compress the bitmap into jpeg format
          */
+
+
+        try {
+            Bitmap map;
+            map = downscaleBitmapUsingDensities(new FileInputStream(photoPath));
+            map.compress(Bitmap.CompressFormat.PNG, 100, new FileOutputStream(photoPath));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
 
         Uri file = Uri.fromFile(new File(photoPath));
 
@@ -288,9 +346,86 @@ public class Firebase {
 
     }
 
+    private Bitmap downscaleBitmapUsingDensities(final InputStream stream)
+    {
+        final BitmapFactory.Options bitmapOptions=new BitmapFactory.Options();
+        bitmapOptions.inJustDecodeBounds = true;
+        Bitmap map = BitmapFactory.decodeStream(stream, new Rect(), bitmapOptions);
+        int height = bitmapOptions.outHeight;
+        int width = bitmapOptions.outWidth;
+        Activity a = mActivityReference.get();
+        int requiredWidth = (int)(500 * ((Main)(a)).getResources().getDisplayMetrics().density);
+        int sampleSize = (int) width / requiredWidth;
+        if(sampleSize < 1) { sampleSize = 1; }
+        bitmapOptions.inSampleSize = sampleSize;
+        bitmapOptions.inPreferredConfig = Bitmap.Config.RGB_565;
+        bitmapOptions.inJustDecodeBounds = false;
+        final Bitmap scaledBitmap=BitmapFactory.decodeStream(stream,new Rect(),bitmapOptions);
+        return scaledBitmap;
+    }
+
+
+    public void downloadImage(String id, final OnSuccessListener<byte[]> listener) {
+
+
+        DatabaseReference ref = mDatabase.child(id);
+
+        // Attach a listener to read the data at our posts reference
+        ref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot attributeSnapshot : dataSnapshot.getChildren()) {
+                    Log.i("data", attributeSnapshot.toString());
+                    switch (attributeSnapshot.getKey()) {
+                        case "image" :
+
+                            StorageReference image = FirebaseStorage.getInstance().getReferenceFromUrl(attributeSnapshot.getValue().toString());
+                            final long ONE_MEGABYTE = 1024 * 1024 * 5;
+                            image.getBytes(ONE_MEGABYTE).addOnSuccessListener(listener).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    Log.i("FAIL", "DOWNLOAD IMAGE");
+                                }
+                            });
+                            break;
+
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+
+
+
+//        Log.i("DOWNLOAD", path);
+//        StorageReference image = FirebaseStorage.getInstance().getReferenceFromUrl(path);
+//
+//        final long ONE_MEGABYTE = 1024 * 1024 * 5;
+//        image.getBytes(ONE_MEGABYTE).addOnSuccessListener(listener).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception exception) {
+//                Log.i("FAIL", "DOWNLOAD IMAGE");
+//            }
+//        });
+
+
+
+    }
+
+
+
+
+
     public static void updateActivity(Activity a) {
         mActivityReference = new WeakReference<Activity>(a);
     }
 
 
+    public static void getMapData() {
+
+    }
 }

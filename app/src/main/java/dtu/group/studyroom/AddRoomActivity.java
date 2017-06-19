@@ -24,6 +24,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -35,6 +37,7 @@ import dtu.group.studyroom.addRoom.AddRoomRatingFragment;
 import dtu.group.studyroom.addRoom.AddRoomReviewFragment;
 import dtu.group.studyroom.addRoom.StudyRoom;
 import dtu.group.studyroom.firebase.Firebase;
+import dtu.group.studyroom.utils.ScalingUtilities;
 import dtu.group.studyroom.utils.Utils;
 
 public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFragment.OnFragmentInteractionListener,
@@ -84,11 +87,66 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
                 storageDir      /* directory */
         );
 
+
         // Save a file: path for use with ACTION_VIEW intents
         mPhotoName = imageFileName;
         mPhotoPath = image.getAbsolutePath();
         return image;
     }
+
+//    private String decodeFile(String path) {
+//        String strMyImagePath = null;
+//        Bitmap scaledBitmap = null;
+//
+//        try {
+//            // Part 1: Decode image
+//            Bitmap unscaledBitmap = ScalingUtilities.decodeFile(path, 200, 200, ScalingUtilities.ScalingLogic.FIT);
+//
+//            if (!(unscaledBitmap.getWidth() <= 800 && unscaledBitmap.getHeight() <= 800)) {
+//                // Part 2: Scale image
+//                scaledBitmap = ScalingUtilities.createScaledBitmap(unscaledBitmap, 200, 200, ScalingUtilities.ScalingLogic.FIT);
+//            } else {
+//                unscaledBitmap.recycle();
+//                return path;
+//            }
+//
+//            // Store to tmp file
+//
+//            String extr = Environment.getExternalStorageDirectory().toString();
+//            File mFolder = new File(extr + "/myTmpDir");
+//            if (!mFolder.exists()) {
+//                mFolder.mkdir();
+//            }
+//
+//            String s = "tmp.png";
+//
+//            File f = new File(mFolder.getAbsolutePath(), s);
+//
+//            strMyImagePath = f.getAbsolutePath();
+//            FileOutputStream fos = null;
+//            try {
+//                fos = new FileOutputStream(f);
+//                scaledBitmap.compress(Bitmap.CompressFormat.PNG, 70, fos);
+//                fos.flush();
+//                fos.close();
+//            } catch (FileNotFoundException e) {
+//
+//                e.printStackTrace();
+//            } catch (Exception e) {
+//
+//                e.printStackTrace();
+//            }
+//
+//            scaledBitmap.recycle();
+//        } catch (Throwable e) {
+//        }
+//
+//        if (strMyImagePath == null) {
+//            return path;
+//        }
+//        return strMyImagePath;
+//
+//    }
 
 
     public void saveStudyRoom(StudyRoom studyRoom) {
@@ -176,6 +234,9 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
+
+
+
         super.onActivityResult(requestCode,resultCode,data);
     }
 
