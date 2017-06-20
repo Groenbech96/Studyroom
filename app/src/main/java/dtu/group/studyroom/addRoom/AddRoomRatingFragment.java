@@ -110,7 +110,6 @@ public class AddRoomRatingFragment extends Fragment {
         opensansFont = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
 
         view = (ImageView) fragmentView.findViewById(R.id.imageView);
-        view.setBackgroundResource(R.drawable.rating);
         anim = (AnimationDrawable) view.getBackground();
 
         title = (TextView) fragmentView.findViewById(R.id.add_room_rating_title);
@@ -123,7 +122,7 @@ public class AddRoomRatingFragment extends Fragment {
 
             public boolean onTouch(View v, MotionEvent event) {
 
-                setSmileymage(rating.getProgress());
+                Utils.setEmoji(view, rating.getProgress());
                 Log.i("RATE", rating.getProgress()+"");
 
                 return false;
@@ -151,7 +150,7 @@ public class AddRoomRatingFragment extends Fragment {
         if(getArguments() != null)
             if(getArguments().containsKey("rating")) {
                 rating.setProgress(getArguments().getInt("rating"));
-                setSmileymage(rating.getProgress());
+                Utils.setEmoji(view, rating.getProgress());
             }
 
 

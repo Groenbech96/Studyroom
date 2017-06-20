@@ -379,7 +379,7 @@ public class Firebase {
                 myRef.child(key).child("image").setValue(downloadUrl.toString());
                 myRef.child(key).child("coordinates").setValue(coordinates);
 
-                rateStudyRoom(uid, key, (int) rating);
+                rateStudyRoom(uid, key, rating);
 
             }
         });
@@ -445,7 +445,7 @@ public class Firebase {
         mRef.addListenerForSingleValueEvent(listener);
 
     }
-    
+
 
     private Bitmap downscaleBitmapUsingDensities(final int sampleSize, final InputStream stream)
     {

@@ -28,6 +28,7 @@ import dtu.group.studyroom.Main;
 import dtu.group.studyroom.R;
 import dtu.group.studyroom.addRoom.StudyRoom;
 import dtu.group.studyroom.firebase.Firebase;
+import dtu.group.studyroom.utils.Utils;
 
 /**
  * Created by christianschmidt on 16/06/2017.
@@ -110,7 +111,9 @@ public class SearchAdapter extends BaseAdapter implements Filterable{
         address.setText(studyRoom.getAddress());
 
         final ImageView view = viewHolder.imageView;
-        setSmileymage(studyRoom.getAverageRating(), view);
+        //view.setImageBitmap(studyRoom.getAverageRating()+"");
+        Utils.setEmoji(view, studyRoom.getAverageRating());
+        // / setSmileymage(studyRoom.getAverageRating(), view);
 
 
         return convertView;

@@ -281,9 +281,6 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
                             StudyRoomDialog dialog = new StudyRoomDialog();
 
                             Bundle b = new Bundle();
-
-                            // Firebase.getInstance().getStudyRoomAverageRating(room.getId());
-
                             b.putString("id", room.getId());
 
                             dialog.setArguments(b);

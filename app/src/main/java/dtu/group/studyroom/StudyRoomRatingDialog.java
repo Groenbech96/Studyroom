@@ -25,6 +25,9 @@ import com.google.firebase.database.ValueEventListener;
 
 import dtu.group.studyroom.addRoom.StudyRoom;
 import dtu.group.studyroom.firebase.Firebase;
+import dtu.group.studyroom.utils.Utils;
+
+import static dtu.group.studyroom.StudyRoomDialog.getScreenWidth;
 
 /**
  * Created by groenbech on 19/06/2017.
@@ -56,8 +59,6 @@ public class StudyRoomRatingDialog extends DialogFragment{
         // Inflate the layout to use as dialog or embedded fragment
         view = inflater.inflate(R.layout.dialog_studyroom_rating, container, false);
 
-        room = ((Main)getActivity()).getStudyrooms().get(getArguments().getString("id"));
-
         ((Button) view.findViewById(R.id.rate_cancel)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,14 +66,17 @@ public class StudyRoomRatingDialog extends DialogFragment{
             }
         });
 
+        image = (ImageView) view.findViewById(R.id.rating_image_dialog);
+        image.setImageResource(R.mipmap.emoji_10);
+
         bar = (SeekBar) view.findViewById(R.id.seekBar_rate_dialog);
+        bar.setProgress(50);
         bar.setOnTouchListener(new View.OnTouchListener() {
             @Override
 
             public boolean onTouch(View v, MotionEvent event) {
 
-                setSmileymage(bar.getProgress());
-
+                Utils.setEmoji(image, bar.getProgress());
                 return false;
             }});
 
@@ -83,17 +87,10 @@ public class StudyRoomRatingDialog extends DialogFragment{
                 Log.i("Rate", bar.getProgress()+"");
 
                 FirebaseUser user = Firebase.getInstance().getUser();
-                Firebase.getInstance().rateStudyRoom(user.getUid(), room.getId(), bar.getProgress());
-
-
-
+                Firebase.getInstance().rateStudyRoom(user.getUid(), getArguments().getString("id"), bar.getProgress());
+                dialog.dismiss();
             }
         });
-
-        image = (ImageView) view.findViewById(R.id.rating_image_dialog);
-
-
-
 
 
         return view;
@@ -113,39 +110,18 @@ public class StudyRoomRatingDialog extends DialogFragment{
 
     }
 
-    private void setSmileymage(int index) {
-
-        if(index != lastIndex) {
 
 
-            if(index < 10) {
-                image.setImageResource(R.drawable.ic_s1);
-            } else if (index >= 10 && index < 20) {
-                image.setImageResource(R.drawable.ic_s2);
-            } else if (index >= 20 && index < 30) {
-                image.setImageResource(R.drawable.ic_s3);
-            }else if (index >= 30 && index < 40) {
-                image.setImageResource(R.drawable.ic_s4);
-            }else if (index >= 40 && index < 50) {
-                image.setImageResource(R.drawable.ic_s5);
-            }else if (index >= 50 && index < 60) {
-                image.setImageResource(R.drawable.ic_s6);
-            }else if (index >= 60 && index < 70) {
-                image.setImageResource(R.drawable.ic_s7);
-            }else if (index >= 70 && index < 101) {
-                image.setImageResource(R.drawable.ic_s8);
-            }
 
-            lastIndex = index;
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        Dialog dialog = getDialog();
+        if (dialog != null) {
+            dialog.getWindow()
+                    .setLayout((int) (getScreenWidth(getActivity()) * .9), ViewGroup.LayoutParams.WRAP_CONTENT);
         }
-
-
-
     }
-
-
-
 
 
 }
