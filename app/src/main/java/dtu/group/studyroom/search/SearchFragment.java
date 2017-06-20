@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -54,6 +55,8 @@ public class SearchFragment extends Fragment implements Main.StudyRoomListener {
     private ListView listView;
     private SearchAdapter searchAdapter;
 
+    private Location location;
+
     public SearchFragment() {
         // Required empty public constructor
     }
@@ -100,6 +103,7 @@ public class SearchFragment extends Fragment implements Main.StudyRoomListener {
         expandedSet = new ConstraintSet();
         expandedSet.connect(R.id.facilitiesMenu,ConstraintSet.BOTTOM,R.id.searchContainer, ConstraintSet.BOTTOM,0);
 
+        //((Main) getActivity()).setF_location((Location) getArguments().getParcelable("location"));
 
         Drawable imgCity = getContext().getDrawable(R.drawable.ic_location_city_black_24px);
         imgCity.setBounds( 0, 0, 35, 35 );
@@ -174,6 +178,11 @@ public class SearchFragment extends Fragment implements Main.StudyRoomListener {
 
         return fragmentView;
 
+    }
+
+
+    public Location getLocation() {
+        return location;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

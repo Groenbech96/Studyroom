@@ -7,9 +7,8 @@
     <ImageView
         android:id="@+id/rating_image_dialog"
         android:layout_width="match_parent"
-        android:layout_height="140dp"
-        android:layout_marginTop="24dp"
-        app:srcCompat="@drawable/ic_s1" />
+        android:layout_height="100dp"
+        android:layout_marginTop="24dp" />
 
     <TextView
         android:id="@+id/textView4"

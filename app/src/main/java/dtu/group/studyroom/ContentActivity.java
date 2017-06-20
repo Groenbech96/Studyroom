@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -43,6 +44,7 @@ import dtu.group.studyroom.firebase.Firebase;
 import dtu.group.studyroom.utils.Utils;
 
 import static dtu.group.studyroom.utils.Utils.LOG_GOOGLE_MAP_API;
+import static dtu.group.studyroom.utils.Utils.setEmoji;
 
 
 /**
@@ -53,8 +55,8 @@ public class ContentActivity extends AppCompatActivity implements OnMapReadyCall
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
-    private TextView areaName, address, checkBox, distText;
-    private ImageView topImage;
+    private TextView areaName, address, checkBox, distText, content_rating_new;
+    private ImageView topImage, content_rating;
     private Bundle allData;
     private RatingBar rateing;
     private StudyRoom studyRoom;
@@ -128,12 +130,30 @@ public class ContentActivity extends AppCompatActivity implements OnMapReadyCall
 
 
 
-    public void setPage(StudyRoom studyroom){
+    public void setPage(final StudyRoom studyroom){
         areaName = (TextView)findViewById(R.id.content_areaName);
         areaName.setText(studyroom.getName());
 
         address = (TextView)findViewById(R.id.content_address);
         address.setText(studyroom.getAddress());
+
+        content_rating_new = (TextView) findViewById(R.id.content_rating_new);
+        content_rating_new.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StudyRoomRatingDialog dialog = new StudyRoomRatingDialog();
+
+                Bundle b = new Bundle();
+                b.putString("id", studyroom.getId());
+
+                dialog.setArguments(b);
+                dialog.show(getFragmentManager(), "DIS");
+            }
+        });
+
+        content_rating = (ImageView) findViewById(R.id.content_rating);
+        setEmoji(content_rating, studyroom.getAverageRating());
+
 
         StudyRoomFacilities facilities = studyroom.getFacilities();
 

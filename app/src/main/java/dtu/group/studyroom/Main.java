@@ -5,6 +5,7 @@ import android.app.ActivityOptions;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -56,6 +57,16 @@ public class Main extends AppCompatActivity implements
 
     private SearchFragment searchFragment;
     private MapsFragment mapFragment;
+
+    public Location getF_location() {
+        return F_location;
+    }
+
+    public void setF_location(Location f_location) {
+        F_location = f_location;
+    }
+
+    private Location F_location;
 
     private HashMap<String, StudyRoom> studyrooms = new HashMap<>();
 
