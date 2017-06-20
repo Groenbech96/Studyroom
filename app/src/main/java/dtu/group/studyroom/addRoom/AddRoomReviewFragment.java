@@ -1,5 +1,6 @@
 package dtu.group.studyroom.addRoom;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -14,6 +15,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -70,8 +72,9 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
     private ImageView view;
     private TextView address, areaName, title, facilityTitle, mapTitle, currentDistance;
     private TextView wifi, power, coffee, group, toilet, quiet;
+    private ImageView emoji;
     private File img;
-    private Button submit, cancel;
+    private FloatingActionButton submit, cancel;
 
     private Typeface opensansFont;
 
@@ -155,8 +158,31 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
         facilityTitle = (TextView) fragmentView.findViewById(R.id.review_facilityTitle);
         facilityTitle.setTypeface(opensansFont);
 
+        emoji = (ImageView) fragmentView.findViewById(R.id.add_review_rating);
+        Utils.setEmoji(emoji, data.getInt("rating"));
 
         foundLatLng = data.getParcelable("latlng");
+
+        submit = (FloatingActionButton) fragmentView.findViewById(R.id.review_submit);
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                submit.setClickable(false);
+                cancel.setClickable(false);
+                saveReview();
+            }
+        });
+
+        cancel = (FloatingActionButton) fragmentView.findViewById(R.id.review_cancel);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cancelReview();
+            }
+        });
+
+
 
 
         /**
@@ -238,6 +264,7 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
     }
 
     private void saveReview() {
+
 
         StudyRoomFacilities facilites = new StudyRoomFacilities(
                 data.getBoolean("wifi"),

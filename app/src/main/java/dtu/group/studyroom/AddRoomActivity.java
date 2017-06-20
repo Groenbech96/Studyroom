@@ -69,7 +69,7 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
         transaction.add(R.id.add_layout,page1, Utils.ADDROOM_NAME_FRAGMENT_TAG).commit();
 
         Firebase.getInstance().logInAnonymously(this);
-        mProgress = new ProgressDialog(this);
+
     }
     @Override
     public void onFragmentInteraction(Uri uri) {
@@ -98,13 +98,13 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
 
 
     public void saveStudyRoom(StudyRoom studyRoom, int rating) {
-        mProgress.setMessage("Uploading studyroom..");
-        mProgress.show();
+       // mProgress = new ProgressDialog(this);
+       // mProgress.setMessage("Uploading studyroom..");
+       // mProgress.show();
 
 
         FirebaseUser user = Firebase.getInstance().getUser();
         Firebase.getInstance().uploadStudyRoom(studyRoom, rating, mPhotoPath, user.getUid());
-        mProgress.dismiss();
 
         onBackPressed();
 

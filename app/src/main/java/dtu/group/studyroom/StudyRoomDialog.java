@@ -113,8 +113,6 @@ public class StudyRoomDialog extends DialogFragment {
         // Build the dialog and set up the button click handlers
         //AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-
-
         dialog = super.onCreateDialog(savedInstanceState);
 
         return dialog;
