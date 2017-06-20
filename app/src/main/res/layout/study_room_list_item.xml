@@ -25,10 +25,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
+        android:layout_marginLeft="0dp"
         android:drawableLeft="@drawable/ic_location_on_grey_24dp"
         android:drawablePadding="5dp"
         android:gravity="left"
-        android:paddingLeft="2dp"
+        android:paddingLeft="0dp"
         android:scaleX="0.52"
         android:scaleY="0.52"
         android:text="TextView"
@@ -36,10 +37,9 @@
         android:textColor="#4D4D4D"
         android:textSize="26sp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchItemName"
-        app:layout_constraintVertical_bias="0.0"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <ImageView
         android:id="@+id/searchItemRateImage"

@@ -367,6 +367,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                     new LatLng(mLastKnownLocation.getLatitude(),
                             mLastKnownLocation.getLongitude()), DEFAULT_ZOOM));
+            ((Main)getActivity()).setF_location(mLastKnownLocation);
         } else {
             Log.d(GOOGLE_MAPS_TAG, "Current location is null. Using defaults.");
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, DEFAULT_ZOOM));
@@ -690,13 +691,15 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
             //fragmentTransaction.setCustomAnimations(R.anim.fadein, R.anim.stayinplace);
 
             SearchFragment searchFragment = SearchFragment.newInstance();
-
+            Bundle b = getArguments();
+            //b.putParcelable("location", mLastKnownLocation);
+            //searchFragment.setArguments(b);
 
             fragmentTransaction.replace(R.id.contentLayer, searchFragment, Utils.SEARCH_FRAGMENT_TAG);
             fragmentTransaction.addToBackStack(null);
 
-             MapsFragment.this.pauseMapServices();
-             fragmentTransaction.commit();
+            MapsFragment.this.pauseMapServices();
+            fragmentTransaction.commit();
         }
 
         @Override

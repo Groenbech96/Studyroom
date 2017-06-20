@@ -2,6 +2,7 @@ package dtu.group.studyroom.search;
 
 import android.app.Activity;
 import android.content.Context;
+import android.location.Location;
 import android.media.Image;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -108,7 +109,19 @@ public class SearchAdapter extends BaseAdapter implements Filterable{
         name.setText(studyRoom.getName());
 
         final TextView address = viewHolder.address;
-        address.setText(studyRoom.getAddress());
+        if(((Main)activity).getF_location() != null) {
+
+            Location location = new Location("");
+            location.setLongitude(studyRoom.getCoordinates().longitude);
+            location.setLatitude(studyRoom.getCoordinates().latitude);
+            float distanceInMeters = ((Main)activity).getF_location().distanceTo(location);
+            float km = distanceInMeters / 1000;
+
+            address.setText(String.format(java.util.Locale.US,"%.1f", km) + " km from you" );
+
+
+        } else
+            address.setText(studyRoom.getAddress());
 
         final ImageView view = viewHolder.imageView;
         //view.setImageBitmap(studyRoom.getAverageRating()+"");
