@@ -91,6 +91,22 @@ public class SearchFragment extends Fragment implements Main.StudyRoomListener {
         searchBar = (EditText) fragmentView.findViewById(R.id.searchBar);
         searchBar.setSoundEffectsEnabled(false);
 
+        /**
+         * Auto show keyboard and focus on text field
+         */
+        searchBar.requestFocus();
+        searchBar.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                InputMethodManager keyboard = (InputMethodManager)
+                        getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                keyboard.showSoftInput(searchBar, 0);
+            }
+        }, 200); //use 300 to make it run when coming back from lock screen
+
+
         citySearch = (EditText) fragmentView.findViewById(R.id.citySearch);
         citySearch.setSoundEffectsEnabled(false);
 
