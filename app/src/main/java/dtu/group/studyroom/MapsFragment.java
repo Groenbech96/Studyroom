@@ -282,7 +282,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
                             Bundle b = new Bundle();
 
-                            Firebase.getInstance().getStudyRoomAverageRating(room.getId());
+                            // Firebase.getInstance().getStudyRoomAverageRating(room.getId());
 
                             b.putString("id", room.getId());
 

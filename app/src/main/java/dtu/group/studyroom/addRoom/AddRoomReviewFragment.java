@@ -271,10 +271,9 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
                 data.getString("postal"),
                 data.getString("city"),
                 (LatLng) data.getParcelable("latlng"),
-                facilites,
-                data.getInt("rating"));
+                facilites);
 
-        ((AddRoomActivity)getActivity()).saveStudyRoom(studyRoom);
+        ((AddRoomActivity)getActivity()).saveStudyRoom(studyRoom, data.getInt("rating"));
 
     }
 

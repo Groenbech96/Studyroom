@@ -110,7 +110,7 @@ public class SearchAdapter extends BaseAdapter implements Filterable{
         address.setText(studyRoom.getAddress());
 
         final ImageView view = viewHolder.imageView;
-        setSmileymage((int) studyRoom.getAverageRating(), view);
+        setSmileymage(studyRoom.getAverageRating(), view);
 
 
         return convertView;

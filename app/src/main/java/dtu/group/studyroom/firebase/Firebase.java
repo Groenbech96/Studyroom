@@ -256,15 +256,6 @@ public class Firebase {
                 case "city" :
                     studyRoom.setCity(attributeSnapshot.getValue().toString());
                     break;
-                case "rating" : // Depricated
-                    try{
-                        studyRoom.setRating((int)attributeSnapshot.getValue());
-                    } catch(ClassCastException e){
-                        Long l = (long) attributeSnapshot.getValue();
-                        int d = l.intValue();
-                        studyRoom.setRating(d);
-                    }
-                    break;
                 case "facilities" :
                     StudyRoomFacilities facilities = createFacilitiesFromSnapshot(attributeSnapshot);
                     studyRoom.setFacilities(facilities);
@@ -342,7 +333,7 @@ public class Firebase {
 
     }
 
-    public void uploadStudyRoom(StudyRoom studyRoom, String photoPath, final String uid) {
+    public void uploadStudyRoom(StudyRoom studyRoom, final int rating, String photoPath, final String uid) {
 
         /**
          * Extract fields from studyroom model
@@ -358,7 +349,6 @@ public class Firebase {
         final int groups = studyRoom.getFacilities().getGroups();
         final int power = studyRoom.getFacilities().getPower();
         final int toilet = studyRoom.getFacilities().getToilet();
-        final double rating = studyRoom.getRating();
         final LatLng coordinates = studyRoom.getCoordinates();
 
 

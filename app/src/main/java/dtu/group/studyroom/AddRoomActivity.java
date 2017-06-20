@@ -94,139 +94,16 @@ public class AddRoomActivity extends AppCompatActivity implements AddRoomNameFra
         return image;
     }
 
-//    private String decodeFile(String path) {
-//        String strMyImagePath = null;
-//        Bitmap scaledBitmap = null;
-//
-//        try {
-//            // Part 1: Decode image
-//            Bitmap unscaledBitmap = ScalingUtilities.decodeFile(path, 200, 200, ScalingUtilities.ScalingLogic.FIT);
-//
-//            if (!(unscaledBitmap.getWidth() <= 800 && unscaledBitmap.getHeight() <= 800)) {
-//                // Part 2: Scale image
-//                scaledBitmap = ScalingUtilities.createScaledBitmap(unscaledBitmap, 200, 200, ScalingUtilities.ScalingLogic.FIT);
-//            } else {
-//                unscaledBitmap.recycle();
-//                return path;
-//            }
-//
-//            // Store to tmp file
-//
-//            String extr = Environment.getExternalStorageDirectory().toString();
-//            File mFolder = new File(extr + "/myTmpDir");
-//            if (!mFolder.exists()) {
-//                mFolder.mkdir();
-//            }
-//
-//            String s = "tmp.png";
-//
-//            File f = new File(mFolder.getAbsolutePath(), s);
-//
-//            strMyImagePath = f.getAbsolutePath();
-//            FileOutputStream fos = null;
-//            try {
-//                fos = new FileOutputStream(f);
-//                scaledBitmap.compress(Bitmap.CompressFormat.PNG, 70, fos);
-//                fos.flush();
-//                fos.close();
-//            } catch (FileNotFoundException e) {
-//
-//                e.printStackTrace();
-//            } catch (Exception e) {
-//
-//                e.printStackTrace();
-//            }
-//
-//            scaledBitmap.recycle();
-//        } catch (Throwable e) {
-//        }
-//
-//        if (strMyImagePath == null) {
-//            return path;
-//        }
-//        return strMyImagePath;
-//
-//    }
 
 
-    public void saveStudyRoom(StudyRoom studyRoom) {
+
+    public void saveStudyRoom(StudyRoom studyRoom, int rating) {
         mProgress.setMessage("Uploading studyroom..");
         mProgress.show();
-//<<<<<<< HEAD
-
-//        /**
-//         * Extract fields from studyroom model
-//         */
-//        final String name = studyRoom.name;
-//        final String address = studyRoom.address;
-//        final String city = studyRoom.city;
-//        final String postal = studyRoom.postal;
-//        final int wifi = studyRoom.facilites.wifi;
-//        final int coffee = studyRoom.facilites.coffee;
-//        final int food = studyRoom.facilites.food;
-//        final int groups = studyRoom.facilites.groups;
-//        final int power = studyRoom.facilites.power;
-//        final int toilet = studyRoom.facilites.toilet;
-//        final float rating = studyRoom.rating;
-//
-//        /**
-//         * Generate unique id for the image
-//         */
-//        String uuid = UUID.randomUUID().toString();
-//
-//        /**
-//         * Set file path with the unique ID
-//         */
-//        StorageReference filepath = mStorage.child("studyroomImages").child(uuid);
-//
-//        /**
-//         * Compress the bitmap into jpeg format
-//         */
-//
-//        Uri file = Uri.fromFile(new File(mPhotoPath));
-//
-//        /**
-//         * Upload the file to the the firebase storage
-//         */
-//        filepath.putFile(file).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//            @Override
-//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//
-//                /**
-//                 * Get the reference to the image
-//                 */
-//                Uri downloadUrl = taskSnapshot.getDownloadUrl();
-//
-//
-//                /**
-//                 * Save the study room under a unique ID
-//                 */
-//                DatabaseReference usersRef = mDatabase.child("studyrooms");
-//
-//                String key = usersRef.push().getKey();
-//
-//                usersRef.child(key).child("name").setValue(name);
-//                usersRef.child(key).child("address").setValue(address);
-//                usersRef.child(key).child("city").setValue(city);
-//                usersRef.child(key).child("postal").setValue(postal);
-//                usersRef.child(key).child("facilites").child("wifi").setValue(wifi);
-//                usersRef.child(key).child("facilites").child("coffee").setValue(coffee);
-//                usersRef.child(key).child("facilites").child("food").setValue(food);
-//                usersRef.child(key).child("facilites").child("groups").setValue(groups);
-//                usersRef.child(key).child("facilites").child("power").setValue(power);
-//                usersRef.child(key).child("facilites").child("toilet").setValue(toilet);
-//                usersRef.child(key).child("rating").setValue(rating);
-//                usersRef.child(key).child("image").setValue(downloadUrl.toString());
-//
-//                mProgress.dismiss();
-//
-//                onBackPressed();
-//            }
-//        });
 
 
         FirebaseUser user = Firebase.getInstance().getUser();
-        Firebase.getInstance().uploadStudyRoom(studyRoom, mPhotoPath, user.getUid());
+        Firebase.getInstance().uploadStudyRoom(studyRoom, rating, mPhotoPath, user.getUid());
         mProgress.dismiss();
 
         onBackPressed();
