@@ -177,38 +177,9 @@ public class Firebase {
             tempID = studyRoom.getId();
 
 
-            getStudyRoomAverageRating(tempID);
+           //  getStudyRoomAverageRating(tempID);
 
-            /*
-            getStudyRoomAverageRating(tempID, new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    if(dataSnapshot.hasChild(tempID)) {
-
-                        DataSnapshot data = dataSnapshot.child(tempID);
-
-                        for (DataSnapshot attributeSnapshot : data.getChildren()) {
-
-                            rating += ((Long) attributeSnapshot.child("rating").getValue()).intValue();
-                            ratingCount++;
-                        }
-                        Log.i("RATINGS", "count: " + ratingCount + " and rating: " + rating);
-                        double d = rating / ratingCount;
-                        tempRating = (int) Math.ceil(d);
-
-                    }
-
-                }
-
-                @Override
-                public void onCancelled(DatabaseError databaseError) {
-
-                }
-            });
-
-            */
-            //studyRoom.setAverageRating(tempRating);
             localStudyRooms.put(studyRoomSnapshot.getKey(),studyRoom);
 
         }
@@ -234,7 +205,6 @@ public class Firebase {
             }
         }
         return localStudyRooms;
-        //((Main) a).setStudyrooms(localStudyRooms);
 
     }
 
@@ -475,8 +445,7 @@ public class Firebase {
         mRef.addListenerForSingleValueEvent(listener);
 
     }
-
-
+    
 
     private Bitmap downscaleBitmapUsingDensities(final int sampleSize, final InputStream stream)
     {
