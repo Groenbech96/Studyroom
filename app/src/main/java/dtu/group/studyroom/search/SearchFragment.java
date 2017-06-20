@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -17,6 +18,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,6 +33,8 @@ import dtu.group.studyroom.Main;
 import dtu.group.studyroom.R;
 import dtu.group.studyroom.addRoom.StudyRoom;
 import dtu.group.studyroom.firebase.Firebase;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 
 /**
@@ -50,6 +54,8 @@ public class SearchFragment extends Fragment implements Main.StudyRoomListener {
     private boolean facilityMenuVisible = true;
     private ListView listView;
     private SearchAdapter searchAdapter;
+
+    private Location location;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -85,6 +91,22 @@ public class SearchFragment extends Fragment implements Main.StudyRoomListener {
         searchBar = (EditText) fragmentView.findViewById(R.id.searchBar);
         searchBar.setSoundEffectsEnabled(false);
 
+        /**
+         * Auto show keyboard and focus on text field
+         */
+        searchBar.requestFocus();
+        searchBar.postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                // TODO Auto-generated method stub
+                InputMethodManager keyboard = (InputMethodManager)
+                        getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                keyboard.showSoftInput(searchBar, 0);
+            }
+        }, 200); //use 300 to make it run when coming back from lock screen
+
+
         citySearch = (EditText) fragmentView.findViewById(R.id.citySearch);
         citySearch.setSoundEffectsEnabled(false);
 
@@ -97,6 +119,7 @@ public class SearchFragment extends Fragment implements Main.StudyRoomListener {
         expandedSet = new ConstraintSet();
         expandedSet.connect(R.id.facilitiesMenu,ConstraintSet.BOTTOM,R.id.searchContainer, ConstraintSet.BOTTOM,0);
 
+        //((Main) getActivity()).setF_location((Location) getArguments().getParcelable("location"));
 
         Drawable imgCity = getContext().getDrawable(R.drawable.ic_location_city_black_24px);
         imgCity.setBounds( 0, 0, 35, 35 );
@@ -142,20 +165,28 @@ public class SearchFragment extends Fragment implements Main.StudyRoomListener {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                View selectedView = ((View) view.findViewById(R.id.searchItemWrapper));
+            /**
+             * Dismiss keyboard
+             */
 
-                SearchAdapter.ViewHolder viewHolder = (SearchAdapter.ViewHolder) selectedView.getTag();
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+            if(imm.isAcceptingText()) { // verify if the soft keyboard is open
+                imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+            }
+            View selectedView = ((View) view.findViewById(R.id.searchItemWrapper));
 
-                String studyRoomId = viewHolder.id;
+            SearchAdapter.ViewHolder viewHolder = (SearchAdapter.ViewHolder) selectedView.getTag();
 
-                StudyRoom studyRoom = ((Main) SearchFragment.this.getActivity()).getStudyrooms().get(studyRoomId);
+            String studyRoomId = viewHolder.id;
 
-                Intent intent = new Intent(SearchFragment.this.getActivity(), ContentActivity.class);
+            StudyRoom studyRoom = ((Main) SearchFragment.this.getActivity()).getStudyrooms().get(studyRoomId);
 
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("studyroom", studyRoom);
-                intent.putExtras(bundle);
-                startActivity(intent);
+            Intent intent = new Intent(SearchFragment.this.getActivity(), ContentActivity.class);
+
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("studyroom", studyRoom);
+            intent.putExtras(bundle);
+            startActivity(intent);
 
 
             }
@@ -163,6 +194,11 @@ public class SearchFragment extends Fragment implements Main.StudyRoomListener {
 
         return fragmentView;
 
+    }
+
+
+    public Location getLocation() {
+        return location;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -189,7 +225,10 @@ public class SearchFragment extends Fragment implements Main.StudyRoomListener {
 
     }
 
-
+    @Override
+    public void update(int i, String id) {
+        // searchAdapter.updateData(i, id);
+    }
 
 
     View.OnClickListener facilityClickListener = new View.OnClickListener() {

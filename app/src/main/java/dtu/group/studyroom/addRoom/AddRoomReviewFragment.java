@@ -1,5 +1,6 @@
 package dtu.group.studyroom.addRoom;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -14,6 +15,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -70,8 +72,9 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
     private ImageView view;
     private TextView address, areaName, title, facilityTitle, mapTitle, currentDistance;
     private TextView wifi, power, coffee, group, toilet, quiet;
+    private ImageView emoji;
     private File img;
-    private Button submit, cancel;
+    private FloatingActionButton submit, cancel;
 
     private Typeface opensansFont;
 
@@ -155,18 +158,23 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
         facilityTitle = (TextView) fragmentView.findViewById(R.id.review_facilityTitle);
         facilityTitle.setTypeface(opensansFont);
 
-        mapTitle = (TextView) fragmentView.findViewById(R.id.review_MapTitle);
-        mapTitle.setTypeface(opensansFont);
+        emoji = (ImageView) fragmentView.findViewById(R.id.add_review_rating);
+        Utils.setEmoji(emoji, data.getInt("rating"));
 
-        submit = (Button) fragmentView.findViewById(R.id.review_submit);
+        foundLatLng = data.getParcelable("latlng");
+
+        submit = (FloatingActionButton) fragmentView.findViewById(R.id.review_submit);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                submit.setClickable(false);
+                cancel.setClickable(false);
                 saveReview();
             }
         });
 
-        cancel = (Button) fragmentView.findViewById(R.id.review_cancel);
+        cancel = (FloatingActionButton) fragmentView.findViewById(R.id.review_cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -174,7 +182,7 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
             }
         });
 
-        foundLatLng = data.getParcelable("latlng");
+
 
 
         /**
@@ -203,22 +211,22 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
         quiet.setTypeface(opensansFont);
 
         if(data.getBoolean("wifi"))
-            wifi.setCompoundDrawables(getDraw(R.drawable.ic_wifi_black_24px),null,getDraw(R.drawable.ic_green_accept), null);
+            wifi.setCompoundDrawables(getDraw(R.drawable.ic_wifi_black_small),null,getDraw(R.drawable.ic_green_accept), null);
 
         if(data.getBoolean("power"))
-            power.setCompoundDrawables(getDraw(R.drawable.ic_power_black_24px),null,getDraw(R.drawable.ic_green_accept), null);
+            power.setCompoundDrawables(getDraw(R.drawable.ic_power_black_small),null,getDraw(R.drawable.ic_green_accept), null);
 
         if(data.getBoolean("coffee"))
-            coffee.setCompoundDrawables(getDraw(R.drawable.ic_local_cafe_black_24px),null,getDraw(R.drawable.ic_green_accept), null);
+            coffee.setCompoundDrawables(getDraw(R.drawable.ic_local_cafe_black_small),null,getDraw(R.drawable.ic_green_accept), null);
 
         if(data.getBoolean("group"))
-            group.setCompoundDrawables(getDraw(R.drawable.ic_group_black_24px),null,getDraw(R.drawable.ic_green_accept), null);
+            group.setCompoundDrawables(getDraw(R.drawable.ic_group_black_small),null,getDraw(R.drawable.ic_green_accept), null);
 
         if(data.getBoolean("toilet"))
-            toilet.setCompoundDrawables(getDraw(R.drawable.ic_wc_black_24px),null,getDraw(R.drawable.ic_green_accept), null);
+            toilet.setCompoundDrawables(getDraw(R.drawable.ic_wc_black_small),null,getDraw(R.drawable.ic_green_accept), null);
 
         if(data.getBoolean("quiet"))
-            quiet.setCompoundDrawables(getDraw(R.drawable.ic_restaurant_black_24px),null,getDraw(R.drawable.ic_green_accept), null);
+            quiet.setCompoundDrawables(getDraw(R.drawable.ic_restaurant_black_small),null,getDraw(R.drawable.ic_green_accept), null);
 
 
 
@@ -257,6 +265,7 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
 
     private void saveReview() {
 
+
         StudyRoomFacilities facilites = new StudyRoomFacilities(
                 data.getBoolean("wifi"),
                 data.getBoolean("toilet"),
@@ -271,10 +280,9 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
                 data.getString("postal"),
                 data.getString("city"),
                 (LatLng) data.getParcelable("latlng"),
-                facilites,
-                data.getInt("rating"));
+                facilites);
 
-        ((AddRoomActivity)getActivity()).saveStudyRoom(studyRoom);
+        ((AddRoomActivity)getActivity()).saveStudyRoom(studyRoom, data.getInt("rating"));
 
     }
 
@@ -373,7 +381,7 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
         // Setting the position for the marker
         markerOptions.position(foundLatLng);
         Bitmap bm = BitmapFactory.decodeResource(getResources(), R.mipmap.studyroom_mapmarker);
-        Bitmap map = Utils.scaleDown(bm, 80, true);
+        Bitmap map = Utils.scaleDown(bm, getActivity().getResources().getInteger(R.integer.markerSize), true);
         BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(map);
 
         markerOptions.icon(icon);

@@ -110,20 +110,19 @@ public class AddRoomRatingFragment extends Fragment {
         opensansFont = Typeface.createFromAsset(getActivity().getAssets(), "OpenSans-Regular.ttf");
 
         view = (ImageView) fragmentView.findViewById(R.id.imageView);
-        view.setBackgroundResource(R.drawable.rating);
         anim = (AnimationDrawable) view.getBackground();
 
         title = (TextView) fragmentView.findViewById(R.id.add_room_rating_title);
         title.setTypeface(opensansFont);
 
         rating = (SeekBar) fragmentView.findViewById(R.id.add_room_seekBar);
-
+        rating.setProgress(50);
         rating.setOnTouchListener(new View.OnTouchListener() {
             @Override
 
             public boolean onTouch(View v, MotionEvent event) {
 
-                setSmileymage(rating.getProgress());
+                Utils.setEmoji(view, rating.getProgress());
                 Log.i("RATE", rating.getProgress()+"");
 
                 return false;
@@ -151,7 +150,7 @@ public class AddRoomRatingFragment extends Fragment {
         if(getArguments() != null)
             if(getArguments().containsKey("rating")) {
                 rating.setProgress(getArguments().getInt("rating"));
-                setSmileymage(rating.getProgress());
+                Utils.setEmoji(view, rating.getProgress());
             }
 
 
@@ -160,37 +159,6 @@ public class AddRoomRatingFragment extends Fragment {
 
     }
 
-    private void setSmileymage(int index) {
-
-        if(index != lastIndex) {
-
-
-            if(index < 10) {
-                view.setImageResource(R.drawable.ic_s1);
-            } else if (index >= 10 && index < 20) {
-                view.setImageResource(R.drawable.ic_s2);
-            } else if (index >= 20 && index < 30) {
-                view.setImageResource(R.drawable.ic_s3);
-            }else if (index >= 30 && index < 40) {
-                view.setImageResource(R.drawable.ic_s4);
-            }else if (index >= 40 && index < 50) {
-                view.setImageResource(R.drawable.ic_s5);
-            }else if (index >= 50 && index < 60) {
-                view.setImageResource(R.drawable.ic_s6);
-            }else if (index >= 60 && index < 70) {
-                view.setImageResource(R.drawable.ic_s7);
-            }else if (index >= 70 && index < 101) {
-                view.setImageResource(R.drawable.ic_s8);
-            }
-
-
-            lastIndex = index;
-
-        }
-
-
-
-    }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {

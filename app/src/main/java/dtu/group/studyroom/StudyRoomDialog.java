@@ -1,11 +1,15 @@
 package dtu.group.studyroom;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
+import android.graphics.Point;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,11 +48,10 @@ public class StudyRoomDialog extends DialogFragment {
     private String id;
     private StudyRoom room;
     private View view;
+    private ProgressDialog mProgress;
 
 
     public StudyRoomDialog() {
-
-
 
     }
 
@@ -61,18 +64,16 @@ public class StudyRoomDialog extends DialogFragment {
         // Inflate the layout to use as dialog or embedded fragment
         view = inflater.inflate(R.layout.dialog_studyroom_preview, container, false);
 
-
         room = ((Main)getActivity()).getStudyrooms().get(getArguments().getString("id"));
+
 
         Firebase.getInstance().downloadImage(room.getId(), new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
-                Log.i("SUCCESS", "DOWNLOAD IMAGE");
 
                 ((RelativeLayout) view.findViewById(R.id.loadingPanel)).setVisibility(View.GONE);
                 ((ImageView) view.findViewById(R.id.dialog_room_picture)).setVisibility(View.VISIBLE);
                 ((ImageView) view.findViewById(R.id.dialog_room_picture)).setImageBitmap(BitmapFactory.decodeByteArray(bytes, 0, bytes.length));
-
 
             }
         });
@@ -112,13 +113,26 @@ public class StudyRoomDialog extends DialogFragment {
         // Build the dialog and set up the button click handlers
         //AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-
-
         dialog = super.onCreateDialog(savedInstanceState);
-
 
         return dialog;
 
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        Dialog dialog = getDialog();
+        if (dialog != null) {
+            dialog.getWindow()
+                    .setLayout((int) (getScreenWidth(getActivity()) * .9), ViewGroup.LayoutParams.WRAP_CONTENT);
+        }
+    }
+
+    public static int getScreenWidth(Activity activity) {
+        Point size = new Point();
+        activity.getWindowManager().getDefaultDisplay().getSize(size);
+        return size.x;
     }
 
 

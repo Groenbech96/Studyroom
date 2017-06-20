@@ -19,7 +19,7 @@ public class StudyRoom implements Parcelable {
     private String postal;
     private StudyRoomFacilities facilities;
 
-    private double rating;
+    private int rating;
 
 
     public LatLng coordinates;
@@ -29,8 +29,7 @@ public class StudyRoom implements Parcelable {
 
     }
 
-    public StudyRoom(String name, String address, String postal, String city, LatLng coordinates, StudyRoomFacilities facilites, float rating) {
-        this.rating = rating;
+    public StudyRoom(String name, String address, String postal, String city, LatLng coordinates, StudyRoomFacilities facilites) {
         this.name = name;
         this.address = address;
         this.facilities = facilites;
@@ -52,10 +51,6 @@ public class StudyRoom implements Parcelable {
         this.facilities = facilites;
     }
 
-    public void setRating(double rating) {
-        this.rating = rating;
-    }
-
     public String getName() {
         return name;
     }
@@ -66,10 +61,6 @@ public class StudyRoom implements Parcelable {
 
     public StudyRoomFacilities getFacilities() {
         return facilities;
-    }
-
-    public double getRating() {
-        return rating;
     }
 
 
@@ -105,6 +96,8 @@ public class StudyRoom implements Parcelable {
         this.coordinates = coordinates;
     }
 
+    public void setAverageRating(int rating) { this.rating = rating; }
+    public int getAverageRating() { return this.rating; }
 
     protected StudyRoom(Parcel in) {
         id = in.readString();
@@ -113,7 +106,7 @@ public class StudyRoom implements Parcelable {
         city = in.readString();
         postal = in.readString();
         facilities = (StudyRoomFacilities) in.readValue(StudyRoomFacilities.class.getClassLoader());
-        rating = in.readDouble();
+        rating = in.readInt();
         coordinates = (LatLng) in.readValue(LatLng.class.getClassLoader());
     }
 
@@ -130,7 +123,7 @@ public class StudyRoom implements Parcelable {
         dest.writeString(city);
         dest.writeString(postal);
         dest.writeValue(facilities);
-        dest.writeDouble(rating);
+        dest.writeInt(rating);
         dest.writeValue(coordinates);
     }
 

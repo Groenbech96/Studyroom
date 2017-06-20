@@ -16,6 +16,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
@@ -43,6 +44,7 @@ import dtu.group.studyroom.firebase.Firebase;
 import dtu.group.studyroom.utils.Utils;
 
 import static dtu.group.studyroom.utils.Utils.LOG_GOOGLE_MAP_API;
+import static dtu.group.studyroom.utils.Utils.setEmoji;
 
 
 /**
@@ -53,8 +55,8 @@ public class ContentActivity extends AppCompatActivity implements OnMapReadyCall
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
 
-    private TextView areaName, address, checkBox, distText;
-    private ImageView topImage;
+    private TextView areaName, address, checkBox, distText, content_rating_new;
+    private ImageView topImage, content_rating;
     private Bundle allData;
     private RatingBar rateing;
     private StudyRoom studyRoom;
@@ -73,10 +75,8 @@ public class ContentActivity extends AppCompatActivity implements OnMapReadyCall
     private SupportMapFragment mapView;
     private GoogleMap mMap;
     private GoogleApiClient mGoogleApiClient;
-    private CameraPosition mCameraPosition = null;
     // DTU LOCATION
 
-    private LatLng mDefaultLocation = new LatLng(55.785574, 12.521381);
     private Location mLastKnownLocation;
 
     /**
@@ -130,12 +130,30 @@ public class ContentActivity extends AppCompatActivity implements OnMapReadyCall
 
 
 
-    public void setPage(StudyRoom studyroom){
+    public void setPage(final StudyRoom studyroom){
         areaName = (TextView)findViewById(R.id.content_areaName);
         areaName.setText(studyroom.getName());
 
         address = (TextView)findViewById(R.id.content_address);
         address.setText(studyroom.getAddress());
+
+        content_rating_new = (TextView) findViewById(R.id.content_rating_new);
+        content_rating_new.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StudyRoomRatingDialog dialog = new StudyRoomRatingDialog();
+
+                Bundle b = new Bundle();
+                b.putString("id", studyroom.getId());
+
+                dialog.setArguments(b);
+                dialog.show(getFragmentManager(), "DIS");
+            }
+        });
+
+        content_rating = (ImageView) findViewById(R.id.content_rating);
+        setEmoji(content_rating, studyroom.getAverageRating());
+
 
         StudyRoomFacilities facilities = studyroom.getFacilities();
 
@@ -178,6 +196,7 @@ public class ContentActivity extends AppCompatActivity implements OnMapReadyCall
         mProgress.setMessage("Downloading..");
         mProgress.show();
 
+
         Firebase.getInstance().downloadImage(id, new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
@@ -205,15 +224,13 @@ public class ContentActivity extends AppCompatActivity implements OnMapReadyCall
         // Setting the position for the marker
         markerOptions.position(studyRoom.getCoordinates());
         Bitmap bm = BitmapFactory.decodeResource(getResources(), R.mipmap.studyroom_mapmarker);
-        Bitmap map = Utils.scaleDown(bm, 80, true);
+        Bitmap map = Utils.scaleDown(bm, getResources().getInteger(R.integer.markerSize), true);
         BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(map);
 
         markerOptions.icon(icon);
 
         markerOptions.title(studyRoom.getAddress());
         mMap.addMarker(markerOptions);
-
-        //updateLocationUI();
 
 
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(

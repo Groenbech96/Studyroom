@@ -36,6 +36,7 @@ import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,21 +64,24 @@ public class Firebase {
     }
 
 
+    private int ratingCount, rating;
 
     // Interface for async callbacks when data has loaded
-    public  interface StudyroomDataCallbacks {
+    public interface StudyroomDataCallbacks {
         void studyroomDataSuccessCallback(HashMap<String, StudyRoom> result);
-
+        void studyroomDataSuccessCallback(int i, String id);
     }
 
     private StudyroomDataCallbacks listenerMap = null;
-
+    private StudyroomDataCallbacks listenerRating = null;
 
     private StorageReference mStorage = FirebaseStorage.getInstance().getReference();
-    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("studyrooms");
+    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
-
+    private HashMap<String, StudyRoom> localStudyRooms;
+    private String tempID;
+    private int tempRating;
 
 
     private Firebase () {
@@ -85,10 +89,6 @@ public class Firebase {
          * Set up listener
          */
         mDatabase.addValueEventListener(changeListener);
-    }
-
-    public void fetchData() {
-
     }
 
     public static void Restart() {
@@ -99,6 +99,9 @@ public class Firebase {
     public void setDataListener(StudyroomDataCallbacks listener) {
         this.listenerMap = listener;
     }
+    public void setRatingListener(StudyroomDataCallbacks listener) {
+        this.listenerRating = listener;
+    }
 
 
     private void success(HashMap<String, StudyRoom> result) {
@@ -107,16 +110,20 @@ public class Firebase {
         }
     }
 
+    private void success(int i, String id) {
+        if(listenerMap != null)
+            listenerMap.studyroomDataSuccessCallback(i, id);
+    }
 
 
     public ValueEventListener changeListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
 
-            HashMap<String, StudyRoom> data = downloadStudyRoom(dataSnapshot);
+            localStudyRooms = downloadStudyRoom(dataSnapshot);
 
             // Send data to the listener
-            success(data);
+            success(localStudyRooms);
 
         }
 
@@ -153,7 +160,6 @@ public class Firebase {
                         // ...
                     }
                 });
-
     }
 
     public HashMap<String, StudyRoom> downloadStudyRoom(DataSnapshot dataSnapshot) {
@@ -162,20 +168,44 @@ public class Firebase {
         //Activity a = mActivityReference.get();
 
 
-        HashMap<String, StudyRoom> localStudyRooms = new HashMap<>();
+        localStudyRooms = new HashMap<>();
 
 
-        for (DataSnapshot studyRoomSnapshot : dataSnapshot.getChildren()) {
-
+        for (DataSnapshot studyRoomSnapshot : dataSnapshot.child("studyrooms").getChildren()) {
             StudyRoom studyRoom = createStudyRoomFromSnapshot(studyRoomSnapshot);
             studyRoom.setId(studyRoomSnapshot.getKey());
+            tempID = studyRoom.getId();
+
+
+           //  getStudyRoomAverageRating(tempID);
+
+
             localStudyRooms.put(studyRoomSnapshot.getKey(),studyRoom);
 
         }
 
+        for (DataSnapshot ratingsSnapshot : dataSnapshot.child("ratings").getChildren()) {
 
-        //((Main) a).setStudyrooms(localStudyRooms);
+            String id = ratingsSnapshot.getKey();
+            StudyRoom room = localStudyRooms.get(id);
+
+            if (room != null) {
+
+                Log.i(id, "Rating set");
+
+                for (DataSnapshot attributeSnapshot : ratingsSnapshot.getChildren()) {
+
+                    rating += ((Long) attributeSnapshot.child("rating").getValue()).intValue();
+                    ratingCount++;
+                }
+                Log.i("RATINGS", "count: " + ratingCount + " and rating: " + rating);
+                double d = rating / ratingCount;
+                localStudyRooms.get(id).setAverageRating((int) Math.ceil(d));
+
+            }
+        }
         return localStudyRooms;
+
     }
 
     private StudyRoom createStudyRoomFromSnapshot(DataSnapshot studyRoomSnapshot) {
@@ -195,15 +225,6 @@ public class Firebase {
                     break;
                 case "city" :
                     studyRoom.setCity(attributeSnapshot.getValue().toString());
-                    break;
-                case "rating" :
-                    try{
-                        studyRoom.setRating((double)attributeSnapshot.getValue());
-                    } catch(ClassCastException e){
-                        Long l = (long) attributeSnapshot.getValue();
-                        double d = l.doubleValue();
-                        studyRoom.setRating(d);
-                    }
                     break;
                 case "facilities" :
                     StudyRoomFacilities facilities = createFacilitiesFromSnapshot(attributeSnapshot);
@@ -282,7 +303,7 @@ public class Firebase {
 
     }
 
-    public void uploadStudyRoom(StudyRoom studyRoom, String photoPath, final String uid) {
+    public void uploadStudyRoom(StudyRoom studyRoom, final int rating, String photoPath, final String uid) {
 
         /**
          * Extract fields from studyroom model
@@ -298,7 +319,6 @@ public class Firebase {
         final int groups = studyRoom.getFacilities().getGroups();
         final int power = studyRoom.getFacilities().getPower();
         final int toilet = studyRoom.getFacilities().getToilet();
-        final double rating = studyRoom.getRating();
         final LatLng coordinates = studyRoom.getCoordinates();
 
 
@@ -315,8 +335,6 @@ public class Firebase {
         /**
          * Compress the bitmap into jpeg format
          */
-
-
         try {
             Bitmap map;
             map = downscaleBitmapUsingDensities(5, new FileInputStream(photoPath));
@@ -344,24 +362,24 @@ public class Firebase {
                  * Save the study room under a unique ID
                  */
 
-                String key = mDatabase.push().getKey();
 
-                mDatabase.child(key).child("name").setValue(name);
-                mDatabase.child(key).child("address").setValue(address);
-                mDatabase.child(key).child("city").setValue(city);
-                mDatabase.child(key).child("postal").setValue(postal);
-                mDatabase.child(key).child("facilities").child("wifi").setValue(wifi);
-                mDatabase.child(key).child("facilities").child("coffee").setValue(coffee);
-                mDatabase.child(key).child("facilities").child("food").setValue(food);
-                mDatabase.child(key).child("facilities").child("groups").setValue(groups);
-                mDatabase.child(key).child("facilities").child("power").setValue(power);
-                mDatabase.child(key).child("facilities").child("toilet").setValue(toilet);
-                mDatabase.child(key).child("image").setValue(downloadUrl.toString());
-                mDatabase.child(key).child("coordinates").setValue(coordinates);
+                DatabaseReference myRef = mDatabase.child("studyrooms");
+                String key = myRef.push().getKey();
 
+                myRef.child(key).child("name").setValue(name);
+                myRef.child(key).child("address").setValue(address);
+                myRef.child(key).child("city").setValue(city);
+                myRef.child(key).child("postal").setValue(postal);
+                myRef.child(key).child("facilities").child("wifi").setValue(wifi);
+                myRef.child(key).child("facilities").child("coffee").setValue(coffee);
+                myRef.child(key).child("facilities").child("food").setValue(food);
+                myRef.child(key).child("facilities").child("groups").setValue(groups);
+                myRef.child(key).child("facilities").child("power").setValue(power);
+                myRef.child(key).child("facilities").child("toilet").setValue(toilet);
+                myRef.child(key).child("image").setValue(downloadUrl.toString());
+                myRef.child(key).child("coordinates").setValue(coordinates);
 
-                rateStudyRoom(uid, key, (int) rating);
-
+                rateStudyRoom(uid, key, rating);
 
             }
         });
@@ -372,24 +390,94 @@ public class Firebase {
 
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("ratings");
         ref.child(id).child(uid).child("rating").setValue(progress);
+    }
+
+    public void getStudyRoomAverageRating(final String id) {
+
+        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child("ratings");
+        ratingCount = 0;
+        rating = 0;
+
+        // Attach a listener to read the data at our posts reference
+        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.hasChild(id)) {
+
+                    DataSnapshot data = dataSnapshot.child(id);
+
+
+
+                    for (DataSnapshot attributeSnapshot : data.getChildren()) {
+
+                        rating += ((Long) attributeSnapshot.child("rating").getValue()).intValue();
+                        ratingCount++;
+
+                    }
+
+                    Log.i("RATINGS", "count: " + ratingCount + " and rating: " + rating);
+                    double d = rating / ratingCount;
+                    success((int) Math.ceil(d), id);
+
+                }
+
+
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
 
     }
+
+    public void getStudyRoomAverageRating(final String id, ValueEventListener listener) {
+
+        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child("ratings");
+        ratingCount = 0;
+        rating = 0;
+
+        // Attach a listener to read the data at our posts reference
+        mRef.addListenerForSingleValueEvent(listener);
+
+    }
+
 
     private Bitmap downscaleBitmapUsingDensities(final int sampleSize, final InputStream stream)
     {
         BitmapFactory.Options bitmapOptions=new BitmapFactory.Options();
+        bitmapOptions.inScaled = false;
+
         Bitmap firstMap = BitmapFactory.decodeStream(stream,new Rect(),bitmapOptions);
 
         float height = bitmapOptions.outHeight;
         float width = bitmapOptions.outWidth;
 
-        float ratio = width / height;
-
-        int widthFinal = 600;
-        int heightFinal = (int)(widthFinal*ratio);
+        int maxWidth = 1000;
+        int maxHeight = 1000;
 
 
-        Bitmap map = Bitmap.createScaledBitmap(firstMap, widthFinal, heightFinal, false);
+        if (width > height) {
+            // landscape
+            float ratio = (float) width / maxWidth;
+            width = maxWidth;
+            height = (int)(height / ratio);
+        } else if (height > width) {
+            // portrait
+            float ratio = (float) height / maxHeight;
+            height = maxHeight;
+            width = (int)(width / ratio);
+        } else {
+            // square
+            height = maxHeight;
+            width = maxWidth;
+        }
+
+        Bitmap map = Bitmap.createScaledBitmap(firstMap, (int)width, (int)height, true);
         //final Bitmap scaledBitmap=BitmapFactory.decodeStream(stream,new Rect(),bitmapOptions);
         //Bitmap map = Bitmap.createScaledBitmap(sc)
         //scaledBitmap.setDensity(Bitmap.DENSITY_NONE);
@@ -400,7 +488,7 @@ public class Firebase {
     public void downloadImage(String id, final OnSuccessListener<byte[]> listener) {
 
 
-        DatabaseReference ref = mDatabase.child(id);
+        DatabaseReference ref = mDatabase.child("studyrooms").child(id);
 
 
         // Attach a listener to read the data at our posts reference
@@ -437,7 +525,7 @@ public class Firebase {
     public void downloadRating(String id, final ValueEventListener success) {
 
 
-        DatabaseReference ref = mDatabase.child(id);
+        DatabaseReference ref = mDatabase.child("studyrooms").child(id);
         ref.addValueEventListener(success);
 
 

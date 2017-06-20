@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+<ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
@@ -18,392 +25,465 @@
         android:background="@android:color/white"
         >
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/add_room_rating_content"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:background="@android:color/white"
-        android:layout_marginTop="32dp"
-        android:animateLayoutChanges="true"
-        android:elevation="5dp"
-        android:outlineProvider="bounds"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
-
-        <ImageView
-            android:id="@+id/mainImage"
-            android:layout_width="0dp"
-            android:layout_height="300dp"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <android.support.constraint.ConstraintLayout
-            android:id="@+id/room_info"
+            android:id="@+id/add_room_rating_content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainImage">
-
-
-            <TextView
-                android:id="@+id/distanceText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginStart="8dp"
-                android:text="2 km"
-                app:layout_constraintLeft_toRightOf="@+id/distance"
-                app:layout_constraintTop_toTopOf="@+id/distance"
-                app:layout_constraintBottom_toBottomOf="@+id/distance" />
-
-            <TextView
-                android:id="@+id/addressReview"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginStart="8dp"
-                android:text="Anker Engelunds Vej 1, 2800 Kongens Lyngby"
-                android:textAlignment="viewStart"
-                app:layout_constraintBottom_toBottomOf="@+id/location"
-                app:layout_constraintLeft_toRightOf="@+id/location" />
-
-            <ImageView
-                android:id="@+id/distance"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:background="@drawable/ic_navigation_black_24px"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/location"
-                app:srcCompat="@drawable/ic_navigation_black_24px"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginBottom="32dp"
-                app:layout_constraintVertical_bias="0.0" />
-
-            <ImageView
-                android:id="@+id/location"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:background="@drawable/ic_location_on_black_24px"
-                app:srcCompat="@drawable/ic_location_on_black_24px"
-                android:layout_marginLeft="16dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                android:layout_marginTop="16dp"
-                app:layout_constraintTop_toBottomOf="@+id/areaName" />
-
-            <TextView
-                android:id="@+id/areaName"
-                android:layout_width="200dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginTop="16dp"
-                android:background="@color/addButtonColor"
-                android:textSize="14sp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text=""
-                android:gravity="center_vertical"
-                android:textAlignment="center"
-                android:textColor="#FFFFFF"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-        </android.support.constraint.ConstraintLayout>
-
-
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/room_facility"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:background="@color/colorBackgroundSecondary"
-            android:paddingBottom="24dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@android:color/white"
+            android:layout_marginTop="32dp"
+            android:animateLayoutChanges="true"
+            android:elevation="5dp"
+            android:outlineProvider="bounds"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/room_info">
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp">
 
-            <TextView
-                android:id="@+id/review_facilityTitle"
+            <ImageView
+                android:id="@+id/mainImage"
                 android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="16dp"
-                android:background="@color/addButtonColor"
-                android:padding="10dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="Facilities"
-                android:textAlignment="center"
-                android:gravity="center_vertical"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp"
+                android:layout_height="330dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintHorizontal_bias="0.0" />
+                tools:layout_editor_absoluteY="0dp" />
 
-            <LinearLayout
-                android:id="@+id/facilityFirstRow"
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/review_room_info"
                 android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_height="wrap_content"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/review_facilityTitle"
-                app:layout_constraintHorizontal_bias="1.0">
+                app:layout_constraintTop_toBottomOf="@+id/mainImage">
 
 
                 <TextView
-                    android:id="@+id/review_wifi"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_weight="0.5"
-                    android:background="@color/colorBackgroundSecondaryDarker"
-                    android:drawableStart="@drawable/ic_wifi_black_24px"
-                    android:drawablePadding="12dp"
-                    android:drawableEnd="@drawable/ic_approve_not_circular_button"
-                    android:fontFamily="sans-serif-condensed"
-                    android:gravity="center_vertical"
-                    android:padding="12dp"
-                    android:text="WIFI"
+                    android:id="@+id/distanceText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:text="2 km"
                     android:textSize="12sp"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintBottom_toBottomOf="@+id/distance"
+                    app:layout_constraintLeft_toRightOf="@+id/distance"
+                    app:layout_constraintTop_toTopOf="@+id/distance"
+                    app:layout_constraintVertical_bias="0.0" />
 
                 <TextView
-                    android:id="@+id/review_power"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_weight="0.5"
-                    android:background="@color/colorBackgroundSecondaryDarker"
-                    android:drawableLeft="@drawable/ic_power_black_24px"
-                    android:drawablePadding="12dp"
-                    android:drawableRight="@drawable/ic_approve_not_circular_button"
-                    android:fontFamily="sans-serif-condensed"
-                    android:gravity="center_vertical"
-                    android:padding="12dp"
-                    android:text="Power"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="@+id/textView6"
-                    app:layout_constraintRight_toRightOf="parent" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/facilitySecondRow"
-                android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/facilityFirstRow">
-
-
-                <TextView
-                    android:id="@+id/review_coffee"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_weight="0.5"
-                    android:background="@color/colorBackgroundSecondaryDarker"
-                    android:drawableLeft="@drawable/ic_local_cafe_black_24px"
-                    android:drawablePadding="12dp"
-                    android:drawableRight="@drawable/ic_approve_not_circular_button"
-                    android:fontFamily="sans-serif-condensed"
-                    android:gravity="center_vertical"
-                    android:padding="12dp"
-                    android:text="Coffee"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/review_groupspace"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_weight="0.5"
-                    android:background="@color/colorBackgroundSecondaryDarker"
-                    android:drawableLeft="@drawable/ic_group_black_24px"
-                    android:drawablePadding="12dp"
-                    android:drawableRight="@drawable/ic_approve_not_circular_button"
-                    android:fontFamily="sans-serif-condensed"
-                    android:gravity="center_vertical"
-                    android:padding="12dp"
-                    android:text="Group spaces"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="@+id/textView6"
-                    app:layout_constraintRight_toRightOf="parent" />
-
-            </LinearLayout>
-
-            <LinearLayout
-
-                android:layout_width="0dp"
-                android:layout_height="60dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="8dp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/facilitySecondRow">
-
-
-                <TextView
-                    android:id="@+id/review_bathroom"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_weight="0.5"
-                    android:background="@color/colorBackgroundSecondaryDarker"
-                    android:drawableLeft="@drawable/ic_wc_black_24px"
-                    android:drawablePadding="12dp"
-                    android:drawableRight="@drawable/ic_approve_not_circular_button"
-                    android:fontFamily="sans-serif-condensed"
-                    android:gravity="center_vertical"
-                    android:padding="12dp"
-                    android:text="Bathroom"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <TextView
-                    android:id="@+id/review_food"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginEnd="4dp"
-                    android:layout_marginStart="4dp"
-                    android:layout_weight="0.5"
-                    android:background="@color/colorBackgroundSecondaryDarker"
-                    android:drawableLeft="@drawable/ic_restaurant_black_24px"
-                    android:drawablePadding="12dp"
-                    android:drawableRight="@drawable/ic_approve_not_circular_button"
-                    android:fontFamily="sans-serif-condensed"
-                    android:gravity="center_vertical"
-                    android:padding="12dp"
-                    android:text="Food"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    app:layout_constraintLeft_toLeftOf="@+id/textView6"
-                    app:layout_constraintRight_toRightOf="parent" />
-
-            </LinearLayout>
-
-        </android.support.constraint.ConstraintLayout>
-
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/review_map_con"
-            android:layout_width="0dp"
-            android:layout_height="500dp"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/room_facility">
-
-            <TextView
-                android:id="@+id/review_MapTitle"
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="16dp"
-                android:background="@color/addButtonColor"
-                android:padding="10dp"
-                android:paddingLeft="5dp"
-                android:paddingRight="5dp"
-                android:text="Map"
-                android:gravity="center_vertical"
-                android:textAlignment="center"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                xmlns:tools="http://schemas.android.com/tools"
-                android:id="@+id/reviewMapView"
-                app:layout_constraintTop_toBottomOf="@+id/review_MapTitle"
-                android:layout_width="0dp"
-                android:layout_height="300dp"
-                android:layout_marginTop="16dp"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                tools:context=".AddRoomReviewFragment"
-                 />
-
-
-                <LinearLayout
+                    android:id="@+id/addressReview"
                     android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_marginEnd="16dp"
-                    android:layout_marginStart="16dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    android:text="Anker Engelunds Vej 1, 2800 Kongens Lyngby"
+                    android:textAlignment="viewStart"
+                    android:textSize="12sp"
+                    app:layout_constraintLeft_toRightOf="@+id/location"
+                    app:layout_constraintTop_toTopOf="@+id/location"
                     android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/location"
+                    app:layout_constraintVertical_bias="1.0" />
+
+                <ImageView
+                    android:id="@+id/distance"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginStart="16dp"
+                    android:background="@drawable/ic_navigation_black_24px"
+                    app:srcCompat="@drawable/ic_navigation_black_24px"
+                    android:layout_marginTop="6dp"
+                    app:layout_constraintTop_toBottomOf="@+id/location"
+                    android:layout_marginLeft="16dp"
+                    app:layout_constraintLeft_toLeftOf="parent" />
+
+                <ImageView
+                    android:id="@+id/location"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/ic_location_on_black_24px"
                     app:layout_constraintLeft_toLeftOf="parent"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/reviewMapView"
-                    app:layout_constraintBottom_toBottomOf="parent">
+                    app:layout_constraintTop_toBottomOf="@+id/areaName"
+                    app:srcCompat="@drawable/ic_location_on_black_24px" />
 
+                <TextView
+                    android:id="@+id/areaName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="22dp"
+                    android:background="@color/addButtonColor"
+                    android:fontFamily="sans-serif-medium"
+                    android:textStyle="normal"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="5dp"
+                    android:text="lol"
+                    android:textAlignment="center"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-                    <Button
-                        android:id="@+id/review_submit"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginRight="4dp"
-                        android:layout_weight="0.5"
-                        android:text="Upload studyroom?"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintLeft_toLeftOf="parent"
-                        app:layout_constraintRight_toLeftOf="@id/review_submit" />
-                    <Button
-                        android:id="@+id/review_cancel"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.5"
-                        android:text="Cancel"
-                        app:layout_constraintLeft_toRightOf="@id/review_cancel"
-                        app:layout_constraintRight_toRightOf="parent"
-                        android:layout_marginLeft="4dp"
-                        app:layout_constraintHorizontal_bias="0.0"
-                        android:layout_marginRight="0dp" />
-
-                </LinearLayout>
+                <ImageView
+                    android:id="@+id/add_review_rating"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginBottom="25dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="13dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/distance" />
 
             </android.support.constraint.ConstraintLayout>
 
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/room_facility"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="@color/colorBackgroundSecondary"
+                android:paddingBottom="24dp"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/review_room_info"
+                android:elevation="5dp"
+                android:outlineProvider="bounds">
+
+                <TextView
+                    android:id="@+id/review_facilityTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:gravity="center_vertical"
+                    android:padding="10dp"
+                    android:paddingLeft="5dp"
+                    android:paddingRight="5dp"
+                    android:text="Facilities"
+                    android:textAlignment="center"
+                    android:textColor="#000000"
+                    android:textSize="18sp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <android.support.constraint.ConstraintLayout
+                    android:id="@+id/review_facility_wrapper"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginLeft="20dp"
+                    android:layout_marginRight="20dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@color/colorBackground"
+                    android:elevation="6dp"
+                    android:outlineProvider="bounds"
+                    android:paddingBottom="30dp"
+                    android:paddingTop="30dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/review_facilityTitle"
+                    app:layout_constraintVertical_bias="0.0">
+
+                    <LinearLayout
+                        android:id="@+id/facilityFirstRow"
+                        android:layout_width="0dp"
+                        android:layout_height="70dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+
+                        <TextView
+                            android:id="@+id/review_wifi"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_weight="0.5"
+                            android:background="@color/colorBackgroundSecondaryDarker"
+                            android:drawableEnd="@drawable/ic_approve_not_circular_button"
+                            android:drawablePadding="12dp"
+                            android:drawableStart="@drawable/ic_wifi_black_small"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center_vertical"
+                            android:padding="12dp"
+                            android:text="Wifi"
+                            android:textColor="#000000"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/review_power"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_weight="0.5"
+                            android:background="@color/colorBackgroundSecondaryDarker"
+                            android:drawableLeft="@drawable/ic_power_black_small"
+                            android:drawablePadding="12dp"
+                            android:drawableRight="@drawable/ic_approve_not_circular_button"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center_vertical"
+                            android:padding="12dp"
+                            android:text="Power"
+                            android:textColor="#000000"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/facilitySecondRow"
+                        android:layout_width="0dp"
+                        android:layout_height="70dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/facilityFirstRow">
+
+
+                        <TextView
+                            android:id="@+id/review_coffee"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_weight="0.5"
+                            android:background="@color/colorBackgroundSecondaryDarker"
+                            android:drawableLeft="@drawable/ic_local_cafe_black_small"
+                            android:drawablePadding="12dp"
+                            android:drawableRight="@drawable/ic_approve_not_circular_button"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center_vertical"
+                            android:padding="12dp"
+                            android:text="Coffee"
+                            android:textColor="#000000"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/review_groupspace"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_weight="0.5"
+                            android:background="@color/colorBackgroundSecondaryDarker"
+                            android:drawableLeft="@drawable/ic_group_black_small"
+                            android:drawablePadding="12dp"
+                            android:drawableRight="@drawable/ic_approve_not_circular_button"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center_vertical"
+                            android:padding="12dp"
+                            android:text="Group spaces"
+                            android:textColor="#000000"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+
+                        android:layout_width="0dp"
+                        android:layout_height="70dp"
+                        android:layout_marginEnd="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintLeft_toLeftOf="parent"
+                        app:layout_constraintRight_toRightOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/facilitySecondRow">
+
+
+                        <TextView
+                            android:id="@+id/review_bathroom"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_weight="0.5"
+                            android:background="@color/colorBackgroundSecondaryDarker"
+                            android:drawableLeft="@drawable/ic_wc_black_small"
+                            android:drawablePadding="12dp"
+                            android:drawableRight="@drawable/ic_approve_not_circular_button"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center_vertical"
+                            android:padding="12dp"
+                            android:text="WC"
+                            android:textColor="#000000"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <TextView
+                            android:id="@+id/review_food"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginEnd="4dp"
+                            android:layout_marginStart="4dp"
+                            android:layout_weight="0.5"
+                            android:background="@color/colorBackgroundSecondaryDarker"
+                            android:drawableLeft="@drawable/ic_restaurant_black_small"
+                            android:drawablePadding="12dp"
+                            android:drawableRight="@drawable/ic_approve_not_circular_button"
+                            android:fontFamily="sans-serif-condensed"
+                            android:gravity="center_vertical"
+                            android:padding="12dp"
+                            android:text="Food"
+                            android:textColor="#000000"
+                            android:textSize="12sp"
+                            android:textStyle="bold"
+                            app:layout_constraintLeft_toLeftOf="parent"
+                            app:layout_constraintRight_toRightOf="parent" />
+
+                    </LinearLayout>
+
+                </android.support.constraint.ConstraintLayout>
+
+            </android.support.constraint.ConstraintLayout>
+
+            <!--<android.support.constraint.ConstraintLayout
+                android:id="@+id/review_map_con"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/room_facility"
+                android:elevation="5dp"
+                android:outlineProvider="bounds">
+
+                <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/reviewMapView"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="parent"
+                    tools:context=".ContentActivity" />
+
+
+            </android.support.constraint.ConstraintLayout> -->
+
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/review_map_con"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
+                android:layout_marginRight="0dp"
+                android:layout_marginTop="0dp"
+                android:elevation="5dp"
+                android:outlineProvider="bounds"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/room_facility">
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="300dp"
+                    android:layout_marginLeft="0dp"
+                    android:layout_marginRight="0dp"
+                    android:layout_marginTop="0dp"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+                        xmlns:tools="http://schemas.android.com/tools"
+                        android:id="@+id/reviewMapView"
+                        android:name="com.google.android.gms.maps.SupportMapFragment"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+
+                        tools:context=".ContentActivity" />
+
+                </RelativeLayout>
+            </android.support.constraint.ConstraintLayout>
         </android.support.constraint.ConstraintLayout>
+
     </android.support.constraint.ConstraintLayout>
+
 </ScrollView>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="10dp">
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/review_cancel"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginLeft="5dp"
+            app:backgroundTint="@color/accountButtonColor"
+            app:elevation="6dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:srcCompat="@drawable/ic_clear_black_24dp" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="56dp"
+            android:id="@+id/review_submit"
+            android:layout_height="56dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            app:backgroundTint="#4CAF50"
+            app:elevation="6dp"
+            app:layout_constraintTop_toBottomOf="@+id/review_submit"
+            app:layout_constraintRight_toRightOf="parent"
+            app:srcCompat="@drawable/ic_check_white_24dp" />
+
+    </LinearLayout>
+
+</RelativeLayout>
+
