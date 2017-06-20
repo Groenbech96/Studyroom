@@ -282,7 +282,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
                             Bundle b = new Bundle();
 
-                            Firebase.getInstance().getStudyRoomAverageRating(Firebase.getInstance().getUser().getUid(), room.getId());
+                            Firebase.getInstance().getStudyRoomAverageRating(room.getId());
 
                             b.putString("id", room.getId());
 
@@ -566,7 +566,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
-    public void update(int i) {
+    public void update(int i, String id) {
 
         Log.i("Downloaded rating", i+"");
 

@@ -353,16 +353,15 @@
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:id="@+id/reviewMapView"
-                app:layout_constraintTop_toBottomOf="@+id/review_MapTitle"
                 android:layout_width="0dp"
                 android:layout_height="300dp"
                 android:layout_marginTop="16dp"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/review_MapTitle"
                 app:layout_constraintVertical_bias="0.0"
-                tools:context=".AddRoomReviewFragment"
-                 />
+                tools:context=".AddRoomReviewFragment" />
 
 
                 <LinearLayout

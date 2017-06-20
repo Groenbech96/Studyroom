@@ -201,8 +201,8 @@ public class SearchFragment extends Fragment implements Main.StudyRoomListener {
     }
 
     @Override
-    public void update(int i) {
-
+    public void update(int i, String id) {
+        searchAdapter.updateData(i, id);
     }
 
 
