@@ -38,7 +38,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/searchItemName"
         app:layout_constraintVertical_bias="0.0"
-        android:layout_marginLeft="8dp"
+        android:layout_marginLeft="0dp"
         app:layout_constraintLeft_toLeftOf="parent" />
 
     <ImageView

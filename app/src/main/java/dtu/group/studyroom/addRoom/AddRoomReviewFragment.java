@@ -155,24 +155,6 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
         facilityTitle = (TextView) fragmentView.findViewById(R.id.review_facilityTitle);
         facilityTitle.setTypeface(opensansFont);
 
-        mapTitle = (TextView) fragmentView.findViewById(R.id.review_MapTitle);
-        mapTitle.setTypeface(opensansFont);
-
-        submit = (Button) fragmentView.findViewById(R.id.review_submit);
-        submit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                saveReview();
-            }
-        });
-
-        cancel = (Button) fragmentView.findViewById(R.id.review_cancel);
-        cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cancelReview();
-            }
-        });
 
         foundLatLng = data.getParcelable("latlng");
 
@@ -203,22 +185,22 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
         quiet.setTypeface(opensansFont);
 
         if(data.getBoolean("wifi"))
-            wifi.setCompoundDrawables(getDraw(R.drawable.ic_wifi_black_24px),null,getDraw(R.drawable.ic_green_accept), null);
+            wifi.setCompoundDrawables(getDraw(R.drawable.ic_wifi_black_small),null,getDraw(R.drawable.ic_green_accept), null);
 
         if(data.getBoolean("power"))
-            power.setCompoundDrawables(getDraw(R.drawable.ic_power_black_24px),null,getDraw(R.drawable.ic_green_accept), null);
+            power.setCompoundDrawables(getDraw(R.drawable.ic_power_black_small),null,getDraw(R.drawable.ic_green_accept), null);
 
         if(data.getBoolean("coffee"))
-            coffee.setCompoundDrawables(getDraw(R.drawable.ic_local_cafe_black_24px),null,getDraw(R.drawable.ic_green_accept), null);
+            coffee.setCompoundDrawables(getDraw(R.drawable.ic_local_cafe_black_small),null,getDraw(R.drawable.ic_green_accept), null);
 
         if(data.getBoolean("group"))
-            group.setCompoundDrawables(getDraw(R.drawable.ic_group_black_24px),null,getDraw(R.drawable.ic_green_accept), null);
+            group.setCompoundDrawables(getDraw(R.drawable.ic_group_black_small),null,getDraw(R.drawable.ic_green_accept), null);
 
         if(data.getBoolean("toilet"))
-            toilet.setCompoundDrawables(getDraw(R.drawable.ic_wc_black_24px),null,getDraw(R.drawable.ic_green_accept), null);
+            toilet.setCompoundDrawables(getDraw(R.drawable.ic_wc_black_small),null,getDraw(R.drawable.ic_green_accept), null);
 
         if(data.getBoolean("quiet"))
-            quiet.setCompoundDrawables(getDraw(R.drawable.ic_restaurant_black_24px),null,getDraw(R.drawable.ic_green_accept), null);
+            quiet.setCompoundDrawables(getDraw(R.drawable.ic_restaurant_black_small),null,getDraw(R.drawable.ic_green_accept), null);
 
 
 
