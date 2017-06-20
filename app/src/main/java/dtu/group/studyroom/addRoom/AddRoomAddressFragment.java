@@ -83,7 +83,7 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
     private LatLng foundLatLng;
     private Location mLastKnownLocation;
 
-    private String postalText, cityText;
+    private String postalText, cityText, addressText;
 
     public static boolean debug = false;
 
@@ -310,7 +310,7 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
                 // This will be displayed on taping the marker
 
                 List<Address> addresses = null;
-                String addressText = "";
+
                 Geocoder geocoder = new Geocoder(getActivity().getApplicationContext(), Locale.getDefault());
                 try {
                     // Getting a maximum of 3 Address that matches the input text
@@ -331,7 +331,7 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
                 markerOptions.title(addressText);
 
                 Bitmap bm = BitmapFactory.decodeResource(getResources(), R.mipmap.studyroom_mapmarker);
-                Bitmap map = Utils.scaleDown(bm, 80, true);
+                Bitmap map = Utils.scaleDown(bm, getActivity().getResources().getInteger(R.integer.markerSize), true);
                 BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(map);
 
                 markerOptions.icon(icon);
@@ -502,10 +502,12 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
 
         if(!searchBar.getText().toString().trim().equals("") && foundLatLng != null) {
             bundle.putString("address", searchBar.getText().toString());
-            if(!postalText.trim().equals(""))
-                bundle.putString("postal", postalText);
-            if(!cityText.trim().equals(""))
-                bundle.putString("city", cityText);
+            if(postalText != null)
+                if(!postalText.trim().equals(""))
+                    bundle.putString("postal", postalText);
+            if(cityText != null)
+                if(!cityText.trim().equals(""))
+                    bundle.putString("city", cityText);
             bundle.putParcelable("latlng", foundLatLng);
         }
 
@@ -519,7 +521,6 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
 
         transaction.replace(R.id.add_layout ,page1);
         transaction.commit();
-
 
     }
 
@@ -535,6 +536,8 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
                 if(location!=null && !location.equals("")){
                     new GeocoderTask().execute(location);
                 }
+
+
 
             }
 
@@ -552,12 +555,25 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
             Geocoder geocoder = new Geocoder(getActivity().getBaseContext());
 
             List<Address> addresses = null;
+
             try {
                 // Getting a maximum of 3 Address that matches the input text
                 addresses = geocoder.getFromLocationName(locationName[0], 1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+                if(addresses != null) {
+                    String postal = addresses.get(0).getPostalCode();
+                    String city = addresses.get(0).getAddressLine(1).toString();
+                    String address = addresses.get(0).getAddressLine(0).toString();
+
+                    addressText = address;
+                    cityText = city;
+                    postalText= postal;
+                }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+
             return addresses;
         }
 
@@ -570,6 +586,9 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
             }
 
             Address address = (Address) addresses.get(0);
+
+            if(addressText != null)
+                searchBar.setText(addressText);
 
             // Creating an instance of GeoPoint, to display in Google Map
             foundLatLng = new LatLng(address.getLatitude(), address.getLongitude());
@@ -584,7 +603,7 @@ public class AddRoomAddressFragment extends Fragment implements OnMapReadyCallba
             // Setting the position for the marker
             markerOptions.position(foundLatLng);
             Bitmap bm = BitmapFactory.decodeResource(getResources(), R.mipmap.studyroom_mapmarker);
-            Bitmap map = Utils.scaleDown(bm, 80, true);
+            Bitmap map = Utils.scaleDown(bm, getActivity().getResources().getInteger(R.integer.markerSize), true);
             BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(map);
 
             markerOptions.icon(icon);

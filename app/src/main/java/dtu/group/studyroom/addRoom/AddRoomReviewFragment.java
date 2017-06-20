@@ -373,7 +373,7 @@ public class AddRoomReviewFragment extends Fragment implements OnMapReadyCallbac
         // Setting the position for the marker
         markerOptions.position(foundLatLng);
         Bitmap bm = BitmapFactory.decodeResource(getResources(), R.mipmap.studyroom_mapmarker);
-        Bitmap map = Utils.scaleDown(bm, 80, true);
+        Bitmap map = Utils.scaleDown(bm, getActivity().getResources().getInteger(R.integer.markerSize), true);
         BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(map);
 
         markerOptions.icon(icon);

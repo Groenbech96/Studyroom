@@ -30,6 +30,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AccelerateInterpolator;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -86,6 +87,9 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
     private HashMap<String, StudyRoom> studyrooms = new HashMap<>();
 
     private boolean dataFetched;
+
+    private Main.StudyRoomListener listener;
+
 
 
     public static boolean debug = false;
@@ -274,9 +278,14 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
                         StudyRoom room = (StudyRoom)entry.getValue();
                         if(room.getCoordinates().equals(marker.getPosition()))  {
 
+                            StudyRoomDialog dialog = new StudyRoomDialog();
+
                             Bundle b = new Bundle();
+
+                            Firebase.getInstance().getStudyRoomAverageRating(Firebase.getInstance().getUser().getUid(), room.getId());
+
                             b.putString("id", room.getId());
-                            StudyRoomRatingDialog dialog = new StudyRoomRatingDialog();
+
                             dialog.setArguments(b);
                             dialog.show(getActivity().getFragmentManager(), "DIS");
 
@@ -399,6 +408,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
         super.onAttach(context);
         ((Main) getActivity()).addListener(this);
 
+
     }
 
     @Override
@@ -517,7 +527,7 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
                     // Setting the position for the marker
                     markerOptions.position(room.getCoordinates());
                     Bitmap bm = BitmapFactory.decodeResource(getResources(), R.mipmap.studyroom_mapmarker);
-                    Bitmap map = Utils.scaleDown(bm, 160, true);
+                    Bitmap map = Utils.scaleDown(bm, getActivity().getResources().getInteger(R.integer.markerSize), true);
                     BitmapDescriptor icon = BitmapDescriptorFactory.fromBitmap(map);
 
                     markerOptions.icon(icon);
@@ -552,6 +562,13 @@ public class MapsFragment extends Fragment implements OnMapReadyCallback,
 
         updateMap(((Main)getActivity()).getStudyrooms());
 
+
+    }
+
+    @Override
+    public void update(int i) {
+
+        Log.i("Downloaded rating", i+"");
 
     }
 

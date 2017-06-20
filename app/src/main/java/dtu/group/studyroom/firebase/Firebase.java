@@ -36,6 +36,7 @@ import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.UUID;
 
@@ -63,21 +64,20 @@ public class Firebase {
     }
 
 
+    private int ratingCount, rating;
 
     // Interface for async callbacks when data has loaded
-    public  interface StudyroomDataCallbacks {
+    public interface StudyroomDataCallbacks {
         void studyroomDataSuccessCallback(HashMap<String, StudyRoom> result);
-
+        void studyroomDataSuccessCallback(int i);
     }
 
     private StudyroomDataCallbacks listenerMap = null;
-
+    private StudyroomDataCallbacks listenerRating = null;
 
     private StorageReference mStorage = FirebaseStorage.getInstance().getReference();
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference().child("studyrooms");
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-
-
 
 
     private Firebase () {
@@ -85,10 +85,6 @@ public class Firebase {
          * Set up listener
          */
         mDatabase.addValueEventListener(changeListener);
-    }
-
-    public void fetchData() {
-
     }
 
     public static void Restart() {
@@ -99,6 +95,9 @@ public class Firebase {
     public void setDataListener(StudyroomDataCallbacks listener) {
         this.listenerMap = listener;
     }
+    public void setRatingListener(StudyroomDataCallbacks listener) {
+        this.listenerRating = listener;
+    }
 
 
     private void success(HashMap<String, StudyRoom> result) {
@@ -107,6 +106,10 @@ public class Firebase {
         }
     }
 
+    private void success(int i) {
+        if(listenerMap != null)
+            listenerMap.studyroomDataSuccessCallback(i);
+    }
 
 
     public ValueEventListener changeListener = new ValueEventListener() {
@@ -153,7 +156,6 @@ public class Firebase {
                         // ...
                     }
                 });
-
     }
 
     public HashMap<String, StudyRoom> downloadStudyRoom(DataSnapshot dataSnapshot) {
@@ -196,7 +198,7 @@ public class Firebase {
                 case "city" :
                     studyRoom.setCity(attributeSnapshot.getValue().toString());
                     break;
-                case "rating" :
+                case "rating" : // Depricated
                     try{
                         studyRoom.setRating((double)attributeSnapshot.getValue());
                     } catch(ClassCastException e){
@@ -315,8 +317,6 @@ public class Firebase {
         /**
          * Compress the bitmap into jpeg format
          */
-
-
         try {
             Bitmap map;
             map = downscaleBitmapUsingDensities(5, new FileInputStream(photoPath));
@@ -362,7 +362,6 @@ public class Firebase {
 
                 rateStudyRoom(uid, key, (int) rating);
 
-
             }
         });
 
@@ -372,24 +371,84 @@ public class Firebase {
 
         final DatabaseReference ref = FirebaseDatabase.getInstance().getReference().child("ratings");
         ref.child(id).child(uid).child("rating").setValue(progress);
+    }
+
+    public void getStudyRoomAverageRating(final String uid, final String id) {
+
+        DatabaseReference mRef = FirebaseDatabase.getInstance().getReference().child("ratings");
+        ratingCount = 0;
+        rating = 0;
+
+        // Attach a listener to read the data at our posts reference
+        mRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if(dataSnapshot.hasChild(id)) {
+
+                    DataSnapshot data = dataSnapshot.child(id);
+
+
+
+                    for (DataSnapshot attributeSnapshot : data.getChildren()) {
+
+                        rating += ((Long) attributeSnapshot.child("rating").getValue()).intValue();
+                        ratingCount++;
+
+                    }
+
+                    Log.i("RATINGS", "count: " + ratingCount + " and rating: " + rating);
+                    double d = rating / ratingCount;
+                    success((int) Math.ceil(d));
+
+                }
+
+
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println("The read failed: " + databaseError.getCode());
+            }
+        });
+
 
     }
+
 
     private Bitmap downscaleBitmapUsingDensities(final int sampleSize, final InputStream stream)
     {
         BitmapFactory.Options bitmapOptions=new BitmapFactory.Options();
+        bitmapOptions.inScaled = false;
+
         Bitmap firstMap = BitmapFactory.decodeStream(stream,new Rect(),bitmapOptions);
 
         float height = bitmapOptions.outHeight;
         float width = bitmapOptions.outWidth;
 
-        float ratio = width / height;
-
-        int widthFinal = 600;
-        int heightFinal = (int)(widthFinal*ratio);
+        int maxWidth = 1000;
+        int maxHeight = 1000;
 
 
-        Bitmap map = Bitmap.createScaledBitmap(firstMap, widthFinal, heightFinal, false);
+        if (width > height) {
+            // landscape
+            float ratio = (float) width / maxWidth;
+            width = maxWidth;
+            height = (int)(height / ratio);
+        } else if (height > width) {
+            // portrait
+            float ratio = (float) height / maxHeight;
+            height = maxHeight;
+            width = (int)(width / ratio);
+        } else {
+            // square
+            height = maxHeight;
+            width = maxWidth;
+        }
+
+        Bitmap map = Bitmap.createScaledBitmap(firstMap, (int)width, (int)height, true);
         //final Bitmap scaledBitmap=BitmapFactory.decodeStream(stream,new Rect(),bitmapOptions);
         //Bitmap map = Bitmap.createScaledBitmap(sc)
         //scaledBitmap.setDensity(Bitmap.DENSITY_NONE);

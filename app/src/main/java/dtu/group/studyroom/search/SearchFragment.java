@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,6 +32,8 @@ import dtu.group.studyroom.Main;
 import dtu.group.studyroom.R;
 import dtu.group.studyroom.addRoom.StudyRoom;
 import dtu.group.studyroom.firebase.Firebase;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 
 /**
@@ -142,20 +145,28 @@ public class SearchFragment extends Fragment implements Main.StudyRoomListener {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                View selectedView = ((View) view.findViewById(R.id.searchItemWrapper));
+            /**
+             * Dismiss keyboard
+             */
 
-                SearchAdapter.ViewHolder viewHolder = (SearchAdapter.ViewHolder) selectedView.getTag();
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+            if(imm.isAcceptingText()) { // verify if the soft keyboard is open
+                imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+            }
+            View selectedView = ((View) view.findViewById(R.id.searchItemWrapper));
 
-                String studyRoomId = viewHolder.id;
+            SearchAdapter.ViewHolder viewHolder = (SearchAdapter.ViewHolder) selectedView.getTag();
 
-                StudyRoom studyRoom = ((Main) SearchFragment.this.getActivity()).getStudyrooms().get(studyRoomId);
+            String studyRoomId = viewHolder.id;
 
-                Intent intent = new Intent(SearchFragment.this.getActivity(), ContentActivity.class);
+            StudyRoom studyRoom = ((Main) SearchFragment.this.getActivity()).getStudyrooms().get(studyRoomId);
 
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("studyroom", studyRoom);
-                intent.putExtras(bundle);
-                startActivity(intent);
+            Intent intent = new Intent(SearchFragment.this.getActivity(), ContentActivity.class);
+
+            Bundle bundle = new Bundle();
+            bundle.putParcelable("studyroom", studyRoom);
+            intent.putExtras(bundle);
+            startActivity(intent);
 
 
             }
@@ -189,7 +200,10 @@ public class SearchFragment extends Fragment implements Main.StudyRoomListener {
 
     }
 
+    @Override
+    public void update(int i) {
 
+    }
 
 
     View.OnClickListener facilityClickListener = new View.OnClickListener() {

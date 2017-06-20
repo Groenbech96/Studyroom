@@ -43,6 +43,7 @@ public class Main extends AppCompatActivity implements
 
     public interface StudyRoomListener {
         void update();
+        void update(int i);
     }
 
     private List<StudyRoomListener> listeners;
@@ -79,6 +80,12 @@ public class Main extends AppCompatActivity implements
                     listener.update();
                 }
 
+            }
+
+            @Override
+            public void studyroomDataSuccessCallback(int i) {
+                for(StudyRoomListener listener : listeners)
+                    listener.update(i);
             }
         });
 
